@@ -1,0 +1,15 @@
+{
+  "require": {
+    "nesbot/carbon": "~1.14",
+    "swiftmailer/swiftmailer": "^5.4",
+    "fzaninotto/faker": "^1.5",
+    "mockery/mockery": "^0.9.4",
+    "symfony/console": "^2.7",
+    "mtdowling/cron-expression": "^1.0",
+    "mailgun/mailgun-php": "^1.8",
+    "phpunit/phpunit": "^5.3"
+  },
+  "autoload": {
+    "psr-0": {"": ""}
+  }
+}
