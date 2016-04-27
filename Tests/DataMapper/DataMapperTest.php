@@ -384,26 +384,7 @@ class DataMapperTest extends DataMapperBaseTest
      * HAS ONE INSERTS
      */
 
-    public function testHasOneWhenInsertingNullInNullableAssociation()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-
-        // Act
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-
-        // Assert
-        $this->assertNull($teacherData['address_id']);
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testHasOneWhenInsertingWithUnknownChildEntity()
+    public function testHasOneWhenInsertingIgnoresAssociation()
     {
         // Arrange
         $this->setUpAssociations();
@@ -414,267 +395,51 @@ class DataMapperTest extends DataMapperBaseTest
         $teacher->setAddress($address);
         $this->dm->persist($teacher);
         $this->dm->flush();
-        $this->dm->detachAll();
         $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
         $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select();
 
         // Assert
         $this->assertEquals(0, sizeof($addressData));
-        $this->assertNull($teacherData['address_id']);
-    }
-
-    public function testHasOneWhenInsertingWithNewChildEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-
-        // Act
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->persist($address);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address->getId(), $teacherData['address_id']);
-    }
-
-    public function testHasOneWhenInsertingWithNewChildEntityInDifferentOrder()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-
-        // Act
-        $teacher->setAddress($address);
-        $this->dm->persist($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address->getId(), $teacherData['address_id']);
-    }
-
-    public function testHasOneWhenInsertingWithManagedChildEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-
-        // Act
-        $this->dm->persist($address);
-        $this->dm->flush();
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address->getId(), $teacherData['address_id']);
+        $this->assertGreaterThan(0, sizeof($teacherData));
     }
 
     /*
      * HAS ONE UPDATES
      */
 
-    public function testHasOneWhenUpdatingFromNullToNewEntity()
+    public function testHasOneWhenUpdatingIgnoresAssociationChangesWhenAssigningEntity()
     {
         // Arrange
         $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $this->dm->persist($teacher);
+        $address = new Address('street1');
+        $this->dm->persist($address);
         $this->dm->flush();
 
         // Act
-        $address = new Address('street1');
-        $this->dm->persist($address);
-        $teacher->setAddress($address);
+        $teacher = new Teacher('Tom');
         $this->dm->persist($teacher);
+        $teacher->setAddress($address);
         $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
         $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
 
         // Assert
         $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address->getId(), $teacherData['address_id']);
-    }
-
-    public function testHasOneWhenUpdatingFromNullToManagedEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-
-        // Act
-        $address = new Address('street1');
-        $this->dm->persist($address);
-        $this->dm->flush();
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address->getId(), $teacherData['address_id']);
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testHasOneWhenUpdatingFromNullToUnknownEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-
-        // Act
-        $address = new Address('street1');
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select();
-
-        // Assert
-        $this->assertEquals(0, sizeof($addressData));
-        $this->assertNull($teacherData['address_id']);
-    }
-
-    public function testHasOneWhenUpdatingFromEntityToNull()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-        $this->dm->persist($address);
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-
-        // Act
-        $teacher->removeAddress();
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertNull($teacherData['address_id']);
-    }
-
-    public function testHasOneWhenUpdatingFromEntityToDifferentNewEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-        $this->dm->persist($address);
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-
-        // Act
-        $address2 = new Address('street2');
-        $this->dm->persist($address2);
-        $teacher->setAddress($address2);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-        $address2Data = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address2->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address2->getId(), $address2Data['id']);
-        $this->assertEquals($address2->getId(), $teacherData['address_id']);
-    }
-
-    public function testHasOneWhenUpdatingFromEntityToDifferentManagedEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-        $this->dm->persist($address);
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-
-        // Act
-        $address2 = new Address('street2');
-        $this->dm->persist($address2);
-        $this->dm->flush();
-        $teacher->setAddress($address2);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-        $address2Data = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address2->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals($address2->getId(), $address2Data['id']);
-        $this->assertEquals($address2->getId(), $teacherData['address_id']);
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testHasOneWhenUpdatingFromEntityToDifferentUnknownEntity()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $address = new Address('street1');
-        $this->dm->persist($address);
-        $teacher->setAddress($address);
-        $this->dm->persist($teacher);
-        $this->dm->flush();
-
-        // Act
-        $address2 = new Address('street2');
-        $teacher->setAddress($address2);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
-        $address2Data = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address2->getId())->select();
-
-        // Assert
-        $this->assertEquals($address->getId(), $addressData['id']);
-        $this->assertEquals(0, sizeof($address2Data));
-        $this->assertEquals($address2->getId(), $teacherData['address_id']);
+        $this->assertNotEquals($teacher->getId(), $addressData['teacher_id']);
     }
 
     /*
      * HAS ONE REMOVALS
      */
 
-    public function testHasOneWhenDeletingOwningEntityWithCascadeDeleteEnabled()
+    // DO THESE 2 AND THEN CONTINUE TO FIND...
+    // DONW" FORGET TO REMOVE COMMENTED IN UOW AND METADATA AND WHAT NOT...
+
+    public function testHasOneWhenDeletingWillNotDeleteIfCascadeDeleteDisabledAndChildEntityStillExists()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testHasOneWhenDeletingEntityWithCascadeDeleteEnabled()
     {
         // Arrange
         $this->setUpAssociations();
@@ -682,42 +447,17 @@ class DataMapperTest extends DataMapperBaseTest
         $this->dm->persist($teacher);
         $address = new Address('street1');
         $this->dm->persist($address);
-        $teacher->setAddress($address);
+        $address->setTeacher($teacher);
         $this->dm->flush();
 
         // Act
         $this->dm->delete($teacher);
         $this->dm->flush();
-        $this->dm->detachAll();
         $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select();
         $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select();
 
         // Assert
         $this->assertEquals(0, sizeof($addressData));
-        $this->assertEquals(0, sizeof($teacherData));
-    }
-
-    public function testHasOneWhenDeletingOwningEntityWithCascadeDeleteDisabled()
-    {
-        // Arrange
-        $this->setUpAssociations();
-        $teacher = new Teacher('Tom');
-        $this->dm->persist($teacher);
-        $addressNoCascade = new AddressTwo('street1');
-        $this->dm->persist($addressNoCascade);
-        $teacher->setAddressNoCascade($addressNoCascade);
-        $this->dm->flush();
-
-        // Act
-        $this->dm->delete($teacher);
-        $this->dm->flush();
-        $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select();
-        $addressNoCascadeData = $this->dm->queryBuilder()->table('AddressTwo')
-            ->where('id', '=', $addressNoCascade->getId())->select()[0];
-
-        // Assert
-        $this->assertEquals($addressNoCascade->getId(), $addressNoCascadeData['id']);
         $this->assertEquals(0, sizeof($teacherData));
     }
 
@@ -749,7 +489,7 @@ class DataMapperTest extends DataMapperBaseTest
         $teacher = new Teacher('Tom');
         $this->dm->persist($teacher);
         $address = new Address('street1');
-        $teacher->setAddress($address);
+        $address->setTeacher($teacher);
         $this->dm->persist($address);
         $this->dm->flush();
 

@@ -100,7 +100,7 @@ class ProxyEntityTest extends DataMapperBaseTest
     /**
      * @depends testHasOneLazyLoadedPropertyIsProxied
      */
-    public function testProxyIsNotResolvedWhenRequestingTheId()
+    public function testHasOneProxyIsResolvedWhenRequestingTheId()
     {
         // Arrange
         $this->setUpLazyEntities();
@@ -117,7 +117,31 @@ class ProxyEntityTest extends DataMapperBaseTest
         $id = $one->entityTwo()->getId();
 
         // Assert
-        $this->assertTrue($one->entityTwo() instanceof ProxyEntity);
+        $this->assertTrue($one->entityTwo() instanceof LazyEntityTwo);
         $this->assertEquals($two->getId(), $id);
+    }
+
+    /**
+     * @depends testHasOneLazyLoadedPropertyIsProxied
+     */
+    public function testBelongsToProxyIsNotResolvedWhenRequestingTheId()
+    {
+        // Arrange
+        $this->setUpLazyEntities();
+        $one = new LazyEntityOne('one');
+        $two = new LazyEntityTwo('two', $one);
+        $one->setEntityTwo($two);
+        $this->dm->persist($one);
+        $this->dm->persist($two);
+        $this->dm->flush();
+        $this->dm->detachAll();
+
+        // Act
+        $two = $this->dm->find(LazyEntityTwo::class, $two->getId());
+        $id = $two->entityOne()->getId();
+
+        // Assert
+        $this->assertTrue($two->entityOne() instanceof ProxyEntity);
+        $this->assertEquals($one->getId(), $id);
     }
 }

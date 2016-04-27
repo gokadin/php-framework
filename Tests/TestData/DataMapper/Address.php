@@ -13,6 +13,9 @@ class Address
     /** @Column(type="string") */
     protected $street;
 
+    /** @BelongsTo(target="Tests\TestData\DataMapper\Teacher", nullable="true") */
+    private $teacher;
+
     public function __construct($street)
     {
         $this->street = $street;
@@ -31,5 +34,15 @@ class Address
     public function setStreet($street)
     {
         $this->street = $street;
+    }
+
+    public function teacher()
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(Teacher $teacher)
+    {
+        $this->teacher = $teacher;
     }
 }

@@ -22,13 +22,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MetadataTest.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php">
+      <file leaf-file-name="DataMapperTest.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.88986784">
-              <caret line="42" column="81" selection-start-line="42" selection-start-column="81" selection-end-line="42" selection-end-column="81" />
+            <state vertical-scroll-proportion="0.3876652">
+              <caret line="491" column="39" selection-start-line="491" selection-start-column="39" selection-end-line="491" selection-end-column="39" />
               <folding>
-                <element signature="e#44#84#0#PHP" expanded="true" />
+                <element signature="e#36#54#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -46,7 +46,6 @@
         <option value="$PROJECT_DIR$/Tests/TestData/Container/ConcreteImplementingInterfaceOne.php" />
         <option value="$PROJECT_DIR$/Tests/TestData/Container/ConcreteNoConstructor.php" />
         <option value="$PROJECT_DIR$/Tests/DataMapper/DataMapperBaseTest.php" />
-        <option value="$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php" />
         <option value="$PROJECT_DIR$/Tests/TestCase.php" />
         <option value="$PROJECT_DIR$/Tests/BaseTest.php" />
         <option value="$PROJECT_DIR$/Tests/Log/LogTest.php" />
@@ -55,6 +54,13 @@
         <option value="$PROJECT_DIR$/Tests/TestData/DataMapper/Mapping/AnnotationClasses/AssocEntity.php" />
         <option value="$PROJECT_DIR$/Tests/DataMapper/Mapping/Drivers/AnnotationDriverTest.php" />
         <option value="$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php" />
+        <option value="$PROJECT_DIR$/Library/DataMapper/Mapping/Metadata.php" />
+        <option value="$PROJECT_DIR$/Tests/TestData/DataMapper/Address.php" />
+        <option value="$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php" />
+        <option value="$PROJECT_DIR$/Library/DataMapper/Proxy/ProxyEntity.php" />
+        <option value="$PROJECT_DIR$/Library/DataMapper/UnitOfWork/UnitOfWork.php" />
+        <option value="$PROJECT_DIR$/Tests/DataMapper/Proxy/ProxyEntityTest.php" />
+        <option value="$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php" />
       </list>
     </option>
   </component>
@@ -68,6 +74,25 @@
     <option name="y" value="27" />
     <option name="width" value="1366" />
     <option name="height" value="741" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Spelling</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>SpellCheckingInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -234,6 +259,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="Proxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataMapper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="Mapping" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -338,25 +385,25 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="PHPUnit.MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn">
-    <configuration default="false" name="LogTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner class="Tests\Log\LogTest" file="$PROJECT_DIR$/Tests/Log/LogTest.php" scope="Class" />
+  <component name="RunManager" selected="PHPUnit.DataMapperTest.testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity">
+    <configuration default="false" name="DataMapper" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner directory="$PROJECT_DIR$/Tests/DataMapper" />
       <method />
     </configuration>
-    <configuration default="false" name="Log" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner directory="$PROJECT_DIR$/Tests/Log" />
+    <configuration default="false" name="ProxyEntityTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="Tests\DataMapper\Proxy\ProxyEntityTest" file="$PROJECT_DIR$/Tests/DataMapper/Proxy/ProxyEntityTest.php" scope="Class" />
       <method />
     </configuration>
-    <configuration default="false" name="AnnotationDriverTest.testHasOneDoesNotCreateADatabaseColumn" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner class="Tests\DataMapper\Mapping\Drivers\AnnotationDriverTest" file="$PROJECT_DIR$/Tests/DataMapper/Mapping/Drivers/AnnotationDriverTest.php" method="testHasOneDoesNotCreateADatabaseColumn" scope="Method" />
+    <configuration default="false" name="ProxyEntityTest.testHasOneProxyIsResolvedWhenRequestingTheId" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="Tests\DataMapper\Proxy\ProxyEntityTest" file="$PROJECT_DIR$/Tests/DataMapper/Proxy/ProxyEntityTest.php" method="testHasOneProxyIsResolvedWhenRequestingTheId" scope="Method" />
       <method />
     </configuration>
-    <configuration default="false" name="MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner class="Tests\DataMapper\Mapping\MetadataTest" file="$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php" method="test_addBelongsToAssociation_CreatesADatabaseColumn" scope="Method" />
+    <configuration default="false" name="ProxyEntityTest.testBelongsToProxyIsNotResolvedWhenRequestingTheId" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="Tests\DataMapper\Proxy\ProxyEntityTest" file="$PROJECT_DIR$/Tests/DataMapper/Proxy/ProxyEntityTest.php" method="testBelongsToProxyIsNotResolvedWhenRequestingTheId" scope="Method" />
       <method />
     </configuration>
-    <configuration default="false" name="MetadataTest.test_addHasOneAssociation_DoesNotCreateADatabaseColumn" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner class="Tests\DataMapper\Mapping\MetadataTest" file="$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php" method="test_addHasOneAssociation_DoesNotCreateADatabaseColumn" scope="Method" />
+    <configuration default="false" name="DataMapperTest.testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="Tests\DataMapper\DataMapperTest" file="$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php" method="testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity" scope="Method" />
       <method />
     </configuration>
     <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
@@ -387,19 +434,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="PHPUnit.LogTest" />
-      <item index="1" class="java.lang.String" itemvalue="PHPUnit.Log" />
-      <item index="2" class="java.lang.String" itemvalue="PHPUnit.AnnotationDriverTest.testHasOneDoesNotCreateADatabaseColumn" />
-      <item index="3" class="java.lang.String" itemvalue="PHPUnit.MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" />
-      <item index="4" class="java.lang.String" itemvalue="PHPUnit.MetadataTest.test_addHasOneAssociation_DoesNotCreateADatabaseColumn" />
+      <item index="0" class="java.lang.String" itemvalue="PHPUnit.DataMapper" />
+      <item index="1" class="java.lang.String" itemvalue="PHPUnit.ProxyEntityTest" />
+      <item index="2" class="java.lang.String" itemvalue="PHPUnit.ProxyEntityTest.testHasOneProxyIsResolvedWhenRequestingTheId" />
+      <item index="3" class="java.lang.String" itemvalue="PHPUnit.ProxyEntityTest.testBelongsToProxyIsNotResolvedWhenRequestingTheId" />
+      <item index="4" class="java.lang.String" itemvalue="PHPUnit.DataMapperTest.testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="PHPUnit.MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" />
-        <item index="1" class="java.lang.String" itemvalue="PHPUnit.MetadataTest.test_addHasOneAssociation_DoesNotCreateADatabaseColumn" />
-        <item index="2" class="java.lang.String" itemvalue="PHPUnit.AnnotationDriverTest.testHasOneDoesNotCreateADatabaseColumn" />
-        <item index="3" class="java.lang.String" itemvalue="PHPUnit.Log" />
-        <item index="4" class="java.lang.String" itemvalue="PHPUnit.LogTest" />
+        <item index="0" class="java.lang.String" itemvalue="PHPUnit.DataMapperTest.testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity" />
+        <item index="1" class="java.lang.String" itemvalue="PHPUnit.DataMapper" />
+        <item index="2" class="java.lang.String" itemvalue="PHPUnit.ProxyEntityTest" />
+        <item index="3" class="java.lang.String" itemvalue="PHPUnit.ProxyEntityTest.testBelongsToProxyIsNotResolvedWhenRequestingTheId" />
+        <item index="4" class="java.lang.String" itemvalue="PHPUnit.ProxyEntityTest.testHasOneProxyIsResolvedWhenRequestingTheId" />
       </list>
     </recent_temporary>
   </component>
@@ -414,35 +461,35 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="AnnotationDriverTest_testHasOneDoesNotCreateADatabaseColumn - 2016.04.25 at 00h 49m 48s.xml">
-      <configuration name="AnnotationDriverTest.testHasOneDoesNotCreateADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="DataMapper - 2016.04.27 at 17h 06m 29s.xml">
+      <configuration name="DataMapper" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="AnnotationDriverTest_testHasOneDoesNotCreateADatabaseColumn - 2016.04.25 at 00h 49m 58s.xml">
-      <configuration name="AnnotationDriverTest.testHasOneDoesNotCreateADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="DataMapperTest_testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity - 2016.04.27 at 17h 09m 04s.xml">
+      <configuration name="DataMapperTest.testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Log - 2016.04.25 at 00h 13m 22s.xml">
-      <configuration name="Log" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest - 2016.04.27 at 17h 00m 13s.xml">
+      <configuration name="ProxyEntityTest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Log - 2016.04.25 at 00h 13m 57s.xml">
-      <configuration name="Log" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest - 2016.04.27 at 17h 01m 56s.xml">
+      <configuration name="ProxyEntityTest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="MetadataTest_test_addBelongsToAssociation_CreatesADatabaseColumn - 2016.04.25 at 00h 55m 22s.xml">
-      <configuration name="MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest - 2016.04.27 at 17h 02m 07s.xml">
+      <configuration name="ProxyEntityTest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="MetadataTest_test_addBelongsToAssociation_CreatesADatabaseColumn - 2016.04.25 at 00h 55m 37s.xml">
-      <configuration name="MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest - 2016.04.27 at 17h 02m 57s.xml">
+      <configuration name="ProxyEntityTest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="MetadataTest_test_addBelongsToAssociation_CreatesADatabaseColumn - 2016.04.25 at 00h 57m 44s.xml">
-      <configuration name="MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest - 2016.04.27 at 17h 04m 09s.xml">
+      <configuration name="ProxyEntityTest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="MetadataTest_test_addBelongsToAssociation_CreatesADatabaseColumn - 2016.04.25 at 00h 58m 43s.xml">
-      <configuration name="MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest - 2016.04.27 at 17h 06m 01s.xml">
+      <configuration name="ProxyEntityTest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="MetadataTest_test_addBelongsToAssociation_CreatesADatabaseColumn - 2016.04.25 at 00h 59m 52s.xml">
-      <configuration name="MetadataTest.test_addBelongsToAssociation_CreatesADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest_testBelongsToProxyIsNotResolvedWhenRequestingTheId - 2016.04.27 at 17h 05m 57s.xml">
+      <configuration name="ProxyEntityTest.testBelongsToProxyIsNotResolvedWhenRequestingTheId" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="MetadataTest_test_addHasOneAssociation_DoesNotCreateADatabaseColumn - 2016.04.25 at 00h 58m 48s.xml">
-      <configuration name="MetadataTest.test_addHasOneAssociation_DoesNotCreateADatabaseColumn" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ProxyEntityTest_testHasOneProxyIsResolvedWhenRequestingTheId - 2016.04.27 at 17h 04m 05s.xml">
+      <configuration name="ProxyEntityTest.testHasOneProxyIsResolvedWhenRequestingTheId" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
@@ -459,7 +506,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39911634" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -473,7 +520,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -728,108 +775,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9159292">
-          <caret line="386" column="30" selection-start-line="386" selection-start-column="24" selection-end-line="386" selection-end-column="30" />
-          <folding>
-            <marker date="1461557059741" expanded="true" signature="40:482" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="531:42135" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="580:835" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="902:1468" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="1023:1176" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="1370:1462" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="1519:1846" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="1900:2322" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="2366:2564" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="2573:2615" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="2666:2870" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="2905:3499" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="3533:4237" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="3649:3933" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="3865:3923" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="4271:4948" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="4957:4999" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="5058:5285" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="5331:5634" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="5671:6197" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="6231:6610" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="6619:6661" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="6715:6906" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="6948:7769" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="7803:8234" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="8293:9206" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="9270:10247" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="10255:10283" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="10361:10874" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="10882:10911" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="10985:11397" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="11406:11448" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="11518:12182" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="12247:12987" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="13068:13808" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="13877:14645" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="14653:14682" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="14749:15555" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="15624:16458" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="16467:16509" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="16579:17309" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="17371:18153" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="18229:19312" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="19392:20503" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="20512:20554" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="20635:21661" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="21669:21699" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="21783:22546" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="22629:23500" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="23283:23320" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="23508:23534" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="23620:24060" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="24149:24796" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="24885:25500" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="25508:25540" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="25551:25593" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="25666:25904" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="25973:26748" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="26821:27624" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="27633:27675" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="27759:27954" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="27962:27994" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="28062:29177" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="29247:30390" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="30399:30441" placeholder=" @expectedException Exception ..." />
-            <marker date="1461557059741" expanded="true" signature="30523:30863" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="30871:30904" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="30955:31702" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="31710:31739" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="31819:32423" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="32499:33108" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="33193:33765" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="33773:33803" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="33902:34190" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="34290:34844" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="34464:34630" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="34914:35699" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="35088:35254" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="35593:35693" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="35707:35735" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="35818:36490" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="35992:36158" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="36566:37206" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="36740:36906" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="37214:37244" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="37315:38683" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="37624:37790" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="38756:40152" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="39065:39231" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="40160:40190" placeholder="..." />
-            <marker date="1461557059741" expanded="true" signature="40256:41076" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="40430:40596" placeholder="{...}" />
-            <marker date="1461557059741" expanded="true" signature="41148:42133" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Tests/DataMapper/Database/SchemaToolTest.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="5.240413">
@@ -950,49 +895,587 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Mapping/Metadata.php">
+    <entry file="file://$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33259913">
-          <caret line="147" column="20" selection-start-line="147" selection-start-column="20" selection-end-line="147" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.26253688">
+          <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
           <folding>
-            <marker date="1461556335995" expanded="false" signature="50:123" placeholder="..." />
-            <marker date="1461556335995" expanded="true" signature="139:4117" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="617:728" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="761:802" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="831:872" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="914:965" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1006:1140" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1174:1220" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1256:1311" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1344:1389" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1425:1480" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1513:1558" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1589:1632" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1670:1758" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1810:2018" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1860:1990" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="1920:1980" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2065:2421" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2160:2221" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2258:2318" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2355:2415" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2457:2505" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2552:2611" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2649:2709" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="2813:3215" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="3322:3727" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="3823:3987" placeholder="{...}" />
-            <marker date="1461556335995" expanded="true" signature="4033:4115" placeholder="{...}" />
+            <marker date="1461560390323" expanded="true" signature="48:194" placeholder="..." />
+            <marker date="1461560390323" expanded="true" signature="231:1200" placeholder="{...}" />
+            <marker date="1461560390323" expanded="true" signature="241:268" placeholder=" @var Metadata ..." />
+            <marker date="1461560390323" expanded="true" signature="343:436" placeholder="{...}" />
+            <marker date="1461560390323" expanded="true" signature="514:811" placeholder="{...}" />
+            <marker date="1461560390323" expanded="true" signature="886:1198" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php">
+    <entry file="file://$PROJECT_DIR$/Tests/TestData/DataMapper/Teacher.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.88986784">
-          <caret line="42" column="81" selection-start-line="42" selection-start-column="81" selection-end-line="42" selection-end-column="81" />
+        <state vertical-scroll-proportion="0.6629956">
+          <caret line="22" column="60" selection-start-line="22" selection-start-column="60" selection-end-line="22" selection-end-column="60" />
           <folding>
-            <element signature="e#44#84#0#PHP" expanded="true" />
+            <marker date="1461557029521" expanded="false" signature="49:186" placeholder="..." />
+            <marker date="1461557029521" expanded="true" signature="216:1835" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="752:843" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="879:920" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="948:988" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1038:1090" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1143:1198" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1230:1274" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1305:1348" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1398:1445" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1482:1525" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1565:1617" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1679:1735" placeholder="{...}" />
+            <marker date="1461557029521" expanded="true" signature="1781:1833" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Tests/TestData/DataMapper/Address.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.66079295">
+          <caret line="15" column="78" selection-start-line="15" selection-start-column="78" selection-end-line="15" selection-end-column="78" />
+          <folding>
+            <marker date="1461645274275" expanded="true" signature="48:61" placeholder=" @Entity ..." />
+            <marker date="1461645274275" expanded="true" signature="77:761" placeholder="{...}" />
+            <marker date="1461645274275" expanded="true" signature="319:364" placeholder="{...}" />
+            <marker date="1461645274275" expanded="true" signature="393:431" placeholder="{...}" />
+            <marker date="1461645274275" expanded="true" signature="461:503" placeholder="{...}" />
+            <marker date="1461645274275" expanded="true" signature="543:588" placeholder="{...}" />
+            <marker date="1461645274275" expanded="true" signature="619:662" placeholder="{...}" />
+            <marker date="1461645274275" expanded="true" signature="712:759" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Console/datamapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1461556336017" expanded="false" signature="64:312" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/DataMapper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1123348">
+          <caret line="184" column="8" selection-start-line="184" selection-start-column="8" selection-end-line="198" selection-end-column="29" />
+          <folding>
+            <marker date="1461556335995" expanded="false" signature="42:279" placeholder="..." />
+            <marker date="1461556335995" expanded="true" signature="297:6592" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="307:336" placeholder=" @var UnitOfWork ..." />
+            <marker date="1461556335995" expanded="true" signature="374:496" placeholder=" The mapping driver used to parse ..." />
+            <marker date="1461556335995" expanded="true" signature="537:675" placeholder=" Used to build a queries differently ..." />
+            <marker date="1461556335995" expanded="true" signature="715:820" placeholder=" Already parsed and loaded metadata from ..." />
+            <marker date="1461556335995" expanded="true" signature="867:957" placeholder=" Initializes mapping and database drivers. ..." />
+            <marker date="1461556335995" expanded="true" signature="1000:1188" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="1197:1275" placeholder=" Initializes the mapping driver. ..." />
+            <marker date="1461556335995" expanded="true" signature="1337:1505" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="1372:1499" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="1403:1489" placeholder="..." />
+            <marker date="1461556335995" expanded="true" signature="1539:1585" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="1594:1765" placeholder=" Finds the object by id and fully loads it ..." />
+            <marker date="1461556335995" expanded="true" signature="1805:1870" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="1879:2077" placeholder=" Finds an object by id and fully loads it. ..." />
+            <marker date="1461556335995" expanded="true" signature="2123:2400" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="2204:2369" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="2409:2567" placeholder=" Finds all the objects of the given class. ..." />
+            <marker date="1461556335995" expanded="true" signature="2605:2838" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="2847:3011" placeholder=" Finds entities which correspond to the ..." />
+            <marker date="1461556335995" expanded="true" signature="3060:3152" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="3161:3367" placeholder=" Finds entities of a certain class by the ..." />
+            <marker date="1461556335995" expanded="true" signature="3423:3604" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="3613:3801" placeholder=" Finds the first matching entity from the given conditions. ..." />
+            <marker date="1461556335995" expanded="true" signature="3860:4113" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="4122:4324" placeholder=" Get the prepared query builder for performing ..." />
+            <marker date="1461556335995" expanded="true" signature="4382:4908" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="4558:4871" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="4663:4796" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="4917:5051" placeholder=" Marks the object for persistence ..." />
+            <marker date="1461556335995" expanded="true" signature="5090:5344" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="5270:5338" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="5353:5416" placeholder=" @param $object ..." />
+            <marker date="1461556335995" expanded="true" signature="5454:5517" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="5526:5588" placeholder=" Executes all scheduled work in the unit of work. ..." />
+            <marker date="1461556335995" expanded="true" signature="5618:5667" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="5676:5765" placeholder=" Stops tracking the object in the unit of work. ..." />
+            <marker date="1461556335995" expanded="true" signature="5803:5859" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="5868:5929" placeholder=" Stops tracking all objects in the unit of work. ..." />
+            <marker date="1461556335995" expanded="true" signature="5963:6015" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="6024:6095" placeholder=" Get the query builder. ..." />
+            <marker date="1461556335995" expanded="true" signature="6132:6180" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="6189:6325" placeholder=" Gets the metadata for the class ..." />
+            <marker date="1461556335995" expanded="true" signature="6367:6590" placeholder="{...}" />
+            <marker date="1461556335995" expanded="true" signature="6423:6493" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.8237885">
+          <caret line="373" column="23" selection-start-line="373" selection-start-column="23" selection-end-line="373" selection-end-column="23" />
+          <folding>
+            <marker date="1461556336011" expanded="true" signature="53:242" placeholder="..." />
+            <marker date="1461556336011" expanded="true" signature="247:341" placeholder=" Used in many relashionships to keep track of ..." />
+            <marker date="1461556336011" expanded="true" signature="429:11588" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="439:468" placeholder=" @var DataMapper ..." />
+            <marker date="1461556336011" expanded="true" signature="498:527" placeholder=" @var UnitOfWork ..." />
+            <marker date="1461556336011" expanded="true" signature="558:613" placeholder=" @var \Library\DataMapper\Mapping\Metadata ..." />
+            <marker date="1461556336011" expanded="true" signature="982:1330" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="1376:1472" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="1505:1686" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="1540:1580" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="1726:1990" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="1840:1922" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2033:2140" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2078:2134" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2176:2293" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2336:2681" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2426:2508" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2576:2616" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2727:2837" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2772:2831" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2871:2945" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="2974:3082" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3111:3186" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3214:3304" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3336:3416" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3425:3509" placeholder=" Find an entity by its id. ..." />
+            <marker date="1461556336011" expanded="true" signature="3541:3712" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3597:3642" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3749:3813" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="3863:4511" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4010:4053" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4120:4189" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4275:4333" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4417:4480" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4570:4662" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4723:4814" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4894:5181" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="4929:5010" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="5239:5364" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="5395:5515" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="5546:5618" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="5651:5742" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="5777:5889" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="5926:6019" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="6028:6136" placeholder=" Loads either all items or the subset ..." />
+            <marker date="1461556336011" expanded="true" signature="6171:6315" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="6324:6535" placeholder=" Loads all missing entities from the given ..." />
+            <marker date="1461556336011" expanded="true" signature="6580:7068" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="6641:6769" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="6695:6759" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="6807:6847" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="6957:7062" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7102:7283" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7149:7189" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7322:7586" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7359:7412" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7479:7550" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7628:8162" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7736:7831" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7888:7933" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="7980:8156" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="8020:8127" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="8196:9088" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="8278:8356" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="8422:8494" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="8529:8569" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="8712:8807" placeholder="..." />
+            <marker date="1461556336011" expanded="true" signature="9155:9531" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="9201:9241" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="9284:9525" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="9604:10075" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="9656:9696" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="9761:10069" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="9865:9990" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="10084:10312" placeholder=" Builds a temporary array from the provided ..." />
+            <marker date="1461556336011" expanded="true" signature="10359:10517" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="10418:10485" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="10563:10670" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="10724:11053" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="10784:11047" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="10869:10923" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="11109:11380" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="11177:11374" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="11263:11317" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="11416:11586" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="11446:11580" placeholder="{...}" />
+            <marker date="1461556336011" expanded="true" signature="11501:11570" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Database/QueryBuilder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.002202643">
+          <caret line="50" column="20" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
+          <folding>
+            <marker date="1461556336016" expanded="true" signature="119:5644" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="300:362" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="420:632" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="469:626" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="500:616" placeholder="..." />
+            <marker date="1461556336016" expanded="true" signature="672:735" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="767:822" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="852:905" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="940:1005" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="1056:1312" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="1132:1256" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="1168:1246" placeholder="..." />
+            <marker date="1461556336016" expanded="true" signature="1366:1459" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="1515:1607" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="1674:1850" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="1708:1842" placeholder="..." />
+            <marker date="1461556336016" expanded="true" signature="1905:1990" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="2026:2093" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="2138:2668" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="2521:2608" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="2709:3264" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="2766:2778" placeholder="INSERT INTO ${$this-&gt;table}... " />
+            <marker date="1461556336016" expanded="true" signature="2919:2982" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="3082:3132" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="3312:3934" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="3353:3398" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="3416:3428" placeholder="INSERT INTO ${$this-&gt;table}... " />
+            <marker date="1461556336016" expanded="true" signature="3645:3695" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="3731:3795" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="3975:4533" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="4146:4348" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="4180:4238" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="4593:5243" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="4721:5046" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="4838:4935" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="5273:5478" placeholder="{...}" />
+            <marker date="1461556336016" expanded="true" signature="5296:5308" placeholder="DELETE FROM " />
+            <marker date="1461556336016" expanded="true" signature="5510:5642" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Mapping/Metadata.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3857494">
+          <caret line="164" column="20" selection-start-line="164" selection-start-column="20" selection-end-line="164" selection-end-column="20" />
+          <folding>
+            <marker date="1461642005891" expanded="false" signature="50:123" placeholder="..." />
+            <marker date="1461642005891" expanded="true" signature="139:4119" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="617:728" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="761:802" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="831:872" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="914:965" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1006:1140" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1174:1220" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1256:1311" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1344:1389" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1425:1480" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1513:1558" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1589:1632" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1670:1758" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1810:2018" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1860:1990" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="1920:1980" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2065:2421" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2160:2221" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2258:2318" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2355:2415" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2457:2505" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2552:2611" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2649:2709" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="2813:3217" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="3324:3729" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="3825:3989" placeholder="{...}" />
+            <marker date="1461642005891" expanded="true" signature="4035:4117" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/UnitOfWork/UnitOfWork.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6629956">
+          <caret line="1103" column="82" selection-start-line="1103" selection-start-column="82" selection-end-line="1103" selection-end-column="82" />
+          <folding>
+            <marker date="1461790973966" expanded="true" signature="53:628" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="633:708" placeholder=" Keeps track of all entities known to data mapper ..." />
+            <marker date="1461790973966" expanded="true" signature="755:29990" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="765:861" placeholder=" Lets the collections know that the unit of work ..." />
+            <marker date="1461790973966" expanded="true" signature="917:969" placeholder=" Entity does not exist in the database. ..." />
+            <marker date="1461790973966" expanded="true" signature="1015:1099" placeholder=" Entity exists in the database, but data mapper only ..." />
+            <marker date="1461790973966" expanded="true" signature="1149:1240" placeholder=" Entity exists in the database and is fully loaded in the ..." />
+            <marker date="1461790973966" expanded="true" signature="1294:1369" placeholder=" Observers of the observable pattern. ..." />
+            <marker date="1461790973966" expanded="true" signature="1409:1438" placeholder=" @var DataMapper ..." />
+            <marker date="1461790973966" expanded="true" signature="1466:1547" placeholder=" Links every entity's hash with its object. ..." />
+            <marker date="1461790973966" expanded="true" signature="1586:1772" placeholder=" Represents every known id associated with its object hash, sorted by class. ..." />
+            <marker date="1461790973966" expanded="true" signature="1808:1883" placeholder=" Links every entity's hash to its id. ..." />
+            <marker date="1461790973966" expanded="true" signature="1917:2003" placeholder=" Links every entity's hash to its original data. ..." />
+            <marker date="1461790973966" expanded="true" signature="2046:2134" placeholder=" Links every entity's hash with its current state. ..." />
+            <marker date="1461790973966" expanded="true" signature="2171:2195" placeholder=" @var array ..." />
+            <marker date="1461790973966" expanded="true" signature="2241:2310" placeholder=" Sorted by class, then by hash. ..." />
+            <marker date="1461790973966" expanded="true" signature="2360:2415" placeholder=" Sorted by class. ..." />
+            <marker date="1461790973966" expanded="true" signature="2462:2531" placeholder=" Sorted by class, then by hash. ..." />
+            <marker date="1461790973966" expanded="true" signature="2579:2634" placeholder=" Sorted by class. ..." />
+            <marker date="1461790973966" expanded="true" signature="2675:2753" placeholder=" Entity persisters with classes as keys. ..." />
+            <marker date="1461790973966" expanded="true" signature="2800:2835" placeholder=" @param DataMapper $dm ..." />
+            <marker date="1461790973966" expanded="true" signature="2885:2922" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="2931:2977" placeholder=" @param $oid ..." />
+            <marker date="1461790973966" expanded="true" signature="3012:3090" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="3099:3217" placeholder=" Adds the fully loaded entity to the unit of work. ..." />
+            <marker date="1461790973966" expanded="true" signature="3272:3977" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="3360:3613" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="3411:3603" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="3467:3495" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="3535:3589" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="3986:4139" placeholder=" Adds a new entity to the unit of work ..." />
+            <marker date="1461790973966" expanded="true" signature="4190:4526" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="4223:4288" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="4329:4369" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="4535:4698" placeholder=" Marks the entity for deletion. ..." />
+            <marker date="1461790973966" expanded="true" signature="4743:5104" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="4832:5039" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="5113:5236" placeholder=" Finds the entity and loads it if necessary. ..." />
+            <marker date="1461790973966" expanded="true" signature="5276:5461" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="5324:5407" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="5470:5607" placeholder=" Checks if the entity is fully loaded in the unit of work. ..." />
+            <marker date="1461790973966" expanded="true" signature="5652:5792" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="5801:5927" placeholder=" Loads a single entity from the database. ..." />
+            <marker date="1461790973966" expanded="true" signature="5973:6315" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="6122:6167" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="6324:6397" placeholder=" @param $class ..." />
+            <marker date="1461790973966" expanded="true" signature="6448:6834" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="6485:6528" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="6675:6744" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="6843:6920" placeholder=" @param $class ..." />
+            <marker date="1461790973966" expanded="true" signature="6983:7316" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="7024:7067" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="7126:7285" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="7325:7463" placeholder=" Builds an entity from raw data from the database. ..." />
+            <marker date="1461790973966" expanded="true" signature="7519:8301" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="7729:8208" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="7780:7834" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="7919:8000" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="8040:8116" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="8383:9015" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="8449:9009" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="8501:8999" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="8561:8669" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="8718:8829" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="8876:8985" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="9117:9346" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="9451:10327" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="9517:9557" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="9674:9809" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="9850:10048" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="10061:10184" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="10215:10321" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="10430:11451" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="10604:10684" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="10707:10745" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="10779:10976" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="10858:10943" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="11028:11288" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="11100:11245" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="11354:11443" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="11460:11520" placeholder=" Detach an entity. ..." />
+            <marker date="1461790973966" expanded="true" signature="11558:12054" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="11647:11687" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="11725:12048" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="11769:11832" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="11868:11933" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="11971:12038" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="12063:12129" placeholder=" Detaches a managed entity. ..." />
+            <marker date="1461790973966" expanded="true" signature="12172:12593" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="12602:12666" placeholder=" Detaches a known entity. ..." />
+            <marker date="1461790973966" expanded="true" signature="12707:12788" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="12797:12859" placeholder=" Detaches a new entity. ..." />
+            <marker date="1461790973966" expanded="true" signature="12898:12984" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="12993:13051" placeholder=" Detaches all entities from the unit of work. ..." />
+            <marker date="1461790973966" expanded="true" signature="13085:13359" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="13368:13464" placeholder=" Schedules the entity for insertion. ..." />
+            <marker date="1461790973966" expanded="true" signature="13518:13583" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="13592:13685" placeholder=" Schedules the entity for update. ..." />
+            <marker date="1461790973966" expanded="true" signature="13736:13798" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="13807:13902" placeholder=" Schedules the entity for deletion. ..." />
+            <marker date="1461790973966" expanded="true" signature="13954:14017" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="14026:14121" placeholder=" Adds a change set for updates. ..." />
+            <marker date="1461790973966" expanded="true" signature="14175:14233" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="14242:14347" placeholder=" Gets the class entity persister. ..." />
+            <marker date="1461790973966" expanded="true" signature="14397:14624" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="14456:14569" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="14633:14834" placeholder=" Figures out the dependecies for all classes and ..." />
+            <marker date="1461790973966" expanded="true" signature="14906:16185" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="15002:16055" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="15097:16045" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="15216:15282" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="15329:15923" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="15397:15433" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="15486:15670" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="15547:15639" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="15721:15905" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="15782:15874" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="16194:16256" placeholder=" Executes all scheduled work in the unit of work. ..." />
+            <marker date="1461790973966" expanded="true" signature="16287:17275" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="16361:17084" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="16465:16543" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="16678:16753" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="16898:16974" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="17113:17269" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="17284:17349" placeholder=" Executes all insertions ..." />
+            <marker date="1461790973966" expanded="true" signature="17398:18779" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="17597:17830" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="17909:18721" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="18073:18287" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="18191:18271" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="18330:18544" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="18448:18528" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="18848:19751" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="18925:19573" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19003:19057" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19214:19282" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19340:19517" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19661:19722" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19819:20380" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19911:20346" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="19963:20336" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="20026:20174" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="20221:20322" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="20389:20549" placeholder=" @param $oid ..." />
+            <marker date="1461790973966" expanded="true" signature="20641:21816" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="20835:20896" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="20931:21210" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="20985:21042" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="21308:21504" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="21562:21771" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="21825:21950" placeholder=" @param $oid ..." />
+            <marker date="1461790973966" expanded="true" signature="22040:22360" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="22229:22269" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="22369:22509" placeholder=" @param $oid ..." />
+            <marker date="1461790973966" expanded="true" signature="22621:23194" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="22698:22995" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="22740:22794" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="22892:22946" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="23203:23267" placeholder=" Executes all removals. ..." />
+            <marker date="1461790973966" expanded="true" signature="23314:23646" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="23436:23550" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="23655:23723" placeholder=" Checks for any assocations marked for cascade removal. ..." />
+            <marker date="1461790973966" expanded="true" signature="23771:24107" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="23884:24101" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="23987:24091" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="24116:24258" placeholder=" Processes cascade removals recursively starting from a single entity. ..." />
+            <marker date="1461790973966" expanded="true" signature="24342:26029" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="24408:26023" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="24469:24523" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="24692:25413" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="24755:25372" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="25009:25087" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="25452:25506" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="25721:25775" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="26038:26110" placeholder=" Executes all scheduled updates ..." />
+            <marker date="1461790973966" expanded="true" signature="26156:26469" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="26277:26375" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="26478:26624" placeholder=" Loops through all managed entities or a single one to detect changes ..." />
+            <marker date="1461790973966" expanded="true" signature="26669:26993" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="26725:26949" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="26832:26886" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="27002:27062" placeholder=" @param $oid ..." />
+            <marker date="1461790973966" expanded="true" signature="27117:27438" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="27299:27339" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="27447:27631" placeholder=" Compares the entity with its original data for changes. ..." />
+            <marker date="1461790973966" expanded="true" signature="27684:28857" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="27881:28288" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="27959:28013" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="28167:28221" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="28382:28546" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="28452:28536" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="28612:28823" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="28935:29334" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="29160:29211" placeholder="..." />
+            <marker date="1461790973966" expanded="true" signature="29439:29729" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="29504:29544" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="29780:29832" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="29869:29988" placeholder="{...}" />
+            <marker date="1461790973966" expanded="true" signature="29923:29982" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Tests/TestData/DataMapper/LazyEntityTwo.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.4955947">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1461557029495" expanded="true" signature="125:833" placeholder="{...}" />
+            <marker date="1461557029495" expanded="true" signature="417:497" placeholder="{...}" />
+            <marker date="1461557029495" expanded="true" signature="525:565" placeholder="{...}" />
+            <marker date="1461557029495" expanded="true" signature="601:642" placeholder="{...}" />
+            <marker date="1461557029495" expanded="true" signature="675:720" placeholder="{...}" />
+            <marker date="1461557029495" expanded="true" signature="780:831" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Tests/DataMapper/Proxy/ProxyEntityTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.71585906">
+          <caret line="144" column="48" selection-start-line="144" selection-start-column="48" selection-end-line="144" selection-end-column="48" />
+          <folding>
+            <marker date="1461791156316" expanded="false" signature="46:214" placeholder="..." />
+            <marker date="1461791156316" expanded="true" signature="264:4356" placeholder="{...}" />
+            <marker date="1461791156316" expanded="true" signature="326:852" placeholder="{...}" />
+            <marker date="1461791156316" expanded="true" signature="916:1442" placeholder="{...}" />
+            <marker date="1461791156316" expanded="true" signature="1451:1511" placeholder=" @depends testHasOneLazyLoadedPropertyIsProxied ..." />
+            <marker date="1461791156316" expanded="true" signature="1578:2163" placeholder="{...}" />
+            <marker date="1461791156316" expanded="true" signature="2172:2232" placeholder=" @depends testHasOneLazyLoadedPropertyIsProxied ..." />
+            <marker date="1461791156316" expanded="true" signature="2303:2908" placeholder="{...}" />
+            <marker date="1461791156316" expanded="true" signature="2917:2977" placeholder=" @depends testHasOneLazyLoadedPropertyIsProxied ..." />
+            <marker date="1461791156316" expanded="true" signature="3046:3629" placeholder="{...}" />
+            <marker date="1461791156316" expanded="true" signature="3638:3698" placeholder=" @depends testHasOneLazyLoadedPropertyIsProxied ..." />
+            <marker date="1461791156316" expanded="true" signature="3773:4354" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Proxy/ProxyEntity.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6629956">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding>
+            <marker date="1461790644778" expanded="false" signature="48:133" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="152:2425" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="162:191" placeholder=" @var UnitOfWork ..." />
+            <marker date="1461790644778" expanded="true" signature="220:250" placeholder=" @var Association ..." />
+            <marker date="1461790644778" expanded="true" signature="287:311" placeholder=" @var mixed ..." />
+            <marker date="1461790644778" expanded="true" signature="339:364" placeholder=" @var string ..." />
+            <marker date="1461790644778" expanded="true" signature="401:425" placeholder=" @var mixed ..." />
+            <marker date="1461790644778" expanded="true" signature="563:750" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="779:939" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="812:862" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="973:1053" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="1100:1211" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="1243:1611" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="1678:2423" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="1720:2417" placeholder="{...}" />
+            <marker date="1461790644778" expanded="true" signature="1750:1791" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="1811:1865" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="1885:1954" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="1974:2058" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="2078:2177" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="2197:2311" placeholder="..." />
+            <marker date="1461790644778" expanded="true" signature="2332:2407" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3876652">
+          <caret line="491" column="39" selection-start-line="491" selection-start-column="39" selection-end-line="491" selection-end-column="39" />
+          <folding>
+            <element signature="e#36#54#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

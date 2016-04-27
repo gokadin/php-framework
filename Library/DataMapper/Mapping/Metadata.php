@@ -139,7 +139,7 @@ class Metadata
         $column = new Column(lcfirst($columnName).'_id', $propName, 'integer', AnnotationDriver::DEFAULT_INTEGER_SIZE);
         $column->setForeignKey();
         $column->setNullable();
-        $this->columns[$columnName] = $column;
+        //$this->columns[$columnName] = $column;
 
         $this->associations[$propName] = new Association(
             $column, self::ASSOC_HAS_ONE, $target, $propName, $cascades, $nullable, null, $load);

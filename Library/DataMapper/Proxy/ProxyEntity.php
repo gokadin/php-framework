@@ -43,7 +43,14 @@ class ProxyEntity
 
     public function getId()
     {
-        return $this->id;
+        if ($this->id > 0)
+        {
+            return $this->id;
+        }
+
+        $entity = $this->resolve();
+
+        return $entity->getId();
     }
 
     public function __get($name)
@@ -62,7 +69,9 @@ class ProxyEntity
 
     private function resolve()
     {
-        $entity = $this->uow->find($this->association->target(), $this->id);
+        $entity = $this->id == 0
+            ? $this->uow->resolveHasOneProxy($this->parentClass, $this->parentId, $this->association->target())
+            : $this->uow->find($this->association->target(), $this->id);
 
         $this->uow->replaceProxy($this->parentClass, $this->parentId, $this->association->propName(), $entity);
 

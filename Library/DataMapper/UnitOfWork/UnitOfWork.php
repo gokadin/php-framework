@@ -377,8 +377,10 @@ final class UnitOfWork implements Observable
             switch ($association->type())
             {
                 case Metadata::ASSOC_HAS_ONE:
-                case Metadata::ASSOC_BELONGS_TO:
                     $this->buildHasOne($entity, $metadata, $association, $data);
+                    break;
+                case Metadata::ASSOC_BELONGS_TO:
+                    $this->buildBelongsTo($entity, $metadata, $association, $data);
                     break;
                 case Metadata::ASSOC_HAS_MANY:
                     $this->buildHasMany($entity, $metadata, $association, $data);
@@ -388,6 +390,14 @@ final class UnitOfWork implements Observable
     }
 
     private function buildHasOne($entity, Metadata $metadata, Association $association, array $data)
+    {
+        $value = new ProxyEntity($this, $association, 0,
+            $metadata->className(), $data[$metadata->primaryKey()->name()]);
+
+        $metadata->reflProp($association->propName())->setValue($entity, $value);
+    }
+
+    private function buildBelongsTo($entity, Metadata $metadata, Association $association, array $data)
     {
         if (is_null($data[$association->column()->name()]))
         {
@@ -773,13 +783,12 @@ final class UnitOfWork implements Observable
         {
             switch ($association->type())
             {
-                case Metadata::ASSOC_HAS_ONE:
                 case Metadata::ASSOC_BELONGS_TO:
-                    $assocData[$association->column()->name()] = $this->processHasOne($oid, $metadata, $association);
+                    $assocData[$association->column()->name()] = $this->processBelongsTo($oid, $metadata, $association);
                     break;
                 case Metadata::ASSOC_HAS_MANY:
                     $this->processHasMany($oid, $metadata, $association);
-                    continue 2;
+                    break;
             }
         }
 
@@ -793,7 +802,7 @@ final class UnitOfWork implements Observable
      * @return null|integer
      * @throws DataMapperException
      */
-    private function processHasOne($oid, Metadata $metadata, Association $association)
+    private function processBelongsTo($oid, Metadata $metadata, Association $association)
     {
         $column = $association->column();
         $assocValue = $metadata->reflProp($column->propName())->getValue($this->entities[$oid]);
@@ -810,7 +819,7 @@ final class UnitOfWork implements Observable
                 return null;
             }
 
-            throw new DataMapperException('UnitOfWork.processHasOneForInsert : Association on '
+            throw new DataMapperException('UnitOfWork.processBelongsToForInsert : Association on '
                 .$column->propName().' cannot be null.');
         }
 
@@ -818,16 +827,14 @@ final class UnitOfWork implements Observable
 
         if (!isset($this->states[$assocOid]))
         {
-            throw new DataMapperException('UnitOfWork.processHasOneForInsert : Associated entity for '
-                .$column->propName().' was not persisted.');
+            throw new DataMapperException('UnitOfWork.processBelongsToForInsert : Associated entity for '
+                .$column->propName().' is not known to datamapper.');
         }
 
-        // association was not yet persisted
         if ($this->states[$assocOid] == self::STATE_NEW)
         {
-            unset($this->visitedEntities[$oid]);
-
-            return null;
+            throw new DataMapperException('UnitOfWork.processBelongsToForInsert : Commit order error. '
+                .'Associated entity '.$column->propName().' is not yet persisted.');
         }
 
         return $this->ids[$assocOid];
@@ -1083,6 +1090,18 @@ final class UnitOfWork implements Observable
         }
 
         return $changeSet;
+    }
+
+    public function resolveHasOneProxy($parentClass, $parentId, $assocClass)
+    {
+        $metadata = $this->dm->getMetadata($parentClass);
+        $assocMetadata = $this->dm->getMetadata($assocClass);
+
+        $results = $this->dm->queryBuilder()->table($assocMetadata->table())
+            ->where($metadata->generateForeignKeyName(), '=', $parentId)
+            ->select();
+
+        return sizeof($results) > 0 ? $this->buildEntity($assocClass, $results[0]) : null;
     }
 
     public function replaceProxy(string $parentClass, string $parentId, string $propName, $replacement)
