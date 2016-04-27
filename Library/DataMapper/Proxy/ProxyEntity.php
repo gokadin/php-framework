@@ -70,7 +70,7 @@ class ProxyEntity
     private function resolve()
     {
         $entity = $this->id == 0
-            ? $this->uow->resolveHasOneProxy($this->parentClass, $this->parentId, $this->association->target())
+            ? $this->uow->resolveHasOneEntity($this->parentClass, $this->parentId, $this->association->target())
             : $this->uow->find($this->association->target(), $this->id);
 
         $this->uow->replaceProxy($this->parentClass, $this->parentId, $this->association->propName(), $entity);

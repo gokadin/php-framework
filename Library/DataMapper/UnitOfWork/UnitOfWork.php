@@ -391,10 +391,23 @@ final class UnitOfWork implements Observable
 
     private function buildHasOne($entity, Metadata $metadata, Association $association, array $data)
     {
-        $value = new ProxyEntity($this, $association, 0,
-            $metadata->className(), $data[$metadata->primaryKey()->name()]);
+        $value = null;
 
-        $metadata->reflProp($association->propName())->setValue($entity, $value);
+        if ($association->isLazy())
+        {
+            $value = new ProxyEntity($this, $association, 0,
+                $metadata->className(), $data[$metadata->primaryKey()->name()]);
+        }
+        else
+        {
+            $value = $this->resolveHasOneEntity($metadata->className(), $data[$metadata->primaryKey()->name()],
+                $association->target());
+        }
+
+        if (!is_null($value))
+        {
+            $metadata->reflProp($association->propName())->setValue($entity, $value);
+        }
     }
 
     private function buildBelongsTo($entity, Metadata $metadata, Association $association, array $data)
@@ -457,6 +470,18 @@ final class UnitOfWork implements Observable
 
         $metadata->reflProp($association->propName())->setValue(
             $entity, new PersistentCollection($this->dm, $association->target(), $items));
+    }
+
+    public function resolveHasOneEntity($parentClass, $parentId, $assocClass)
+    {
+        $metadata = $this->dm->getMetadata($parentClass);
+        $assocMetadata = $this->dm->getMetadata($assocClass);
+
+        $results = $this->dm->queryBuilder()->table($assocMetadata->table())
+            ->where($metadata->generateForeignKeyName(), '=', $parentId)
+            ->select();
+
+        return sizeof($results) > 0 ? $this->buildEntity($assocClass, $results[0]) : null;
     }
 
     /**
@@ -1090,18 +1115,6 @@ final class UnitOfWork implements Observable
         }
 
         return $changeSet;
-    }
-
-    public function resolveHasOneProxy($parentClass, $parentId, $assocClass)
-    {
-        $metadata = $this->dm->getMetadata($parentClass);
-        $assocMetadata = $this->dm->getMetadata($assocClass);
-
-        $results = $this->dm->queryBuilder()->table($assocMetadata->table())
-            ->where($metadata->generateForeignKeyName(), '=', $parentId)
-            ->select();
-
-        return sizeof($results) > 0 ? $this->buildEntity($assocClass, $results[0]) : null;
     }
 
     public function replaceProxy(string $parentClass, string $parentId, string $propName, $replacement)
