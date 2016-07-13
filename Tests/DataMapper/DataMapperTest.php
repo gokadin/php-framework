@@ -5,7 +5,6 @@ namespace Tests\DataMapper;
 use Carbon\Carbon;
 use Tests\TestData\DataMapper\TimeEntity;
 use Library\DataMapper\Collection\PersistentCollection;
-use Tests\TestData\DataMapper\AddressTwo;
 use Library\DataMapper\Collection\EntityCollection;
 use Tests\TestData\DataMapper\Address;
 use Tests\TestData\DataMapper\Event;
