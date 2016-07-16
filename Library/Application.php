@@ -2,10 +2,8 @@
 
 namespace Library;
 
-use Config\EventRegistration;
 use Library\Container\Container;
 use Library\Container\ContainerConfiguration;
-use Library\Facades\Facade;
 use Library\Http\Response;
 use Library\Http\View;
 use Library\Http\ViewFactory;

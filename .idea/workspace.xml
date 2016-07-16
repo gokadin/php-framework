@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dc254fae-3119-4c54-82a1-31519771be60" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Http/ApiResponse.php" afterPath="$PROJECT_DIR$/Library/Http/Response.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Application.php" afterPath="$PROJECT_DIR$/Library/Application.php" />
     </list>
     <ignored path="framework.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,12 +24,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Response.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Library/Http/Response.php">
+      <file leaf-file-name="Application.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Library/Application.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36873156">
-              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="-3.6460178">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <folding>
+                <element signature="e#27#59#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -69,6 +71,7 @@
         <option value="$PROJECT_DIR$/Library/Lsys/LsysException.php" />
         <option value="$PROJECT_DIR$/Library/Lsys/Lsys.php" />
         <option value="$PROJECT_DIR$/Library/Http/ApiResponse.php" />
+        <option value="$PROJECT_DIR$/Library/Application.php" />
       </list>
     </option>
   </component>
@@ -1428,9 +1431,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Library/Http/Response.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36873156">
+        <state vertical-scroll-proportion="0.036873158">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1468705165186" expanded="true" signature="46:1073" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="203:225" placeholder=" @var int ..." />
+            <marker date="1468705165186" expanded="true" signature="261:285" placeholder=" @var mixed ..." />
+            <marker date="1468705165186" expanded="true" signature="391:473" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="507:553" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="605:658" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="686:726" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="762:803" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="836:916" placeholder="{...}" />
+            <marker date="1468705165186" expanded="true" signature="955:1071" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/Application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.6460178">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding>
+            <element signature="e#27#59#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
