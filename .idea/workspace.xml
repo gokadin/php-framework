@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dc254fae-3119-4c54-82a1-31519771be60" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Library/Http/ApiResponse.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Http/ApiResponse.php" afterPath="$PROJECT_DIR$/Library/Http/Response.php" />
     </list>
     <ignored path="framework.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,8 +24,8 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ApiResponse.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Library/Http/ApiResponse.php">
+      <file leaf-file-name="Response.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Library/Http/Response.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.36873156">
               <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
@@ -1428,37 +1427,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Library/Http/Response.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1461556335992" expanded="false" signature="36:114" placeholder="..." />
-            <marker date="1461556335992" expanded="true" signature="130:2658" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="140:165" placeholder=" @var Router ..." />
-            <marker date="1461556335992" expanded="true" signature="197:223" placeholder=" @var Session ..." />
-            <marker date="1461556335992" expanded="true" signature="256:281" placeholder=" @var string ..." />
-            <marker date="1461556335992" expanded="true" signature="313:337" placeholder=" @var array ..." />
-            <marker date="1461556335992" expanded="true" signature="430:538" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="668:784" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="844:930" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="977:1056" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1084:1151" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1187:1270" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1318:1450" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1487:1620" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1656:1757" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1797:1870" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="1905:1979" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="2022:2112" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="2158:2293" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="2329:2443" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="2482:2656" placeholder="{...}" />
-            <marker date="1461556335992" expanded="true" signature="2521:2561" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Library/Http/ApiResponse.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36873156">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
