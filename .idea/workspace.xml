@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dc254fae-3119-4c54-82a1-31519771be60" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Library/Http/ApiResponse.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php" afterPath="$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php" />
     </list>
     <ignored path="framework.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -22,6 +22,20 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="framework" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="ApiResponse.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Library/Http/ApiResponse.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.36873156">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -55,6 +69,7 @@
         <option value="$PROJECT_DIR$/Tests/DataMapper/DataMapperTest.php" />
         <option value="$PROJECT_DIR$/Library/Lsys/LsysException.php" />
         <option value="$PROJECT_DIR$/Library/Lsys/Lsys.php" />
+        <option value="$PROJECT_DIR$/Library/Http/ApiResponse.php" />
       </list>
     </option>
   </component>
@@ -117,6 +132,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -146,43 +162,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TestData" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataMapper" />
+              <option name="myItemId" value="Library" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -199,10 +179,13 @@
               <option name="myItemId" value="Library" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -338,9 +321,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="27" width="1368" height="742" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -384,7 +367,6 @@
           <folding>
             <marker date="1461791814205" expanded="true" signature="53:628" placeholder="..." />
             <marker date="1461791814205" expanded="true" signature="633:708" placeholder=" Keeps track of all entities known to data mapper ..." />
-            <marker date="1461791814205" expanded="true" signature="755:30319" placeholder="{...}" />
             <marker date="1461791814205" expanded="true" signature="765:861" placeholder=" Lets the collections know that the unit of work ..." />
             <marker date="1461791814205" expanded="true" signature="917:969" placeholder=" Entity does not exist in the database. ..." />
             <marker date="1461791814205" expanded="true" signature="1015:1099" placeholder=" Entity exists in the database, but data mapper only ..." />
@@ -1056,7 +1038,6 @@
           <folding>
             <marker date="1461791814205" expanded="true" signature="53:628" placeholder="..." />
             <marker date="1461791814205" expanded="true" signature="633:708" placeholder=" Keeps track of all entities known to data mapper ..." />
-            <marker date="1461791814205" expanded="true" signature="755:30319" placeholder="{...}" />
             <marker date="1461791814205" expanded="true" signature="765:861" placeholder=" Lets the collections know that the unit of work ..." />
             <marker date="1461791814205" expanded="true" signature="917:969" placeholder=" Entity does not exist in the database. ..." />
             <marker date="1461791814205" expanded="true" signature="1015:1099" placeholder=" Entity exists in the database, but data mapper only ..." />
@@ -1267,7 +1248,6 @@
           <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding>
             <marker date="1461556335995" expanded="false" signature="42:279" placeholder="..." />
-            <marker date="1461556335995" expanded="true" signature="297:6592" placeholder="{...}" />
             <marker date="1461556335995" expanded="true" signature="307:336" placeholder=" @var UnitOfWork ..." />
             <marker date="1461556335995" expanded="true" signature="374:496" placeholder=" The mapping driver used to parse ..." />
             <marker date="1461556335995" expanded="true" signature="537:675" placeholder=" Used to build a queries differently ..." />
@@ -1322,7 +1302,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <marker date="1461557029462" expanded="false" signature="37:116" placeholder="..." />
-            <marker date="1461557029462" expanded="true" signature="160:477" placeholder="{...}" />
             <marker date="1461557029462" expanded="true" signature="228:475" placeholder="{...}" />
           </folding>
         </state>
@@ -1334,7 +1313,6 @@
           <caret line="20" column="15" selection-start-line="20" selection-start-column="15" selection-end-line="20" selection-end-column="15" />
           <folding>
             <marker date="1461557029510" expanded="true" signature="40:594" placeholder="..." />
-            <marker date="1461557029510" expanded="true" signature="646:2617" placeholder="{...}" />
             <marker date="1461557029510" expanded="true" signature="684:706" placeholder=" @var PDO ..." />
             <marker date="1461557029510" expanded="true" signature="807:1696" placeholder="{...}" />
             <marker date="1461557029510" expanded="true" signature="889:1278" placeholder="..." />
@@ -1358,7 +1336,6 @@
           <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
           <folding>
             <marker date="1468382245756" expanded="true" signature="40:440" placeholder="..." />
-            <marker date="1468382245756" expanded="true" signature="489:32081" placeholder="{...}" />
             <marker date="1468382245756" expanded="true" signature="538:793" placeholder="{...}" />
             <marker date="1468382245756" expanded="true" signature="860:1426" placeholder="{...}" />
             <marker date="1468382245756" expanded="true" signature="981:1134" placeholder="{...}" />
@@ -1440,37 +1417,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Tests/Lsys/LsysTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29498526">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Library/DataMapper/DataMapperException.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.40560472">
           <caret line="11" column="5" selection-start-line="8" selection-start-column="4" selection-end-line="11" selection-end-column="5" />
           <folding>
-            <marker date="1461556336016" expanded="true" signature="97:251" placeholder="{...}" />
             <marker date="1461556336016" expanded="true" signature="180:249" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Library/Lsys/LsysException.php">
+    <entry file="file://$PROJECT_DIR$/Library/Http/Response.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3318584">
-          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
-          <folding />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1461556335992" expanded="false" signature="36:114" placeholder="..." />
+            <marker date="1461556335992" expanded="true" signature="130:2658" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="140:165" placeholder=" @var Router ..." />
+            <marker date="1461556335992" expanded="true" signature="197:223" placeholder=" @var Session ..." />
+            <marker date="1461556335992" expanded="true" signature="256:281" placeholder=" @var string ..." />
+            <marker date="1461556335992" expanded="true" signature="313:337" placeholder=" @var array ..." />
+            <marker date="1461556335992" expanded="true" signature="430:538" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="668:784" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="844:930" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="977:1056" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1084:1151" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1187:1270" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1318:1450" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1487:1620" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1656:1757" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1797:1870" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="1905:1979" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="2022:2112" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="2158:2293" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="2329:2443" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="2482:2656" placeholder="{...}" />
+            <marker date="1461556335992" expanded="true" signature="2521:2561" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Library/Lsys/Lsys.php">
+    <entry file="file://$PROJECT_DIR$/Library/Http/ApiResponse.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55309737">
-          <caret line="53" column="28" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.36873156">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding />
         </state>
       </provider>
