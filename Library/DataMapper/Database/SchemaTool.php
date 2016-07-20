@@ -167,16 +167,18 @@ class SchemaTool
             }
 
             if ($force &&
-                ($column->type() != $existingColumns[$column->name()]['type'] ||
+                (($column->type() != $existingColumns[$column->name()]['type'] && $column->type() != 'json') ||
+                    ($column->type() == 'json' && $existingColumns[$column->name()]['type'] != 'text') ||
                     $column->isNullable() != $existingColumns[$column->name()]['isNullable'] ||
-                ($column->type() != 'datetime' &&
-                    $column->type() != 'text' &&
-                    $column->type() != 'boolean' &&
-                    $column->type() != 'decimal' &&
-                    $column->size() != $existingColumns[$column->name()]['size']) ||
-                ($column->type() == 'decimal' &&
-                    ($column->size() + 2 != $existingColumns[$column->name()]['size'] ||
-                        $column->precision() != $existingColumns[$column->name()]['precision']))))
+                    ($column->type() != 'datetime' &&
+                        $column->type() != 'text' &&
+                        $column->type() != 'boolean' &&
+                        $column->type() != 'decimal' &&
+                        $column->type() != 'json' &&
+                        $column->size() != $existingColumns[$column->name()]['size']) ||
+                    ($column->type() == 'decimal' &&
+                        ($column->size() + 2 != $existingColumns[$column->name()]['size'] ||
+                            $column->precision() != $existingColumns[$column->name()]['precision']))))
             {
                 $this->databaseDriver->dropColumnFrom($metadata->table(), $column->name());
                 $this->databaseDriver->addColumnTo($metadata->table(), $column);

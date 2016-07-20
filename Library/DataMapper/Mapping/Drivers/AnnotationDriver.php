@@ -121,6 +121,14 @@ class AnnotationDriver
             ? $parsed['Column']['type']
             : Column::TYPE_INTEGER;
 
+        if ($type == Column::TYPE_JSON)
+        {
+            $column = new Column($columnName, $propName, Column::TYPE_JSON, self::TEXT_SIZE);
+            $column->setNullable();
+
+            return $column;
+        }
+
         $size = 0;
         switch ($type)
         {

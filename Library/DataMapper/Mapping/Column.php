@@ -13,6 +13,7 @@ class Column
     const TYPE_DECIMAL = 'decimal';
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_DATETIME = 'datetime';
+    const TYPE_JSON = 'json';
 
     protected $columnName;
     protected $propName;
@@ -160,6 +161,11 @@ class Column
     public function setIndex()
     {
         $this->hasIndex = true;
+    }
+
+    public function isJson()
+    {
+        return $this->type == self::TYPE_JSON;
     }
 
     public function isRequired()

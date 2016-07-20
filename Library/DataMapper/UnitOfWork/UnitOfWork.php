@@ -261,7 +261,7 @@ final class UnitOfWork implements Observable
     private function isLoaded($class, $id)
     {
         return isset($this->idMap[$class][$id]) &&
-            $this->states[$this->idMap[$class][$id]] == self::STATE_MANAGED;
+        $this->states[$this->idMap[$class][$id]] == self::STATE_MANAGED;
     }
 
     /**
@@ -360,6 +360,11 @@ final class UnitOfWork implements Observable
             if ($column->isDateTime())
             {
                 $value = Carbon::parse($value);
+            }
+
+            if ($column->isJson())
+            {
+                $value = json_decode($value, true);
             }
 
             $metadata->reflProp($column->propName())->setValue($entity, $value);
@@ -783,6 +788,12 @@ final class UnitOfWork implements Observable
                 $value = Carbon::now();
             }
 
+            if ($column->isJson())
+            {
+                $data[$column->name()] = is_null($value) ? '[]' : json_encode($value);
+                continue;
+            }
+
             if (is_null($value) && $column->isDefault())
             {
                 $value = $column->defaultValue();
@@ -1090,6 +1101,11 @@ final class UnitOfWork implements Observable
             }
 
             $actualValue = $metadata->reflProp($column->propName())->getValue($entity);
+
+            if ($column->isJson())
+            {
+                $actualValue = json_encode($actualValue);
+            }
 
             if ($originalData[$column->name()] == $actualValue)
             {

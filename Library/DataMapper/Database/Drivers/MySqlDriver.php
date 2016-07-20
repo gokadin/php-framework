@@ -255,6 +255,11 @@ class MySqlDriver
             return $primaryKeyStr;
         }
 
+        if ($column->isJson())
+        {
+            return $column->name().' TEXT';
+        }
+
         $columnStr = $column->name();
         $columnStr .= ' '.$this->getColumnTypeString($column->type());
         if ($column->type() != 'datetime' && $column->type() != 'text')
