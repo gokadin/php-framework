@@ -19,13 +19,18 @@ class Transformer
      */
     private $only = [];
 
+    /**
+     * @var array
+     */
+    private $without = [];
+
     public function __construct($config)
     {
         $this->registerDefinitions($config);
     }
 
     /**
-     * @param $config string
+     * @param $config
      */
     private function registerDefinitions($config)
     {
@@ -88,6 +93,11 @@ class Transformer
                 continue;
             }
 
+            if (sizeof($this->without) > 0 && in_array($key, $this->without))
+            {
+                continue;
+            }
+
             $result[$key] = $closure($item);
         }
 
@@ -105,6 +115,13 @@ class Transformer
         return $this;
     }
 
+    public function without(array $without)
+    {
+        $this->without = $without;
+
+        return $this;
+    }
+
     /**
      * Clear the transformer for the next call
      */
@@ -112,5 +129,6 @@ class Transformer
     {
         $this->class = null;
         $this->only = [];
+        $this->without = [];
     }
 }

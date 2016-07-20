@@ -4,7 +4,6 @@ namespace Library\Validation;
 
 use Carbon\Carbon;
 use Library\Database\Database;
-use Library\Facades\Request;
 
 class Validator
 {
@@ -32,10 +31,15 @@ class Validator
         foreach ($rules as $field => $constraints)
         {
             $customError = null;
-            $value = isset($data[$field]) ? $data[$field] : null;
+            $value = $data[$field];
 
             if (!is_array($constraints))
             {
+                if ($constraints != 'required' && is_null($value))
+                {
+                    continue;
+                }
+
                 $args = array();
                 $temp = explode(':', $constraints);
                 $functionName = $temp[0];
@@ -50,6 +54,11 @@ class Validator
 
                 $this->errors[$field][] = $this->buildErrorString($field, $functionName, $args, $customError);
 
+                continue;
+            }
+
+            if (!in_array('required', $constraints) && is_null($value))
+            {
                 continue;
             }
 
