@@ -67,7 +67,7 @@ class ProxyEntity
         return is_null($entity) ? null : $this->callMethod($entity, $name, $arguments);
     }
 
-    private function resolve()
+    public function resolve()
     {
         $entity = $this->id == 0
             ? $this->uow->resolveHasOneEntity($this->parentClass, $this->parentId, $this->association->target())

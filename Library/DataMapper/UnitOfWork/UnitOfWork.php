@@ -1005,6 +1005,11 @@ final class UnitOfWork implements Observable
                 continue;
             }
 
+            if ($assocValue instanceof ProxyEntity)
+            {
+                $assocValue = $assocValue->resolve();
+            }
+
             $assocOid = spl_object_hash($assocValue);
 
             if (isset($this->scheduledRemovals[$metadata->className()]) &&

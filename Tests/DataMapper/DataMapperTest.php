@@ -446,9 +446,10 @@ class DataMapperTest extends DataMapperBaseTest
         $teacher = new Teacher('Tom');
         $this->dm->persist($teacher);
         $address = new Address('street1');
-        $this->dm->persist($address);
         $address->setTeacher($teacher);
+        $this->dm->persist($address);
         $this->dm->flush();
+        $teacher->setAddress($address);
 
         // Act
         $this->dm->delete($teacher);
