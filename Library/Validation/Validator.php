@@ -31,7 +31,7 @@ class Validator
         foreach ($rules as $field => $constraints)
         {
             $customError = null;
-            $value = $data[$field];
+            $value = isset($data[$field]) ? $data[$field]: null;
 
             if (!is_array($constraints))
             {
@@ -54,11 +54,6 @@ class Validator
 
                 $this->errors[$field][] = $this->buildErrorString($field, $functionName, $args, $customError);
 
-                continue;
-            }
-
-            if (!in_array('required', $constraints) && is_null($value))
-            {
                 continue;
             }
 

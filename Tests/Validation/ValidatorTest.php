@@ -123,7 +123,7 @@ class ValidatorTest extends BaseTest
     {
         // Act
         $result = $this->validator->make(
-            ['one' => null],
+            [],
             ['one' => ['required' => 'custom']]
         );
 
