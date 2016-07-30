@@ -50,21 +50,21 @@ class ProxyEntity
 
         $entity = $this->resolve();
 
-        return $entity->getId();
+        return is_null($entity) ? null : $entity->getId();
     }
 
     public function __get($name)
     {
         $entity = $this->resolve();
 
-        return $entity->$name;
+        return is_null($entity) ? null : $entity->$name;
     }
 
     public function __call($name, $arguments)
     {
         $entity = $this->resolve();
 
-        return $this->callMethod($entity, $name, $arguments);
+        return is_null($entity) ? null : $this->callMethod($entity, $name, $arguments);
     }
 
     private function resolve()

@@ -3,6 +3,7 @@
 namespace Tests\DataMapper;
 
 use Carbon\Carbon;
+use Library\DataMapper\Proxy\ProxyEntity;
 use Tests\TestData\DataMapper\TimeEntity;
 use Library\DataMapper\Collection\PersistentCollection;
 use Library\DataMapper\Collection\EntityCollection;
@@ -478,7 +479,7 @@ class DataMapperTest extends DataMapperBaseTest
 
         // Assert
         $this->assertEquals($teacher->getId(), $foundTeacher->getId());
-        $this->assertNull($foundTeacher->address());
+        $this->assertTrue(is_null($foundTeacher->address()) || $foundTeacher->address() instanceof ProxyEntity);
     }
 
     public function testHasOneWhenFindingByIdDetachedEntitiesWithExisitingChildEntity()
