@@ -5,6 +5,7 @@ namespace Library\Database\Drivers;
 use Library\Database\Table;
 use Predis\Client as PredisClient;
 
+/* OBSOLETE *** TO REMOVE */
 class RedisDatabaseDriver implements IDatabaseDriver
 {
     const NEXT_ID = '_nextId';

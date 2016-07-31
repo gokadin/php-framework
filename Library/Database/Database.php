@@ -20,6 +20,7 @@ class Database
     {
         switch ($settings['driver'])
         {
+            // TO REMOVE
             case 'redis':
                 $this->driver = new RedisDatabaseDriver($settings['redis']);
                 break;
@@ -77,13 +78,6 @@ class Database
     {
 
     }
-
-//    public function query($sql)
-//    {
-//        $query = $this->dao->prepare($sql);
-//        $query->execute();
-//        return $query;
-//    }
 
     public function beginTransaction()
     {

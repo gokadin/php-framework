@@ -24,6 +24,8 @@ class Transformer
      */
     private $without = [];
 
+    private $with = [];
+
     public function __construct($config)
     {
         $this->registerDefinitions($config);
@@ -101,7 +103,20 @@ class Transformer
             $result[$key] = $closure($item);
         }
 
+        if (sizeof($this->with) > 0)
+        {
+            $this->executeWith($item, $result);
+        }
+
         return $result;
+    }
+
+    private function executeWith($item, $result)
+    {
+        foreach ($this->with as $key => $closure)
+        {
+            $result[$key] = $closure($item);
+        }
     }
 
     /**
@@ -122,6 +137,13 @@ class Transformer
         return $this;
     }
 
+    public function with(array $with)
+    {
+        $this->with[] = $with;
+
+        return $this;
+    }
+
     /**
      * Clear the transformer for the next call
      */
@@ -130,5 +152,6 @@ class Transformer
         $this->class = null;
         $this->only = [];
         $this->without = [];
+        $this->with = [];
     }
 }

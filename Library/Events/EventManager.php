@@ -99,7 +99,7 @@ class EventManager
         $this->queue->push($listener, $event);
     }
 
-    // **************************** NOT WORKING!!!!!
+    // *** TO REMOVE
     /**
      * Broadcasts the event
      *

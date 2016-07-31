@@ -85,8 +85,6 @@ class Column
         return $this;
     }
 
-    /* Accessor functions */
-
     public function getPropertyName()
     {
         return $this->propertyName;
