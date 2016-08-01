@@ -151,6 +151,19 @@ final class UnitOfWork implements Observable
         return isset($this->ids[$oid]) ? $this->ids[$oid] : null;
     }
 
+    public function findOrFail($id)
+    {
+        $entity = $this->find($id);
+
+        if (is_null($entity))
+        {
+            throw new DataMapperException('DataMapper.findOrFail : Could not find entity of class '.
+                $this->metadata->className(). ' with id of '.$id);
+        }
+
+        return $entity;
+    }
+
     /**
      * Adds the fully loaded entity to the unit of work.
      *
