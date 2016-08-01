@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dc254fae-3119-4c54-82a1-31519771be60" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Queue (obsolete - to remove)/Drivers/DatabaseQueueDriver.php" afterPath="$PROJECT_DIR$/Library/Queue/Drivers/DatabaseQueueDriver.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Queue (obsolete - to remove)/Drivers/SyncQueueDriver.php" afterPath="$PROJECT_DIR$/Library/Queue/Drivers/SyncQueueDriver.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Queue (obsolete - to remove)/JobFailedException.php" afterPath="$PROJECT_DIR$/Library/Queue/JobFailedException.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Queue (obsolete - to remove)/Queue.php" afterPath="$PROJECT_DIR$/Library/Queue/Queue.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Library/Queue (obsolete - to remove)/Queueable.php" afterPath="$PROJECT_DIR$/Library/Queue/Queueable.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php" afterPath="$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php" />
     </list>
     <ignored path="framework.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,14 +24,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="EventManagerTest.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Tests/Events/EventManagerTest.php">
+      <file leaf-file-name="PersistentCollection.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.654185">
-              <caret line="35" column="79" selection-start-line="35" selection-start-column="79" selection-end-line="35" selection-end-column="79" />
-              <folding>
-                <element signature="e#32#64#0#PHP" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.9262537">
+              <caret line="199" column="5" selection-start-line="199" selection-start-column="5" selection-end-line="199" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -66,7 +59,6 @@
         <option value="$PROJECT_DIR$/Tests/DataMapper/Mapping/MetadataTest.php" />
         <option value="$PROJECT_DIR$/Library/DataMapper/Mapping/Metadata.php" />
         <option value="$PROJECT_DIR$/Tests/TestData/DataMapper/Address.php" />
-        <option value="$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php" />
         <option value="$PROJECT_DIR$/Tests/DataMapper/Proxy/ProxyEntityTest.php" />
         <option value="$PROJECT_DIR$/Library/Lsys/LSys.php" />
         <option value="$PROJECT_DIR$/Tests/Lsys/LsysTest.php" />
@@ -90,6 +82,7 @@
         <option value="$PROJECT_DIR$/Library/Routing/Router.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/Library/DataMapper/UnitOfWork/UnitOfWork.php" />
+        <option value="$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php" />
       </list>
     </option>
   </component>
@@ -213,24 +206,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Queue" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -374,14 +349,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="27" width="1368" height="742" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -413,73 +388,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Persisters/EntityPersister.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.0929203">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1461556336017" expanded="true" signature="234:284" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="321:366" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="415:470" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="507:548" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="586:628" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="665:706" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="744:911" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="791:860" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="955:1179" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="1050:1071" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="1222:1398" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="1322:1336" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="1437:1613" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="1485:1568" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="1658:1876" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="1746:1812" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="1920:2154" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="2008:2090" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="2192:2365" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="2239:2321" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="2409:2651" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="2497:2560" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="2583:2643" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="2694:3203" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="2787:2965" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="2877:2955" placeholder="{...}" />
-            <marker date="1461556336017" expanded="true" signature="3048:3119" placeholder="..." />
-            <marker date="1461556336017" expanded="true" signature="3146:3195" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Proxy/ProxyEntity.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4100295">
-          <caret line="69" column="29" selection-start-line="69" selection-start-column="29" selection-end-line="69" selection-end-column="29" />
-          <folding>
-            <marker date="1469918479482" expanded="false" signature="48:133" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="162:191" placeholder=" @var UnitOfWork ..." />
-            <marker date="1469918479482" expanded="true" signature="220:250" placeholder=" @var Association ..." />
-            <marker date="1469918479482" expanded="true" signature="287:311" placeholder=" @var mixed ..." />
-            <marker date="1469918479482" expanded="true" signature="339:364" placeholder=" @var string ..." />
-            <marker date="1469918479482" expanded="true" signature="401:425" placeholder=" @var mixed ..." />
-            <marker date="1469918479482" expanded="true" signature="563:750" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="779:965" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="812:862" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="999:1105" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="1152:1289" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="1320:1689" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="1756:2501" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="1798:2495" placeholder="{...}" />
-            <marker date="1469918479482" expanded="true" signature="1828:1869" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="1889:1943" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="1963:2032" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="2052:2136" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="2156:2255" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="2275:2389" placeholder="..." />
-            <marker date="1469918479482" expanded="true" signature="2410:2485" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Library/DataMapper/DataMapper.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.361357">
@@ -1434,11 +1342,80 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Tests/Events/EventManagerTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.654185">
-          <caret line="35" column="79" selection-start-line="35" selection-start-column="79" selection-end-line="35" selection-end-column="79" />
+        <state vertical-scroll-proportion="0.5176991">
+          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
           <folding>
-            <element signature="e#32#64#0#PHP" expanded="true" />
+            <marker date="1461557029469" expanded="true" signature="36:400" placeholder="..." />
+            <marker date="1461557029469" expanded="true" signature="441:2730" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="451:482" placeholder=" @var EventManager ..." />
+            <marker date="1461557029469" expanded="true" signature="540:577" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="609:649" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="704:858" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="899:1427" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="1474:1776" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="1533:1607" placeholder="..." />
+            <marker date="1461557029469" expanded="true" signature="1534:1606" placeholder="..." />
+            <marker date="1461557029469" expanded="true" signature="1843:2229" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="1902:2007" placeholder="..." />
+            <marker date="1461557029469" expanded="true" signature="1903:2006" placeholder="..." />
+            <marker date="1461557029469" expanded="true" signature="2289:2728" placeholder="{...}" />
+            <marker date="1461557029469" expanded="true" signature="2348:2458" placeholder="..." />
+            <marker date="1461557029469" expanded="true" signature="2349:2457" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Tests/DataMapper/Collection/PersistentCollectionTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5162242">
+          <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+          <folding>
+            <marker date="1461556888876" expanded="false" signature="51:202" placeholder="..." />
+            <marker date="1461556888876" expanded="true" signature="261:11223" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="358:627" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="516:545" placeholder="..." />
+            <marker date="1461556888876" expanded="true" signature="699:1101" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="1170:1666" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="1728:2164" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="2262:2897" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="2687:2765" placeholder="..." />
+            <marker date="1461556888876" expanded="true" signature="2973:3459" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="3534:4354" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="3965:4079" placeholder="..." />
+            <marker date="1461556888876" expanded="true" signature="4262:4348" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="4432:5222" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="4863:4977" placeholder="..." />
+            <marker date="1461556888876" expanded="true" signature="5064:5174" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="5274:5991" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="5705:5819" placeholder="..." />
+            <marker date="1461556888876" expanded="true" signature="6028:6962" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="6220:6377" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="6442:6690" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="6523:6636" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="6971:7013" placeholder=" @expectedException Exception ..." />
+            <marker date="1461556888876" expanded="true" signature="7079:7431" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="7487:8494" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="7634:7791" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="7856:7931" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="8552:9703" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="8750:8907" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="8972:9224" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="9058:9171" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="9736:10402" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="9857:10010" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="10093:10162" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="10456:11221" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="10577:10730" placeholder="{...}" />
+            <marker date="1461556888876" expanded="true" signature="10813:10882" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/DataMapper/Collection/PersistentCollection.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9262537">
+          <caret line="199" column="5" selection-start-line="199" selection-start-column="5" selection-end-line="199" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -186,6 +186,19 @@ final class PersistentCollection extends AbstractEntityCollection implements Obs
         return $this->items[$id];
     }
 
+    public function findOrFail($id)
+    {
+        $entity = $this->find($id);
+
+        if (is_null($entity))
+        {
+            throw new DataMapperException('PersistentCollection.findOrFail : Could not find entity of class '.
+                $this->metadata->className(). ' with id of '.$id);
+        }
+
+        return $entity;
+    }
+
     public function containsId($id)
     {
         return array_key_exists($id, $this->items);
