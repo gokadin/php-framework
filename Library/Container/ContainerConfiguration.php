@@ -2,7 +2,6 @@
 
 namespace Library\Container;
 
-use Library\Configuration\Config;
 use Library\Database\ModelFactory;
 use Library\Events\EventManager;
 use Library\Http\Redirect;
@@ -33,8 +32,7 @@ class ContainerConfiguration
     public function configureContainer()
     {
         $app = $this->container->resolveInstance('app');
-
-        $this->container->registerInstance('config', new Config());
+        
         $this->container->registerInstance('request', new Request());
         $this->container->registerInstance('view', new View());
         $session = new Session();

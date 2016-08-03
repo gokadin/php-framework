@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dc254fae-3119-4c54-82a1-31519771be60" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Library/Testing/DatabaseTransactions.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Library/Testing/FakerTestTrait.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Application.php" afterPath="$PROJECT_DIR$/Library/Application.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Testing/TestCase.php" afterPath="$PROJECT_DIR$/Library/Testing/TestCase.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Library/Configuration/Config.php" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Container/ContainerConfiguration.php" afterPath="$PROJECT_DIR$/Library/Container/ContainerConfiguration.php" />
     </list>
     <ignored path="framework.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,9 +28,11 @@
       <file leaf-file-name="ContainerConfiguration.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Library/Container/ContainerConfiguration.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.70058995">
-              <caret line="66" column="65" selection-start-line="66" selection-start-column="65" selection-end-line="66" selection-end-column="65" />
-              <folding />
+            <state vertical-scroll-proportion="0.40560472">
+              <caret line="34" column="8" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
+              <folding>
+                <element signature="e#37#71#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -87,6 +87,7 @@
         <option value="$PROJECT_DIR$/Library/DataMapper/UnitOfWork/UnitOfWork.php" />
         <option value="$PROJECT_DIR$/Library/Testing/TestCase.php" />
         <option value="$PROJECT_DIR$/Library/Application.php" />
+        <option value="$PROJECT_DIR$/Library/Container/ContainerConfiguration.php" />
       </list>
     </option>
   </component>
@@ -387,7 +388,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="13" />
+      <option name="time" value="14" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -937,27 +938,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Library/Configuration/envFunctions.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1461556336056" expanded="true" signature="52:877" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="90:875" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="232:316" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="362:436" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="502:868" placeholder="..." />
-            <marker date="1461556336056" expanded="true" signature="560:827" placeholder="..." />
-            <marker date="1461556336056" expanded="true" signature="652:718" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="907:1170" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="933:1168" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="1008:1138" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="1043:1072" placeholder="..." />
-            <marker date="1461556336056" expanded="true" signature="1098:1128" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1848,28 +1828,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Library/Configuration/Config.php">
+    <entry file="file://$PROJECT_DIR$/Library/Configuration/envFunctions.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6637168">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461556336056" expanded="true" signature="71:921" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="129:172" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="220:919" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="264:603" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="651:700" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="748:878" placeholder="{...}" />
-            <marker date="1461556336056" expanded="true" signature="783:812" placeholder="..." />
-            <marker date="1461556336056" expanded="true" signature="838:868" placeholder="..." />
+            <marker date="1461556336056" expanded="true" signature="52:877" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="90:875" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="232:316" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="362:436" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="502:868" placeholder="..." />
+            <marker date="1461556336056" expanded="true" signature="560:827" placeholder="..." />
+            <marker date="1461556336056" expanded="true" signature="652:718" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="907:1170" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="933:1168" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="1008:1138" placeholder="{...}" />
+            <marker date="1461556336056" expanded="true" signature="1043:1072" placeholder="..." />
+            <marker date="1461556336056" expanded="true" signature="1098:1128" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Library/Container/ContainerConfiguration.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70058995">
-          <caret line="66" column="65" selection-start-line="66" selection-start-column="65" selection-end-line="66" selection-end-column="65" />
-          <folding />
+        <state vertical-scroll-proportion="0.40560472">
+          <caret line="34" column="8" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
+          <folding>
+            <element signature="e#37#71#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
