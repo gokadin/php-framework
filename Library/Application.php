@@ -11,8 +11,19 @@ use Library\Routing\Router;
 
 class Application
 {
+    /**
+     * @var string
+     */
     protected $basePath;
+
+    /**
+     * @var Container
+     */
     protected $container;
+
+    /**
+     * @var mixed
+     */
     protected $controllerResponse;
 
     /**
@@ -60,7 +71,7 @@ class Application
 
     public function container()
     {
-        if ($this->container == null)
+        if (is_null($this->container))
         {
             $this->container = new Container();
             $this->ConfigureContainer();
@@ -84,20 +95,22 @@ class Application
         $this->controllerResponse = $result;
     }
 
+    /**
+     * Takes the application output and sends it to
+     * the client.
+     * Allowed output types are:
+     * -> strings
+     * -> View object
+     * -> Response object
+     *
+     * @throws Container\ContainerException
+     */
+    // TODO: add error output if nothing valid is found
     public function sendView()
     {
-        if (!is_object($this->controllerResponse) && !is_array($this->controllerResponse))
+        if ($this->controllerResponse instanceof Response)
         {
-            echo $this->controllerResponse;
-            exit();
-            return;
-        }
-
-        if (is_array($this->controllerResponse))
-        {
-            echo json_encode($this->controllerResponse);
-            exit();
-            return;
+            $this->controllerResponse->executeResponse();
         }
 
         if ($this->controllerResponse instanceof View)
@@ -107,12 +120,12 @@ class Application
 
             echo $content;
             exit();
-            return;
         }
 
-        if ($this->controllerResponse instanceof Response)
+        if (is_string($this->controllerResponse))
         {
-            $this->controllerResponse->executeResponse();
+            echo $this->controllerResponse;
+            exit();
         }
     }
 

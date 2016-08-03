@@ -2,12 +2,8 @@
 
 namespace Library\Testing;
 
-use Library\Facades\Request;
-use Library\Facades\Router;
-use Library\Facades\Session;
 use PHPUnit_Framework_TestCase;
 use Mockery;
-use Library\Facades\Facade;
 
 class TestCase extends PHPUnit_Framework_TestCase
 {
