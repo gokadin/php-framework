@@ -2,21 +2,19 @@
 
 namespace Library\Http;
 
-use Library\Shao\Shao;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 
 class View
 {
     const VIEW_FOLDER = 'resources/views';
 
-    protected $basePath;
-    protected $content;
-    protected $vars;
+    private $basePath;
+    private $vars;
     private $viewAction;
 
     public function __construct($viewAction = null, array $data = [])
     {
-        $this->basePath = __DIR__.'/../../'.self::VIEW_FOLDER;
+        $this->basePath = __DIR__ . '/../../' . self::VIEW_FOLDER;
 
         if (!is_null($viewAction))
         {
@@ -35,17 +33,16 @@ class View
 
     public function add(array $data)
     {
-        foreach ($data as $key => $value)
-        {
+        foreach ($data as $key => $value) {
             $this->vars[$key] = $value;
         }
     }
 
-    public function processView(ViewFactory $viewFactory, Shao $shao)
+    public function processView()
     {
-        $view = $this->basePath.'/'.str_replace('.', '/', $this->viewAction);
+        $view = $this->basePath . '/' . str_replace('.', '/', $this->viewAction);
 
-        $contentFile = $this->getContentFile($view, $shao);
+        $contentFile = $this->getContentFile($view);
 
         if (!is_null($this->vars))
         {
@@ -54,39 +51,19 @@ class View
 
         ob_start();
         require $contentFile;
-        $content = ob_get_clean();
-
-        if ($viewFactory->hasLayout())
-        {
-            ob_start();
-            require $viewFactory->getLayoutFile();
-            return ob_get_clean();
-        }
-
-        return $content;
+        return ob_get_clean();
     }
 
-    protected function getContentFile($view, Shao $shao)
+    private function getContentFile($view)
     {
         $validExtensions = ['.php', '.html'];
-        $validShaoExtensions = ['.shao.php', '.shao.html'];
 
-        foreach ($validExtensions as $validExtension)
-        {
-            if (file_exists($view.$validExtension))
-            {
-                return $view.$validExtension;
+        foreach ($validExtensions as $validExtension) {
+            if (file_exists($view . $validExtension)) {
+                return $view . $validExtension;
             }
         }
 
-        foreach ($validShaoExtensions as $validShaoExtension)
-        {
-            if (file_exists($view.$validShaoExtension))
-            {
-                return $shao->parseFile($view.$validShaoExtension);
-            }
-        }
-
-        throw new RuntimeException('File '.$view.' does not exist.');
+        throw new RuntimeException('File ' . $view . ' does not exist.');
     }
 }

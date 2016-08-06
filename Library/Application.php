@@ -3,11 +3,9 @@
 namespace Library;
 
 use Library\Container\Container;
-use Library\Container\ContainerConfiguration;
 use Library\Http\Response;
 use Library\Http\View;
 use Library\Http\ViewFactory;
-use Library\Routing\Router;
 
 class Application
 {
@@ -24,12 +22,7 @@ class Application
     /**
      * @var mixed
      */
-    protected $controllerResponse;
-
-    /**
-     * @var Router
-     */
-    private $router;
+    private $controllerResponse;
 
     public function __construct()
     {
@@ -38,10 +31,6 @@ class Application
         $this->container = new Container();
         $this->controllerResponse = null;
         $this->basePath = __DIR__.'/../';
-
-        $this->configureContainer();
-
-        $this->router = $this->container->resolveInstance('router');
     }
 
     private function configureErrorHandling()
@@ -57,14 +46,21 @@ class Application
         }
     }
 
-    protected function configureContainer()
+    public function configureContainer()
     {
         $this->container->registerInstance('app', $this);
-        $containerConfiguration = new ContainerConfiguration($this->container);
-        $containerConfiguration->configureContainer();
 
-        $appContainerConfiguration = new \Config\ContainerConfiguration($this->container);
-        $appContainerConfiguration->configureContainer();
+        $containerConfiguration = null;
+        switch (env('APP_ENV'))
+        {
+            case 'framework_testing':
+                $containerConfiguration = new \Config\TestContainerConfiguration($this->container);
+                break;
+            default:
+                $containerConfiguration = new \Config\ContainerConfiguration($this->container);
+        }
+
+        $containerConfiguration->configureContainer();
     }
 
     public function container()
@@ -80,7 +76,7 @@ class Application
 
     public function loadRoutes()
     {
-        $router = $this->router;
+        $router = $this->container->resolve('router');
         $router->group(['namespace' => 'App\\Http\\Controllers'], function($router) {
             require __DIR__ . '/../App/Http/routes.php';
         });
@@ -88,7 +84,8 @@ class Application
 
     public function processRoute()
     {
-        $result = $this->router->dispatch($this->container()->resolveInstance('request'));
+        $result = $this->container->resolve('router')->dispatch(
+            $this->container()->resolveInstance('request'));
 
         $this->controllerResponse = $result;
     }
