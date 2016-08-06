@@ -2,8 +2,6 @@
 
 namespace Tests\Validation;
 
-use Library\Database\Database;
-use Library\Database\Table;
 use Library\Validation\Validator;
 use Tests\BaseTest;
 
@@ -14,26 +12,11 @@ class ValidatorTest extends BaseTest
      */
     protected $validator;
 
-    /**
-     * @var Database
-     */
-    protected $database;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->database = new Database([
-            'driver' => 'mysql',
-            'mysql' => [
-                'host' => env('DATABASE_HOST'),
-                'database' => env('DATABASE_NAME'),
-                'username' => env('DATABASE_USERNAME'),
-                'password' => env('DATABASE_PASSWORD')
-            ]
-        ]);
-
-        $this->validator = new Validator($this->database);
+        $this->validator = new Validator();
     }
 
     public function tearDown()
@@ -282,37 +265,6 @@ class ValidatorTest extends BaseTest
         $this->assertFalse($this->validator->email('a@.c'));
         $this->assertFalse($this->validator->email('a.c'));
         $this->assertFalse($this->validator->email('@b.c'));
-    }
-
-    public function testUniqueWorksWhenValid()
-    {
-        // Arrange
-        $table = new Table('Test');
-        $table->increments('id');
-        $table->integer('col1');
-        $this->database->create($table);
-
-        // Assert
-        $this->assertTrue($this->validator->unique('nonexistant', 'Test', 'col1'));
-
-        // Arrange
-        $this->database->drop('Test');
-    }
-
-    public function testUniqueWorksWhenInvalid()
-    {
-        // Arrange
-        $table = new Table('Test');
-        $table->increments('id');
-        $table->integer('col1');
-        $this->database->create($table);
-        $this->database->table('Test')->insert(['col1' => 'sr']);
-
-        // Assert
-        $this->assertFalse($this->validator->unique('str', 'Test', 'col1'));
-
-        // Arrange
-        $this->database->drop('Test');
     }
 
     public function testEqualsFieldWorksWhenValid()

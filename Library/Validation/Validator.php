@@ -3,18 +3,11 @@
 namespace Library\Validation;
 
 use Carbon\Carbon;
-use Library\Database\Database;
 
 class Validator
 {
-    private $database;
     private $data = [];
     private $errors = [];
-
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
 
     public function make(array $data, array $rules)
     {
@@ -139,8 +132,6 @@ class Validator
                 return $field.' must be true or false';
             case 'email':
                 return 'Email format is invalid';
-            case 'unique':
-                return $field.' is already taken';
             case 'equalsField':
                 return $field.' does not equal '.$args[0];
             case 'date':
@@ -238,22 +229,6 @@ class Validator
             return false;
 
         return true;
-    }
-
-    public function unique($value, $table, $columnName)
-    {
-        try
-        {
-            $results = $this->database->table($table)
-                ->where($columnName, '=', $value)
-                ->select();
-
-            return sizeof($results) == 0;
-        }
-        catch (\PDOException $e)
-        {
-            return false;
-        }
     }
 
     public function equalsField($value, $fieldName)
