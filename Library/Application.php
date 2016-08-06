@@ -42,8 +42,6 @@ class Application
         $this->configureContainer();
 
         $this->router = $this->container->resolveInstance('router');
-
-        $this->loadRoutes();
     }
 
     private function configureErrorHandling()
@@ -80,7 +78,7 @@ class Application
         return $this->container;
     }
 
-    private function loadRoutes()
+    public function loadRoutes()
     {
         $router = $this->router;
         $router->group(['namespace' => 'App\\Http\\Controllers'], function($router) {
