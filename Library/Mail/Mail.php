@@ -4,7 +4,6 @@ namespace Library\Mail;
 
 use Library\Http\View;
 use Library\Mail\Drivers\MailgunDriver;
-use Library\Shao\Shao;
 
 class Mail
 {
@@ -13,16 +12,9 @@ class Mail
      */
     private $driver;
 
-    /**
-     * @var Shao
-     */
-    private $shao;
-
-    public function __construct($config, Shao $shao)
+    public function __construct($config)
     {
         $this->initializeDriver($config);
-
-        $this->shao = $shao;
     }
 
     private function initializeDriver($config)

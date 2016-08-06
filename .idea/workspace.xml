@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dc254fae-3119-4c54-82a1-31519771be60" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Application.php" afterPath="$PROJECT_DIR$/Library/Application.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Container/ContainerConfiguration.php" afterPath="$PROJECT_DIR$/Library/Container/ContainerConfiguration.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Library/Mail/Mail.php" afterPath="$PROJECT_DIR$/Library/Mail/Mail.php" />
     </list>
     <ignored path="framework.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,13 +24,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Application.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Library/Application.php">
+      <file leaf-file-name="Mail.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Library/Mail/Mail.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4100295">
-              <caret line="80" column="11" selection-start-line="80" selection-start-column="11" selection-end-line="80" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.5899705">
+              <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
               <folding>
-                <element signature="e#27#59#0#PHP" expanded="true" />
+                <element signature="e#32#54#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -88,6 +87,7 @@
         <option value="$PROJECT_DIR$/Library/Testing/TestCase.php" />
         <option value="$PROJECT_DIR$/Library/Container/ContainerConfiguration.php" />
         <option value="$PROJECT_DIR$/Library/Application.php" />
+        <option value="$PROJECT_DIR$/Library/Mail/Mail.php" />
       </list>
     </option>
   </component>
@@ -347,13 +347,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Library/Shao/ShaoFunctions.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Library/Shao/ShaoLogic.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1852,7 +1845,41 @@
         <state vertical-scroll-proportion="0.4100295">
           <caret line="80" column="11" selection-start-line="80" selection-start-column="11" selection-end-line="80" selection-end-column="11" />
           <folding>
-            <element signature="e#27#59#0#PHP" expanded="true" />
+            <marker date="1470457970464" expanded="true" signature="31:213" placeholder="..." />
+            <marker date="1470457970464" expanded="true" signature="232:3106" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="242:267" placeholder=" @var string ..." />
+            <marker date="1470457970464" expanded="true" signature="303:331" placeholder=" @var Container ..." />
+            <marker date="1470457970464" expanded="true" signature="368:392" placeholder=" @var mixed ..." />
+            <marker date="1470457970464" expanded="true" signature="438:463" placeholder=" @var Router ..." />
+            <marker date="1470457970464" expanded="true" signature="521:811" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="858:1092" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="898:1086" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="933:996" placeholder="..." />
+            <marker date="1470457970464" expanded="true" signature="1017:1076" placeholder="..." />
+            <marker date="1470457970464" expanded="true" signature="1137:1492" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="1525:1719" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="1570:1679" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="1753:1953" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="1816:1945" placeholder="..." />
+            <marker date="1470457970464" expanded="true" signature="1878:1944" placeholder="..." />
+            <marker date="1470457970464" expanded="true" signature="1989:2138" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="2147:2374" placeholder=" Takes the application output and sends it to ..." />
+            <marker date="1470457970464" expanded="true" signature="2463:3028" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="2528:2606" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="2662:2887" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="2735:2827" placeholder="..." />
+            <marker date="1470457970464" expanded="true" signature="2938:3022" placeholder="{...}" />
+            <marker date="1470457970464" expanded="true" signature="3060:3104" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Library/Mail/Mail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5899705">
+          <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+          <folding>
+            <element signature="e#32#54#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
