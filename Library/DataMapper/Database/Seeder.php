@@ -2,7 +2,6 @@
 
 namespace Library\DataMapper\Database;
 
-use Faker\Factory;
 use Faker\Generator;
 use Library\DataMapper\DataMapper;
 
@@ -28,12 +27,15 @@ abstract class Seeder
         $this->faker = $faker;
     }
 
-    public function call($seederClass)
+    public abstract function run();
+
+    protected function call(string $class, int $times = 1)
     {
-        $seeder = new $seederClass($this->dm, $this->faker);
+        $instance = new $class($this->dm, $this->faker);
 
-        $seeder->run();
+        for ($i = 0; $i < $times; $i++)
+        {
+            $instance->run();
+        }
     }
-
-    abstract function run();
 }

@@ -138,6 +138,19 @@ class DataMapper
     }
 
     /**
+     * @param $class
+     * @param array $conditions
+     * @return EntityCollection
+     * @throws DataMapperException
+     */
+    public function findLike($class, array $conditions)
+    {
+        $queryBuilder = $this->_findBy($class, $conditions, 'LIKE');
+
+        return new EntityCollection($this->unitOfWork->processFoundData($class, $queryBuilder->select()));
+    }
+
+    /**
      * Finds entities of a certain class by the
      * given conditions.
      *
@@ -177,10 +190,11 @@ class DataMapper
      *
      * @param $class
      * @param array $conditions
+     * @param string $operator
      * @return $this
      * @throws DataMapperException
      */
-    private function _findBy($class, array $conditions)
+    private function _findBy($class, array $conditions, string $operator = '=')
     {
         $metadata = $this->getMetadata($class);
 
@@ -193,7 +207,7 @@ class DataMapper
                 throw new DataMapperException('DataMapper.findBy : Property '.$prop.' does not exist.');
             }
 
-            $queryBuilder->where($column->name(), '=', $value);
+            $queryBuilder->where($column->name(), $operator, $value);
         }
 
         return $queryBuilder;

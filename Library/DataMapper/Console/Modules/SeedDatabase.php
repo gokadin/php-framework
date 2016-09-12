@@ -47,7 +47,7 @@ class SeedDatabase extends Command
             $output->writeln('<info>Erased database.</info>');
         }
 
-        $dbSeeder = new DatabaseSeeder($dm, Factory::create());
+        $dbSeeder = new \Config\Datamapper\Seeds($dm, Factory::create());
 
         $dbSeeder->run();
 
