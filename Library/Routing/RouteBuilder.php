@@ -161,12 +161,13 @@ class RouteBuilder
     }
 
     /**
+     * @param array $methods
      * @param string $description
      * @param array $parameters
      */
-    private function catchAll(string $description, array $parameters = []): void
+    private function catchAll(array $methods, string $description, array $parameters = []): void
     {
-        $this->catchAll = $this->addRoute(['GET'], '/', $description, $parameters);
+        $this->addCatchAllRoute($methods, $description, $parameters);
     }
 
     /**
@@ -193,9 +194,30 @@ class RouteBuilder
      * @param string $uri
      * @param string $description
      * @param array $parameters
+     */
+    private function addRoute(array $methods, string $uri, string $description, array $parameters): void
+    {
+        $this->routes->add($this->buildRoute($methods, $uri, $description, $parameters));
+    }
+
+    /**
+     * @param array $methods
+     * @param string $description
+     * @param array $parameters
+     */
+    private function addCatchAllRoute(array $methods, string $description, array $parameters): void
+    {
+        $this->routes->addCatchAll($this->buildRoute($methods, '/', $description, $parameters));
+    }
+
+    /**
+     * @param array $methods
+     * @param string $uri
+     * @param string $description
+     * @param array $parameters
      * @return Route
      */
-    private function addRoute(array $methods, string $uri, string $description, array $parameters): Route
+    private function buildRoute(array $methods, string $uri, string $description, array $parameters): Route
     {
         $uri = $this->buildPrefix().$uri;
 
@@ -206,9 +228,7 @@ class RouteBuilder
 
         $name = $this->buildName($parameters, $uri);
 
-        $route = new Route($methods, $uri, $controller, $action, $middlewares, $name);
-        $this->routes->add($route);
-        return $route;
+        return new Route($methods, $uri, $controller, $action, $middlewares, $name);
     }
 
     /**
@@ -224,7 +244,7 @@ class RouteBuilder
      */
     private function buildPrefix(): string
     {
-        return implode('', $this->prefixes);
+        return implode('/', $this->prefixes);
     }
 
     /**

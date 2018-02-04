@@ -2,7 +2,6 @@
 
 namespace Library\Routing;
 
-use Library\Http\Request;
 use Exception;
 
 class Route
@@ -129,21 +128,21 @@ class Route
     }
 
     /**
-     * @param Request $request
+     * @param string $method
+     * @param string $uri
      * @return bool
      * @throws Exception
      */
-    public function matches(Request $request): bool
+    public function matches(string $method, string $uri): bool
     {
-        if (!in_array($request->method(), $this->methods))
+        if (!in_array($method, $this->methods))
         {
             return false;
         }
 
         $pattern = '({[a-zA-Z0-9]+})';
         $substituteUrl = preg_replace($pattern, '([^\/]*)', $this->uri, -1, $parameterCount);
-
-        if (preg_match('`^'.strtolower($substituteUrl).'(\?.*)?$`', strtolower($request->uri()), $valueMatches) != 1)
+        if (preg_match('`^'.strtolower($substituteUrl).'(\?.*)?$`', strtolower($uri), $valueMatches) != 1)
         {
             return false;
         }
@@ -161,6 +160,20 @@ class Route
         }
 
         $this->populateGetArray();
+
+        return true;
+    }
+
+    /**
+     * @param $method
+     * @return bool
+     */
+    public function matchesCatchAll($method): bool
+    {
+        if (!in_array($method, $this->methods))
+        {
+            return false;
+        }
 
         return true;
     }

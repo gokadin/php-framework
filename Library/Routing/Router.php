@@ -94,7 +94,13 @@ class Router
         return $response;
     }
 
-    protected function findRoute(Request $request)
+    /**
+     * Matches a route with the request.
+     *
+     * @param Request $request
+     * @return Route
+     */
+    private function findRoute(Request $request): Route
     {
         try
         {
@@ -102,13 +108,15 @@ class Router
         }
         catch (RouterException $e)
         {
-            if (!is_null($this->catchAll) && $this->catchAll->hasMethod($request->method()))
+            try
             {
-                return $this->catchAll;
+                return $this->routes->matchCatchAll($request);
             }
-
-            $response = new Response(Response::STATUS_BAD_REQUEST);
-            $response->executeResponse();
+            catch (RouterException $e)
+            {
+                $response = new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
+                $response->executeResponse();
+            }
         }
     }
 
