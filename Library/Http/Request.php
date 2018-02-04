@@ -4,180 +4,304 @@ namespace Library\Http;
 
 class Request
 {
-    protected $method;
-    protected $uri;
-    private $data;
+    /**
+     * @var string
+     */
+    private $method;
 
-    public function __construct($method = null, $uri = null, $data = null)
+    /**
+     * @var string
+     */
+    private $uri;
+
+    /**
+     * @var array
+     */
+    private $getData;
+
+    /**
+     * @var array
+     */
+    private $postData;
+
+    /**
+     * @var array
+     */
+    private $headers;
+
+    /**
+     * Request constructor.
+     *
+     * @param mixed $method
+     * @param mixed $uri
+     * @param array|null $getData
+     * @param array|null $postData
+     * @param array|null $headers
+     * @internal param array|null $data
+     */
+    public function __construct($method = null, $uri = null, array $getData = null, array $postData = null, array $headers = null)
     {
-        $this->method = $method;
-        $this->uri = $uri;
-        $this->data = $data;
+        $this->setUpHeaders($headers);
+        $this->setUpMethod($method);
+        $this->setUpUri($uri);
+        $this->setUpGetData($getData);
+        $this->setUpPostData($postData);
     }
 
-    protected function getDataFromSource()
+    /**
+     * @param mixed $method
+     */
+    private function setUpMethod($method): void
     {
-        if ($this->data != null)
+        if (!is_null($method))
         {
-            return $this->data;
+            $this->method = $method;
+            return;
+        }
+
+        $this->method = array_key_exists('REQUEST_METHOD', $_SERVER) ? strtoupper($_SERVER['REQUEST_METHOD']) : '';
+
+        if (isset($_POST['_method']))
+        {
+            $this->method = strtoupper($_POST['_method']);
+        }
+    }
+
+    /**
+     * @param mixed $uri
+     */
+    private function setUpUri($uri): void
+    {
+        if (!is_null($uri))
+        {
+            $this->uri = $uri;
+            return;
+        }
+
+        $this->uri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '';
+    }
+
+    /**
+     * @param mixed $getData
+     */
+    private function setUpGetData($getData): void
+    {
+        if (!is_null($getData))
+        {
+            $this->getData = $getData;
+            return;
+        }
+
+        foreach ($_GET as $key => $value)
+        {
+            if ($key == 'json')
+            {
+                $this->getData[$key] = json_decode($value);
+                continue;
+            }
+
+            $this->getData[$key] = $value;
+        }
+    }
+
+    /**
+     * @param mixed $postData
+     */
+    private function setUpPostData($postData): void
+    {
+        if (!is_null($postData))
+        {
+            $this->postData = $postData;
+            return;
+        }
+
+        if ($this->method == 'GET')
+        {
+            $this->postData = [];
+            return;
         }
 
         if ($this->isJson())
         {
             $decodedJson = $this->getDecodedJson();
-            $this->data = array_merge(is_array($decodedJson) ? $decodedJson : [], $this->retrieveGetData());
-
-            return $this->data;
+            $this->postData = is_array($decodedJson) ? $decodedJson : [];
+            return;
         }
 
-        switch ($this->method())
-        {
-            case 'GET':
-                $this->data = $this->retrieveGetData();
-                break;
-            case 'POST':
-            case 'PUT':
-            case 'PATCH':
-            case 'DELETE':
-                $this->data = array_merge($_POST, $this->retrieveGetData());
-                break;
-        }
-
-        return $this->data;
+        $this->postData = $_POST;
     }
 
-    private function retrieveGetData()
+    /**
+     * @param mixed $headers
+     */
+    private function setUpHeaders($headers): void
     {
-        $result = [];
-        foreach ($_GET as $key => $value)
+        if (!is_null($headers))
         {
-            if ($key == 'json')
-            {
-                $result[$key] = json_decode($value);
-
-                continue;
-            }
-
-            $result[$key] = $value;
+            $this->headers = $headers;
+            return;
         }
 
-        return $result;
-    }
-
-    public function get($key)
-    {
-        return isset($_GET[$key]) ? $_GET[$key] : null;
-    }
-
-    public function isJson()
-    {
-        if (!strpos($this->header('Content-Type'), '/json'))
+        if (function_exists('apache_request_headers'))
         {
-            return false;
+            $this->headers = apache_request_headers();
+            return;
         }
 
-        return true;
+        $this->headers = [];
     }
 
-    protected function getDecodedJson()
+    /**
+     * @return string
+     */
+    public function method(): string
+    {
+       return $this->method;
+    }
+
+    /**
+     * @return string
+     */
+    public function uri(): string
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isJson(): bool
+    {
+        return strpos($this->header('Content-Type'), '/json');
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
+    public function get(string $key)
+    {
+        return array_key_exists($key, $this->getData) ? $this->getData[$key] : null;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function getExists(string $key): bool
+    {
+        return array_key_exists($key, $this->getData);
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function data(string $key)
+    {
+        return array_key_exists($key, $this->postData) ? $this->postData[$key] : null;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function dataExists(string $key): bool
+    {
+        return array_key_exists($key, $this->postData);
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function header(string $key)
+    {
+        if (array_key_exists($key, $this->headers))
+        {
+            return $this->headers[$key];
+        }
+
+        $key = strtolower($key);
+        return array_key_exists($key, $this->headers) ? $this->headers[$key] : null;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function headerExists(string $key): bool
+    {
+        return array_key_exists($key, $this->headers);
+    }
+
+    /**
+     * @return array
+     */
+    public function all(): array
+    {
+        return $this->excludeFrameworkVariables(array_merge($this->getData, $this->postData));
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function cookie(string $key)
+    {
+        return array_key_exists($key, $_COOKIE) ? $_COOKIE[$key] : null;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function cookieExists(string $key): bool
+    {
+        return array_key_exists($key, $_COOKIE);
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function file(string $key)
+    {
+        return array_key_exists($key, $_FILES) ? $_FILES[$key] : null;
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function fileExists(string $key): bool
+    {
+        return array_key_exists($key, $_FILES);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getDecodedJson()
     {
         return json_decode(file_get_contents('php://input'), true);
     }
 
-    public function __get($key)
+    /**
+     * @param array $arr
+     * @return array
+     */
+    private function excludeFrameworkVariables(array $arr): array
     {
-        $data = $this->getDataFromSource();
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    public function all()
-    {
-        return $this->excludeFrameworkVariablesFromAll($this->getDataFromSource());
-    }
-
-    protected function excludeFrameworkVariablesFromAll($arr)
-    {
-        $results = array();
+        $results = [];
         foreach ($arr as $key => $value)
         {
             if ($key != '_method' && $key != '_token')
+            {
                 $results[$key] = $value;
+            }
         }
 
         return $results;
-    }
-
-    public function cookieData($key)
-    {
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : null;
-    }
-
-    public function cookieExists($key)
-    {
-        return isset($_COOKIE[$key]);
-    }
-
-    public function data($key)
-    {
-        $data = $this->getDataFromSource();
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    public function dataExists($key)
-    {
-        $data = $this->getDataFromSource();
-        return isset($data[$key]);
-    }
-
-    public function method()
-    {
-        if ($this->method != null)
-        {
-            return $this->method;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'GET')
-            return $this->method = 'GET';
-
-        if (isset($_POST['_method']))
-        {
-            return $this->method = strtoupper($_POST['_method']);
-        }
-
-        return $this->method = $_SERVER['REQUEST_METHOD'];
-    }
-    
-    public function fileData($key)
-    {
-        return isset($_FILES[$key]) ? $_FILES[$key] : null;
-    }
-    
-    public function fileExists($key)
-    {
-        return isset($_FILES[$key]);
-    }
-
-    public function uri()
-    {
-        if (!is_null($this->uri))
-        {
-            return $this->uri;
-        }
-
-        return $this->uri = $_SERVER['REQUEST_URI'];
-    }
-
-    public function header($key)
-    {
-        $headers = apache_request_headers();
-
-        if (isset($headers[$key]))
-        {
-            return $headers[$key];
-        }
-
-        $key = strtolower($key);
-
-        return isset($headers[$key]) ? $headers[$key] : null;
     }
 }
