@@ -10,7 +10,7 @@ use Library\DataMapper\Console\Modules\SeedDatabase;
 
 $app = new Application();
 
-$config = require __DIR__.'/../../../Config/datamapper.php';
+$config = require __DIR__.'/../../../Config/Datamapper/datamapper.php';
 $app->add(new CreateSchema($config));
 $app->add(new DropSchema($config));
 $app->add(new UpdateSchema($config));

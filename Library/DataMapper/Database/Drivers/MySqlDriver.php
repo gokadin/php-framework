@@ -205,7 +205,7 @@ class MySqlDriver
     {
         return $this->dao->exec($str);
     }
-
+ 
     public function createTable(Metadata $metadata)
     {
         if ($this->tableExists($metadata->table()))

@@ -10,12 +10,12 @@ trait DataMapperTimestamps
     /** @Column(name="updated_at", type="datetime") */
     protected $updatedAt;
 
-    public function createdAt()
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function updatedAt()
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }

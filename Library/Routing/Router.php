@@ -4,21 +4,20 @@ namespace Library\Routing;
 
 use Library\Container\Container;
 use Library\Http\Request;
+use Library\Http\Response;
 use Library\Validation\Validator;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 use ReflectionMethod;
 
 class Router
 {
+    const ENGINE_METHOD = 'POST';
+    const ENGINE_URI = '/api/engine';
+
     protected $container;
     protected $validator;
     protected $routes;
     protected $currentRoute;
-    protected $namespaces = [];
-    protected $prefixes = [];
-    protected $middlewares = [];
-    protected $names = [];
-    private $catchAll;
 
     public function __construct(Container $container, Validator $validator)
     {
@@ -27,214 +26,9 @@ class Router
         $this->routes = new RouteCollection();
     }
 
-    public function get($uri, $action)
+    public function setRoutes(RouteCollection $routes)
     {
-        $this->addRoute(['GET'], $uri, $action);
-    }
-
-    public function post($uri, $action)
-    {
-        $this->addRoute(['POST'], $uri, $action);
-    }
-
-    public function put($uri, $action)
-    {
-        $this->addRoute(['PUT'], $uri, $action);
-    }
-
-    public function patch($uri, $action)
-    {
-        $this->addRoute(['PATCH'], $uri, $action);
-    }
-
-    public function delete($uri, $action)
-    {
-        $this->addRoute(['DELETE'], $uri, $action);
-    }
-
-    public function many($methods, $uri, $action)
-    {
-        $this->addRoute($methods, $uri, $action);
-    }
-
-    public function resource($controller, $actions)
-    {
-        foreach ($actions as $action)
-        {
-            switch ($action)
-            {
-                case 'fetch':
-                    $this->addRoute(['GET'], '/', $controller.'@fetch');
-                    break;
-                case 'show':
-                    $this->addRoute(['GET'], '/{id}', $controller.'@show');
-                    break;
-                case 'create':
-                    $this->addRoute(['GET'], '/create', $controller.'@create');
-                    break;
-                case 'store':
-                    $this->addRoute(['POST'], '/', $controller.'@store');
-                    break;
-                case 'edit':
-                    $this->addRoute(['GET'], '/{id}/edit', $controller.'@edit');
-                    break;
-                case 'update':
-                    $this->addRoute(['PUT'], '/{id}', $controller.'@update');
-                    break;
-                case 'destroy':
-                    $this->addRoute(['DELETE'], '/{id}', $controller.'@destroy');
-                    break;
-            }
-        }
-    }
-
-    public function catchAll($action)
-    {
-        $this->catchAll = $this->addRoute(['GET'], '/', $action);
-    }
-
-    public function group($params, $action)
-    {
-        if (isset($params['namespace'])) { array_push($this->namespaces, $params['namespace']); }
-        if (isset($params['prefix'])) { array_push($this->prefixes, $params['prefix']); }
-        if (isset($params['middleware'])) { array_push($this->middlewares, $params['middleware']); }
-        if (isset($params['as'])) { array_push($this->names, $params['as']); }
-
-        $action($this);
-
-        if (isset($params['namespace'])) { array_pop($this->namespaces); }
-        if (isset($params['prefix'])) { array_pop($this->prefixes); }
-        if (isset($params['middleware'])) { array_pop($this->middlewares); }
-        if (isset($params['as'])) { array_pop($this->names); }
-    }
-
-    public function getUri($name, array $params = [])
-    {
-        $route = $this->routes->getNamedRoute($name);
-
-        if (is_null($route))
-        {
-            return '';
-        }
-
-        if (sizeof($params) == 0)
-        {
-            return $route->uri();
-        }
-
-        return $this->resolveUriWithParameters($route->uri(), $params);
-    }
-
-    protected function resolveUriWithParameters($uri, $params)
-    {
-        return preg_replace('/({[a-zA-Z0-9]+})/', $params, $uri);
-    }
-
-    protected function addRoute($methods, $uri, $action)
-    {
-        if (sizeof($this->namespaces) > 0)
-        {
-            $namespaceString = '';
-            for ($i = 0; $i < sizeof($this->namespaces); $i++)
-            {
-                $namespaceString .= $this->namespaces[$i].'\\';
-            }
-
-            if (is_string($action))
-            {
-                $action = $namespaceString.$action;
-            }
-            else if (is_array($action) && isset($action['uses']))
-            {
-                $action['uses'] = $namespaceString.$action['uses'];
-            }
-        }
-
-        if (sizeof($this->prefixes) > 0)
-        {
-            $prefixString = '';
-            for ($i = 0; $i < sizeof($this->prefixes); $i++)
-            {
-                $prefixString .= $this->prefixes[$i];
-            }
-
-            $uri = $prefixString.$uri;
-        }
-
-        $middlewares = array();
-        if (sizeof($this->middlewares) > 0)
-        {
-            foreach ($this->middlewares as $middleware)
-            {
-                if (!is_array($middleware))
-                {
-                    $middlewares[] = $middleware;
-                    continue;
-                }
-
-                foreach ($middleware as $m)
-                {
-                    $middlewares[] = $m;
-                }
-            }
-        }
-
-        $name = null;
-        $namePrefix = '';
-        if (sizeof($this->names) > 0)
-        {
-            $namePrefix = implode('.', $this->names).'.';
-        }
-
-        if (!is_callable($action))
-        {
-            if (is_array($action))
-            {
-                if (isset($action['as']))
-                {
-                    $name = $namePrefix.$action['as'];
-                }
-                else
-                {
-                    $name = $this->generateRouteNameFromController($action['uses'], $namePrefix);
-                }
-            }
-            else
-            {
-                $name = $this->generateRouteNameFromController($action, $namePrefix);
-            }
-        }
-
-        $route = new Route($methods, $uri, $action, $name, $middlewares);
-        $this->routes->add($route);
-
-        return $route;
-    }
-
-    protected function generateRouteNameFromController($controllerAndAction, $prefix)
-    {
-        $name = explode('@', $controllerAndAction)[1];
-
-        if ($prefix != '' || sizeof($this->namespaces) == 0)
-        {
-            return $prefix.$name;
-        }
-
-        foreach ($this->namespaces as $namespace)
-        {
-            if ($namespace == 'App\\Http\\Controllers')
-            {
-                continue;
-            }
-
-            $ns = explode('\\', $namespace);
-            foreach ($ns as $n)
-            {
-                $prefix .= lcfirst($n).'.';
-            }
-        }
-
-        return $prefix.$name;
+        $this->routes = $routes;
     }
 
     public function has($name)
@@ -254,9 +48,50 @@ class Router
 
     public function dispatch(Request $request)
     {
+        if ($request->method() == 'OPTIONS' && env('ALLOW_CORS_HEADERS'))
+        {
+            return $this->handleCorsRequest($request);
+        }
+
+        if ($request->method() == self::ENGINE_METHOD && $request->uri() == self::ENGINE_URI)
+        {
+            if (env('ALLOW_CORS_HEADERS'))
+            {
+                header('Access-Control-Allow-Origin: *');
+            }
+
+            return $this->dispatchEngineRequest($request);
+        }
+
         $this->currentRoute = $this->findRoute($request);
 
         return $this->executeRouteAction($request);
+    }
+
+    private function dispatchEngineRequest(Request $request)
+    {
+        if (!$request->dataExists('data'))
+        {
+            return new Response(Response::STATUS_BAD_REQUEST, 'No data was passed to engine request.');
+        }
+
+        $engine = $this->container->resolveInstance('engine');
+        $result = $engine->run($request->data('data'));
+
+        return new Response($result['status'], $result['content']);
+    }
+
+    private function handleCorsRequest($request)
+    {
+        $response = new Response(Response::STATUS_OK);
+
+        $response->addHeader('Access-Control-Allow-Origin', '*');
+        $response->addHeader('Access-Control-Allow-Credentials', true);
+        $response->addHeader('Access-Control-Max-Age', 86400);
+        $response->addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        $response->addHeader('Access-Control-Allow-Headers', "{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+
+        return $response;
     }
 
     protected function findRoute(Request $request)
@@ -272,8 +107,7 @@ class Router
                 return $this->catchAll;
             }
 
-            $response = $this->container->resolveInstance('response');
-            $response->redirect404();
+            $response = new Response(Response::STATUS_BAD_REQUEST);
             $response->executeResponse();
         }
     }
@@ -391,12 +225,7 @@ class Router
         {
             if (!$this->processRequest($instance))
             {
-                $response = $this->container->resolveInstance('response');
-
-                $instance->isJson()
-                    ? $response->json($this->validator->errors(), 401)
-                    : $response->back()->withErrors($this->validator->errors());
-
+                $response = new Response(Response::STATUS_NOT_FOUND, $this->validator->errors());
                 $response->executeResponse();
             }
         }

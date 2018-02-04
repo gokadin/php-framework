@@ -66,7 +66,7 @@ class Container
                 continue;
             }
 
-            throw new ContainerException('Could not resolve parameter '.$parameter->getName().' for class '.get_class($class));
+            throw new ContainerException('Could not resolve parameter '.$parameter->getName().' for class '.$class);
         }
 
         return $resolvedParameters;
@@ -104,7 +104,6 @@ class Container
         if (!$r->isInstantiable())
         {
             throw new ContainerException('Class '.$class.' cannot be instantiated.');
-            return null;
         }
 
         return $this->resolveConcrete($class, $r);
@@ -125,7 +124,6 @@ class Container
             }
 
             throw new ContainerException('Interface '.$interface.' is not registered.');
-            return null;
         }
 
         $concrete = $this->registeredInterfaces[$interface];
@@ -164,7 +162,6 @@ class Container
                 if (!$parameter->isOptional())
                 {
                     throw new ContainerException('Parameter '.$parameter->getName().' of class '.$class.' cannot be resolved.');
-                    return null;
                 }
                 else
                 {

@@ -27,7 +27,7 @@ abstract class Seeder
         $this->faker = $faker;
     }
 
-    public abstract function run();
+    abstract function run();
 
     protected function call(string $class, int $times = 1)
     {
@@ -35,7 +35,7 @@ abstract class Seeder
 
         for ($i = 0; $i < $times; $i++)
         {
-            $instance->run();
+            $this->dm->persist($instance->run());
         }
     }
 }

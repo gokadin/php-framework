@@ -91,21 +91,12 @@ class Mail
     private function getFile($view)
     {
         $validExtensions = ['.php', '.html'];
-        $validShaoExtensions = ['.shao.php', '.shao.html'];
 
         foreach ($validExtensions as $validExtension)
         {
             if (file_exists($view.$validExtension))
             {
                 return $view.$validExtension;
-            }
-        }
-
-        foreach ($validShaoExtensions as $validShaoExtension)
-        {
-            if (file_exists($view.$validShaoExtension))
-            {
-                return $this->shao->parseFile($view.$validShaoExtension);
             }
         }
 

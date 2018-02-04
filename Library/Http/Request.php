@@ -175,6 +175,9 @@ class Request
         {
             return $headers[$key];
         }
+
+        $key = strtolower($key);
+
         return isset($headers[$key]) ? $headers[$key] : null;
     }
 }

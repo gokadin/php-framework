@@ -2,16 +2,12 @@
 
 namespace Tests;
 
-use Library\Testing\TestCase;
+use PHPUnit_Framework_TestCase;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTest extends PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    protected function basePath()
     {
-        parent::setUp();
-
-        putenv('APP_ENV=framework_testing');
-
-        require __DIR__.'/../Bootstrap/autoload.php';
+        return realpath(__DIR__);
     }
 }

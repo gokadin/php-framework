@@ -3,7 +3,6 @@
 namespace Library\Testing;
 
 use PHPUnit_Framework_TestCase;
-use Mockery;
 
 class TestCase extends PHPUnit_Framework_TestCase
 {
@@ -11,7 +10,11 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        require __DIR__.'/../Configuration/envFunctions.php';
+
         putenv('APP_ENV=testing');
+
+        configureEnvironment();
     }
 
     public function tearDown()

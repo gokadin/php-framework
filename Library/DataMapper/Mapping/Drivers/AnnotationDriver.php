@@ -30,7 +30,7 @@ class AnnotationDriver
 
         $table = isset($parsed['Entity']['name'])
             ? $parsed['Entity']['name']
-            : $r->getShortName();
+            : lcfirst($r->getShortName());
         $metadata = new Metadata($class, $table, $r);
 
         $properties = $r->getProperties();

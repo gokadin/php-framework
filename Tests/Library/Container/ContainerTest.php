@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\Container;
+namespace Tests\Library\Container;
 
 use Library\Container\Container;
 use Tests\BaseTest;
 use Tests\TestData\Container\ConcreteEmptyConstructor;
 use Tests\TestData\Container\ConcreteImplementingInterfaceOne;
-use Tests\TestData\Container\ConcreteImplementingInterfaceTwo;
 use Tests\TestData\Container\ConcreteNoConstructor;
 use Tests\TestData\Container\ConcreteNoTypeHintDefault;
 use Tests\TestData\Container\ConcreteNoTypeHintNoDefault;

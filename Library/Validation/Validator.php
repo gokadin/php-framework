@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 class Validator
 {
+    private $database;
     private $data = [];
     private $errors = [];
 
@@ -131,7 +132,7 @@ class Validator
             case 'boolean':
                 return $field.' must be true or false';
             case 'email':
-                return 'Email format is invalid';
+                return $field.' is already taken';
             case 'equalsField':
                 return $field.' does not equal '.$args[0];
             case 'date':

@@ -2,7 +2,6 @@
 
 namespace Library\DataMapper\Console\Modules;
 
-use Database\Seeds\DatabaseSeeder;
 use Faker\Factory;
 use Library\DataMapper\Database\SchemaTool;
 use Library\DataMapper\DataMapper;

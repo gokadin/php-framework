@@ -2,19 +2,21 @@
 
 namespace Library\Http;
 
+use Library\Shao\Shao;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 
 class View
 {
     const VIEW_FOLDER = 'resources/views';
 
-    private $basePath;
-    private $vars;
+    protected $basePath;
+    protected $content;
+    protected $vars;
     private $viewAction;
 
     public function __construct($viewAction = null, array $data = [])
     {
-        $this->basePath = __DIR__ . '/../../' . self::VIEW_FOLDER;
+        $this->basePath = __DIR__.'/../../'.self::VIEW_FOLDER;
 
         if (!is_null($viewAction))
         {
@@ -33,14 +35,15 @@ class View
 
     public function add(array $data)
     {
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $this->vars[$key] = $value;
         }
     }
 
     public function processView()
     {
-        $view = $this->basePath . '/' . str_replace('.', '/', $this->viewAction);
+        $view = $this->basePath.'/'.str_replace('.', '/', $this->viewAction);
 
         $contentFile = $this->getContentFile($view);
 
@@ -54,16 +57,18 @@ class View
         return ob_get_clean();
     }
 
-    private function getContentFile($view)
+    protected function getContentFile($view)
     {
         $validExtensions = ['.php', '.html'];
 
-        foreach ($validExtensions as $validExtension) {
-            if (file_exists($view . $validExtension)) {
-                return $view . $validExtension;
+        foreach ($validExtensions as $validExtension)
+        {
+            if (file_exists($view.$validExtension))
+            {
+                return $view.$validExtension;
             }
         }
 
-        throw new RuntimeException('File ' . $view . ' does not exist.');
+        throw new RuntimeException('File '.$view.' does not exist.');
     }
 }

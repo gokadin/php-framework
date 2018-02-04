@@ -3,6 +3,7 @@
 namespace Library\Routing;
 
 use Library\Http\Request;
+use Exception;
 
 class Route
 {
@@ -76,12 +77,13 @@ class Route
         $pattern = '/{([a-zA-Z0-9]+)}/';
         preg_match_all($pattern, $this->uri, $varMatches);
 
+        if (sizeof($varMatches[1]) != $parameterCount) {
+            throw new Exception('Route arguments do not match.');
+        }
+
         for ($i = 0; $i < $parameterCount; $i++)
         {
-            if (isset($varMatches[$i]))
-            {
-                $this->parameters[$varMatches[1][$i]] = $valueMatches[$i + 1];
-            }
+            $this->parameters[$varMatches[1][$i]] = $valueMatches[$i + 1];
         }
 
         $this->populateGetArray();
