@@ -19,17 +19,35 @@ class RouteBuilderTest extends BaseTest
         $this->routebuilder = new RouteBuilder($this->basePath());
     }
 
+    public function test_getRoutes_buildsNameCorrectlyWhenOutsideGroup()
+    {
+        // Act
+        $routes = $this->routebuilder->getRoutes();
+
+        // Assert
+        $this->assertTrue($routes->exists('a'));
+    }
+
+    public function test_getRoutes_buildsNameCorrectlyWhenOutsideGroupWithAsParameter()
+    {
+        // Act
+        $routes = $this->routebuilder->getRoutes();
+
+        // Assert
+        $this->assertTrue($routes->exists('name1'));
+    }
+
     public function test_getRoutes_buildsAGetRouteCorrectly()
     {
         // Act
         $routes = $this->routebuilder->getRoutes();
 
         // Assert
-        $this->assertEquals(1, $routes->count());
-        $this->assertEquals(['GET'], $routes->toArray()[0]->methods());
-        $this->assertEquals('/a', $routes->toArray()[0]->uri());
-        $this->assertEquals('controllerA', $routes->toArray()[0]->controller());
-        $this->assertEquals('actionA', $routes->toArray()[0]->action());
-        $this->assertEquals(0, sizeof($routes->toArray()[0]->middlewares()));
+        $route = $routes->get('a');
+        $this->assertEquals(['GET'], $route->methods());
+        $this->assertEquals('/a', $route->uri());
+        $this->assertEquals('controllerA', $route->controller());
+        $this->assertEquals('actionA', $route->action());
+        $this->assertEquals(0, sizeof($route->middlewares()));
     }
 }

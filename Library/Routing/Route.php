@@ -33,6 +33,11 @@ class Route
     private $middlewares;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var array
      */
     private $parameters;
@@ -45,14 +50,16 @@ class Route
      * @param string $controller
      * @param string $action
      * @param array $middlewares
+     * @param string $name
      */
-    public function __construct(array $methods, string $uri, string $controller, string $action, array $middlewares)
+    public function __construct(array $methods, string $uri, string $controller, string $action, array $middlewares, string $name)
     {
         $this->methods = $methods;
         $this->uri = $uri;
         $this->controller = $controller;
         $this->action = $action;
         $this->middlewares = $middlewares;
+        $this->name = $name;
         $this->parameters = [];
     }
 
@@ -103,6 +110,14 @@ class Route
     public function middlewares(): array
     {
         return $this->middlewares;
+    }
+
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
     }
 
     /**

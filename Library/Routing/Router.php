@@ -100,7 +100,7 @@ class Router
         {
             return $this->routes->match($request);
         }
-        catch (RouteNotFoundException $e)
+        catch (RouterException $e)
         {
             if (!is_null($this->catchAll) && $this->catchAll->hasMethod($request->method()))
             {

@@ -3,26 +3,40 @@
 namespace Library\Routing;
 
 use Library\Http\Request;
+use Countable;
 
-class RouteCollection implements \Countable
+class RouteCollection implements Countable
 {
-    protected $allRoutes;
-    protected $routesByMethod;
+    /**
+     * @var array
+     */
+    private $allRoutes = [];
 
-    public function __construct()
-    {
-        $this->allRoutes = array();
-        $this->routesByMethod = array();
-    }
+    /**
+     * @var array
+     */
+    private $routesByMethod = [];
 
-    public function toArray()
+    /**
+     * @var array
+     */
+    private $routesByName = [];
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
     {
         return $this->allRoutes;
     }
 
-    public function add(Route $route)
+    /**
+     * @param Route $route
+     */
+    public function add(Route $route): void
     {
         $this->allRoutes[] = $route;
+        $this->routesByName[$route->name()] = $route;
 
         foreach ($route->methods() as $method)
         {
@@ -30,11 +44,38 @@ class RouteCollection implements \Countable
         }
     }
 
-    public function match(Request $request)
+    /**
+     * @param string $name
+     * @return Route
+     * @throws RouterException
+     */
+    public function get(string $name): Route
     {
-        $method = $request->method();
+        if (isset($this->routesByName[$name]))
+        {
+            return $this->routesByName[$name];
+        }
 
-        foreach ($this->routesByMethod[$method] as $route)
+        throw new RouterException('Route with name '.$name.' not found.');
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function exists(string $name): bool
+    {
+        return isset($this->routesByName[$name]);
+    }
+
+    /**
+     * @param Request $request
+     * @return Route
+     * @throws RouterException
+     */
+    public function match(Request $request): Route
+    {
+        foreach ($this->routesByMethod[$request->method()] as $route)
         {
             if ($route->matches($request))
             {
@@ -42,10 +83,13 @@ class RouteCollection implements \Countable
             }
         }
 
-        throw new RouteNotFoundException('Route for uri '.$request->uri().' and method '.$method.' not found.');
+        throw new RouterException('Route for uri '.$request->uri().' and method '.$request->method().' not found.');
     }
 
-    public function count()
+    /**
+     * @return int
+     */
+    public function count(): int
     {
         return count($this->allRoutes);
     }
