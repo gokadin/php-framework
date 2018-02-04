@@ -7,59 +7,118 @@ use Exception;
 
 class Route
 {
-    protected $methods;
-    protected $uri;
-    protected $action;
-    protected $middlewares;
-    protected $name;
-    protected $parameters;
+    /**
+     * @var array
+     */
+    private $methods;
 
-    public function __construct($methods, $uri, $action, $name, $middlewares)
+    /**
+     * @var string
+     */
+    private $uri;
+
+    /**
+     * @var string
+     */
+    private $controller;
+
+    /**
+     * @var string
+     */
+    private $action;
+
+    /**
+     * @var array
+     */
+    private $middlewares;
+
+    /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
+     * Route constructor.
+     *
+     * @param array $methods
+     * @param string $uri
+     * @param string $controller
+     * @param string $action
+     * @param array $middlewares
+     */
+    public function __construct(array $methods, string $uri, string $controller, string $action, array $middlewares)
     {
         $this->methods = $methods;
         $this->uri = $uri;
+        $this->controller = $controller;
         $this->action = $action;
         $this->middlewares = $middlewares;
-        $this->name = $name;
-        $this->parameters = array();
+        $this->parameters = [];
     }
 
-    public function methods()
+    /**
+     * @return array
+     */
+    public function methods(): array
     {
         return $this->methods;
     }
 
-    public function hasMethod($method)
+    /**
+     * @param string $method
+     * @return bool
+     */
+    public function hasMethod(string $method): bool
     {
         return in_array($method, $this->methods);
     }
 
-    public function uri()
+    /**
+     * @return string
+     */
+    public function uri(): string
     {
         return $this->uri;
     }
 
-    public function action()
+    /**
+     * @return string
+     */
+    public function controller(): string
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @return string
+     */
+    public function action(): string
     {
         return $this->action;
     }
 
-    public function middlewares()
+    /**
+     * @return array
+     */
+    public function middlewares(): array
     {
         return $this->middlewares;
     }
 
-    public function name()
-    {
-        return $this->name;
-    }
-
-    public function parameters()
+    /**
+     * @return array
+     */
+    public function parameters(): array
     {
         return $this->parameters;
     }
 
-    public function matches(Request $request)
+    /**
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public function matches(Request $request): bool
     {
         if (!in_array($request->method(), $this->methods))
         {
@@ -91,7 +150,10 @@ class Route
         return true;
     }
 
-    private function populateGetArray()
+    /**
+     * Populates the $_GET array from its parameters
+     */
+    private function populateGetArray(): void
     {
         $_GET = array_merge($_GET, $this->parameters);
     }

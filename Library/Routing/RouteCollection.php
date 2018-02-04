@@ -8,13 +8,11 @@ class RouteCollection implements \Countable
 {
     protected $allRoutes;
     protected $routesByMethod;
-    protected $nameList;
 
     public function __construct()
     {
         $this->allRoutes = array();
         $this->routesByMethod = array();
-        $this->nameList = array();
     }
 
     public function toArray()
@@ -29,11 +27,6 @@ class RouteCollection implements \Countable
         foreach ($route->methods() as $method)
         {
             $this->routesByMethod[$method][] = $route;
-        }
-
-        if (!is_null($route->name()))
-        {
-            $this->nameList[$route->name()] = $route;
         }
     }
 
@@ -50,16 +43,6 @@ class RouteCollection implements \Countable
         }
 
         throw new RouteNotFoundException('Route for uri '.$request->uri().' and method '.$method.' not found.');
-    }
-
-    public function hasNamedRoute($name)
-    {
-        return isset($this->nameList[$name]);
-    }
-
-    public function getNamedRoute($name)
-    {
-        return isset($this->nameList[$name]) ? $this->nameList[$name] : null;
     }
 
     public function count()

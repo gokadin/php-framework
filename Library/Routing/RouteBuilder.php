@@ -4,67 +4,120 @@ namespace Library\Routing;
 
 class RouteBuilder
 {
-    private $file;
-    protected $namespaces = [];
-    protected $prefixes = [];
-    protected $middlewares = [];
-    protected $names = [];
+    /**
+     * @var string
+     */
+    private $routesFile;
+
+    /**
+     * @var RouteCollection
+     */
+    private $routes;
+
+    /**
+     * @var array
+     */
+    private $namespaces = [];
+
+    /**
+     * @var array
+     */
+    private $prefixes = [];
+
+    /**
+     * @var array
+     */
+    private $middlewares = [];
+
+    /**
+     * @var Route
+     */
     private $catchAll;
 
-    public function __construct($customFile = null)
+    /**
+     * RouteBuilder constructor.
+     *
+     * @param string $basePath
+     */
+    public function __construct(string $basePath)
     {
-        $this->routes = new RouteCollection();
+        $this->routesFile = $basePath.'/App/Http/routes.php';
 
-        if (!is_null($customFile))
-        {
-            $this->file = $customFile;
-        }
-        else
-        {
-            $this->file = __DIR__.'/../../App/Http/routes.php';
-        }
+        $this->routes = new RouteCollection();
     }
 
-    public function getRoutes()
+    /**
+     * @return RouteCollection
+     */
+    public function getRoutes(): RouteCollection
     {
         $this->group(['namespace' => 'App\\Http\\Controllers'], function() {
-            require $this->file;
+            require $this->routesFile;
         });
 
         return $this->routes;
     }
 
-    private function get($uri, $action)
+    /**
+     * @param string $uri
+     * @param string $description
+     */
+    private function get(string $uri, string $description): void
     {
-        $this->addRoute(['GET'], $uri, $action);
+        $this->addRoute(['GET'], $uri, $description);
     }
 
-    private function post($uri, $action)
+    /**
+     * @param string $uri
+     * @param string $description
+     */
+    private function post(string $uri, string $description): void
     {
-        $this->addRoute(['POST'], $uri, $action);
+        $this->addRoute(['POST'], $uri, $description);
     }
 
-    private function put($uri, $action)
+    /**
+     * @param string $uri
+     * @param string $description
+     */
+    private function put(string $uri, string $description): void
     {
-        $this->addRoute(['PUT'], $uri, $action);
+        $this->addRoute(['PUT'], $uri, $description);
     }
 
-    private function patch($uri, $action)
+    /**
+     * @param string $uri
+     * @param string $description
+     */
+    private function patch(string $uri, string $description): void
     {
-        $this->addRoute(['PATCH'], $uri, $action);
+        $this->addRoute(['PATCH'], $uri, $description);
     }
 
-    private function delete($uri, $action)
+    /**
+     * @param string $uri
+     * @param string $description
+     */
+    private function delete(string $uri, string $description): void
     {
-        $this->addRoute(['DELETE'], $uri, $action);
+        $this->addRoute(['DELETE'], $uri, $description);
     }
 
-    private function many($methods, $uri, $action)
+    /**
+     * @param array $methods
+     * @param string $uri
+     * @param string $description
+     */
+    private function many(array $methods, string $uri, string $description): void
     {
-        $this->addRoute($methods, $uri, $action);
+        $this->addRoute($methods, $uri, $description);
     }
 
-    private function resource($controller, $actions)
+    /**
+     * @param string $controller
+     * @param array $actions
+     */
+    private function resource(string $controller, array $actions): void
     {
         foreach ($actions as $action)
         {
@@ -95,130 +148,82 @@ class RouteBuilder
         }
     }
 
-    private function catchAll($action)
+    /**
+     * @param string $description
+     */
+    private function catchAll(string $description): void
     {
-        $this->catchAll = $this->addRoute(['GET'], '/', $action);
+        $this->catchAll = $this->addRoute(['GET'], '/', $description);
     }
 
-    private function group($params, $action)
+    /**
+     * @param array $params
+     * @param $builderMethod
+     */
+    private function group(array $params, $builderMethod): void
     {
         if (isset($params['namespace'])) { array_push($this->namespaces, $params['namespace']); }
         if (isset($params['prefix'])) { array_push($this->prefixes, $params['prefix']); }
         if (isset($params['middleware'])) { array_push($this->middlewares, $params['middleware']); }
-        if (isset($params['as'])) { array_push($this->names, $params['as']); }
 
-        $action($this);
+        $builderMethod($this);
 
         if (isset($params['namespace'])) { array_pop($this->namespaces); }
         if (isset($params['prefix'])) { array_pop($this->prefixes); }
         if (isset($params['middleware'])) { array_pop($this->middlewares); }
-        if (isset($params['as'])) { array_pop($this->names); }
     }
 
-    protected function addRoute($methods, $uri, $action)
+    /**
+     * @param array $methods
+     * @param string $uri
+     * @param string $description
+     */
+    private function addRoute(array $methods, string $uri, string $description): void
     {
-        if (sizeof($this->namespaces) > 0)
-        {
-            $namespaceString = '';
-            for ($i = 0; $i < sizeof($this->namespaces); $i++)
-            {
-                $namespaceString .= $this->namespaces[$i].'\\';
-            }
+        $uri = $this->buildPrefix().$uri;
 
-            if (is_string($action))
-            {
-                $action = $namespaceString.$action;
-            }
-            else if (is_array($action) && isset($action['uses']))
-            {
-                $action['uses'] = $namespaceString.$action['uses'];
-            }
-        }
+        list($controller, $action) = explode('@', $description);
+        $controller = $this->buildNamespace().$controller;
 
-        if (sizeof($this->prefixes) > 0)
-        {
-            $prefixString = '';
-            for ($i = 0; $i < sizeof($this->prefixes); $i++)
-            {
-                $prefixString .= $this->prefixes[$i];
-            }
-
-            $uri = $prefixString.$uri;
-        }
-
-        $middlewares = array();
-        if (sizeof($this->middlewares) > 0)
-        {
-            foreach ($this->middlewares as $middleware)
-            {
-                if (!is_array($middleware))
-                {
-                    $middlewares[] = $middleware;
-                    continue;
-                }
-
-                foreach ($middleware as $m)
-                {
-                    $middlewares[] = $m;
-                }
-            }
-        }
-
-        $name = null;
-        $namePrefix = '';
-        if (sizeof($this->names) > 0)
-        {
-            $namePrefix = implode('.', $this->names).'.';
-        }
-
-        if (!is_callable($action))
-        {
-            if (is_array($action))
-            {
-                if (isset($action['as']))
-                {
-                    $name = $namePrefix.$action['as'];
-                }
-                else
-                {
-                    $name = $this->generateRouteNameFromController($action['uses'], $namePrefix);
-                }
-            }
-            else
-            {
-                $name = $this->generateRouteNameFromController($action, $namePrefix);
-            }
-        }
-
-        $route = new Route($methods, $uri, $action, $name, $middlewares);
-        $this->routes->add($route);
-
-        return $route;
+        $this->routes->add(new Route($methods, $uri, $controller, $action, $this->buildMiddlewares()));
     }
 
-    protected function generateRouteNameFromController($controllerAndAction, $prefix)
+    /**
+     * @return string
+     */
+    private function buildNamespace(): string
     {
-        $name = explode('@', $controllerAndAction)[1];
+        return implode('\\', $this->namespaces).sizeof($this->namespaces) > 0 ? '\\' : '';
+    }
 
-        if ($prefix != '' || sizeof($this->namespaces) == 0)
-        {
-            return $prefix.$name;
-        }
+    /**
+     * @return string
+     */
+    private function buildPrefix(): string
+    {
+        return implode('', $this->prefixes);
+    }
 
-        foreach ($this->namespaces as $namespace)
+    /**
+     * @return array
+     */
+    private function buildMiddlewares(): array
+    {
+        $middlewares = [];
+        foreach ($this->middlewares as $middleware)
         {
-            if ($namespace == 'App\\Http\\Controllers')
+            if (is_string($middleware))
             {
+                $middlewares[] = $middleware;
                 continue;
             }
 
-            $ns = explode('\\', $namespace);
-            foreach ($ns as $n)
+            if (is_array($middleware))
             {
-                $prefix .= lcfirst($n).'.';
+                $middlewares = array_merge($middlewares, $middleware);
             }
         }
 
-        return $prefix.$name;
+        return $middlewares;
     }
 }

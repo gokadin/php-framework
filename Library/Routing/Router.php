@@ -46,7 +46,7 @@ class Router
         return strpos($this->currentRoute->name(), $str) !== false;
     }
 
-    public function dispatch(Request $request)
+    public function dispatch($routes, Request $request)
     {
         if ($request->method() == 'OPTIONS' && env('ALLOW_CORS_HEADERS'))
         {

@@ -5,6 +5,7 @@ namespace Library\Core;
 use Library\Container\Container;
 use Library\Container\ContainerConfiguration;
 use Library\Routing\RouteBuilder;
+use Library\Routing\RouteCollection;
 
 class Application
 {
@@ -21,7 +22,7 @@ class Application
     /**
      * @var mixed
      */
-    private $controllerResponse;
+    private $response;
 
     /**
      * Initializes the framework.
@@ -38,50 +39,9 @@ class Application
     }
 
     /**
-     * @return string
-     */
-    public function basePath()
-    {
-        return $this->basePath;
-    }
-
-    /**
-     * @return Container
-     */
-    public function container()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Process the request through the route.
-     */
-    public function processRoute()
-    {
-        $builder = new RouteBuilder();
-        $routes = $builder->getRoutes();
-
-        $router = $this->container->resolveInstance('router');
-        $router->setRoutes($routes);
-
-        $result = $this->container->resolveInstance('router')->dispatch(
-            $this->container()->resolveInstance('request'));
-
-        $this->controllerResponse = $result;
-    }
-
-    /**
-     * Returns framework result to the client.
-     */
-    public function sendResponse()
-    {
-        $this->controllerResponse->executeResponse();
-    }
-
-    /**
      * Loads the environment variables.
      */
-    private function loadEnvironment()
+    private function loadEnvironment(): void
     {
         $environment = new Environment($this->basePath);
         $environment->load();
@@ -90,13 +50,57 @@ class Application
     /**
      * Instanciates and configures the container.
      */
-    private function setUpContainer()
+    private function setUpContainer(): void
     {
         $this->container = new Container();
         $this->container->registerInstance('app', $this);
 
         $containerConfiguration = new ContainerConfiguration($this->container, $this->basePath);
         $containerConfiguration->configure();
+    }
+
+    /**
+     * @return string
+     */
+    public function basePath(): string
+    {
+        return $this->basePath;
+    }
+
+    /**
+     * @return Container
+     */
+    public function container(): Container
+    {
+        return $this->container;
+    }
+
+    /**
+     * Process the request through the route.
+     */
+    public function processRoute(): void
+    {
+        $router = $this->container->resolveInstance('router');
+        $request = $this->container->resolveInstance('request');
+
+        $this->response = $router->dispatch($this->buildRoutes(), $request);
+    }
+
+    /**
+     * @return RouteCollection
+     */
+    private function buildRoutes(): RouteCollection
+    {
+        $builder = new RouteBuilder($this->basePath);
+        return $builder->getRoutes();
+    }
+
+    /**
+     * Returns framework result to the client.
+     */
+    public function sendResponse(): void
+    {
+        $this->response->executeResponse();
     }
 }
 
