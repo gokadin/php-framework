@@ -3,207 +3,173 @@
 namespace Library\Routing;
 
 use Library\Container\Container;
+use Library\Controller\Controller;
 use Library\Http\Request;
 use Library\Http\Response;
 use Library\Validation\Validator;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 use ReflectionMethod;
+use Closure;
 
 class Router
 {
-    const ENGINE_METHOD = 'POST';
-    const ENGINE_URI = '/api/engine';
+    private const ALLOW_CORS_REQUESTS_KEY = 'ALLOW_CORS_REQUESTS';
 
     protected $container;
     protected $validator;
-    protected $routes;
-    protected $currentRoute;
 
     public function __construct(Container $container, Validator $validator)
     {
         $this->container = $container;
         $this->validator = $validator;
-        $this->routes = new RouteCollection();
     }
 
-    public function setRoutes(RouteCollection $routes)
+    /**
+     * @param RouteCollection $routes
+     * @param Request $request
+     * @return Response
+     */
+    public function dispatch(RouteCollection $routes, Request $request): Response
     {
-        $this->routes = $routes;
-    }
-
-    public function has($name)
-    {
-        return $this->routes->hasNamedRoute($name);
-    }
-
-    public function current()
-    {
-        return $this->currentRoute;
-    }
-
-    public function currentNameContains($str)
-    {
-        return strpos($this->currentRoute->name(), $str) !== false;
-    }
-
-    public function dispatch($routes, Request $request)
-    {
-        if ($request->method() == 'OPTIONS' && env('ALLOW_CORS_HEADERS'))
+        if ($this->isCorsRequest($request))
         {
-            return $this->handleCorsRequest($request);
+            return $this->handleCorsRequest();
         }
 
-        if ($request->method() == self::ENGINE_METHOD && $request->uri() == self::ENGINE_URI)
-        {
-            if (env('ALLOW_CORS_HEADERS'))
-            {
-                header('Access-Control-Allow-Origin: *');
-            }
-
-            return $this->dispatchEngineRequest($request);
-        }
-
-        $this->currentRoute = $this->findRoute($request);
-
-        return $this->executeRouteAction($request);
+        return $this->handleHttpRequest($routes, $request);
     }
 
-    private function dispatchEngineRequest(Request $request)
+    private function isCorsRequest(Request $request)
     {
-        if (!$request->dataExists('data'))
-        {
-            return new Response(Response::STATUS_BAD_REQUEST, 'No data was passed to engine request.');
-        }
-
-        $engine = $this->container->resolveInstance('engine');
-        $result = $engine->run($request->data('data'));
-
-        return new Response($result['status'], $result['content']);
+        return $request->method() == 'OPTIONS';
     }
 
-    private function handleCorsRequest($request)
+    /**
+     * @return Response
+     */
+    private function handleCorsRequest(): Response
     {
+        if (!getenv(self::ALLOW_CORS_REQUESTS_KEY))
+        {
+            return new Response(Response::STATUS_UNAUTHORIZED);
+        }
+
         $response = new Response(Response::STATUS_OK);
-
-        $response->addHeader('Access-Control-Allow-Origin', '*');
-        $response->addHeader('Access-Control-Allow-Credentials', true);
-        $response->addHeader('Access-Control-Max-Age', 86400);
-        $response->addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        $response->addHeader('Access-Control-Allow-Headers', "{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+        $this->setCorsHeaders($response);
 
         return $response;
     }
 
     /**
-     * Matches a route with the request.
-     *
-     * @param Request $request
-     * @return Route
+     * @param Response $response
      */
-    private function findRoute(Request $request): Route
+    private function setCorsHeaders(Response $response): void
+    {
+        $response->addHeader('Access-Control-Allow-Origin', '*');
+        $response->addHeader('Access-Control-Allow-Credentials', true);
+        $response->addHeader('Access-Control-Max-Age', 86400);
+        $response->addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        $response->addHeader('Access-Control-Allow-Headers', "{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    }
+
+    /**
+     * @param RouteCollection $routes
+     * @param Request $request
+     * @return Response
+     */
+    private function handleHttpRequest(RouteCollection $routes, Request $request): Response
     {
         try
         {
-            return $this->routes->match($request);
+            $route = $this->findRoute($routes, $request);
         }
         catch (RouterException $e)
         {
-            try
-            {
-                return $this->routes->matchCatchAll($request);
-            }
-            catch (RouterException $e)
-            {
-                $response = new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
-                $response->executeResponse();
-            }
+            return new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
+        }
+
+        return $this->executeRouteAction($route, $request);
+    }
+
+    /**
+     * Matches a route with the request.
+     *
+     * @param RouteCollection $routes
+     * @param Request $request
+     * @return Route
+     */
+    private function findRoute(RouteCollection $routes, Request $request): Route
+    {
+        try
+        {
+            return $routes->match($request);
+        }
+        catch (RouterException $e)
+        {
+            return $routes->matchCatchAll($request);
         }
     }
 
-    protected function executeRouteAction(Request $request)
+    /**
+     * @param Route $route
+     * @param Request $request
+     * @return Response
+     */
+    private function executeRouteAction(Route $route, Request $request): Response
     {
-        $action = $this->currentRoute->action();
+        $actionClosure = $this->getControllerClosure($route->controller(), $route->action(), $route->parameters());
 
-        $actionClosure = function() { return ''; };
-
-        if (is_string($action))
-        {
-            $actionClosure = $this->getControllerClosure($action);
-        }
-
-        if (is_array($action))
-        {
-            $actionClosure = $this->getArrayClosure($action);
-        }
-
-        if (is_callable($action))
-        {
-            $actionClosure = function() use ($action) {
-                return call_user_func_array($action, $this->currentRoute->parameters());
-            };
-        }
-
-        return $this->executeActionClosure($actionClosure, $request);
+        return $this->executeActionClosure($actionClosure, $request, $route->middlewares());
     }
 
-    protected function executeActionClosure($closure, Request $request)
+    /**
+     * @param string $controller
+     * @param string $action
+     * @param array $routeParameters
+     * @return Closure
+     */
+    private function getControllerClosure(string $controller, string $action, array $routeParameters): Closure
     {
-        if (sizeof($this->currentRoute->middlewares()) == 0)
-        {
-            return $closure();
-        }
-
-        $closure = $this->getActionClosureWithMiddlewares($closure, $request, sizeof($this->currentRoute->middlewares()) - 1);
-
-        return $closure();
-    }
-
-    protected function getActionClosureWithMiddlewares($closure, Request $request, $index)
-    {
-        $middlewareName = '\\App\\Http\\Middleware\\'.$this->currentRoute->middlewares()[$index];
-        $middleware = $this->resolve($middlewareName);
-
-        if ($index == 0)
-        {
-            return function() use ($middleware, $closure, $request) {
-                return $middleware->handle($request, $closure);
-            };
-        }
-
-        return $this->getActionClosureWithMiddlewares(function() use ($middleware, $closure, $request) {
-            return $middleware->handle($request, $closure);
-        }, $request, $index - 1);
-    }
-
-    protected function getArrayClosure($action)
-    {
-        if (isset($action['uses']))
-        {
-            return $this->getControllerClosure($action['uses']);
-        }
-    }
-
-    protected function getControllerClosure($action)
-    {
-        return function() use ($action) {
-            list($controllerName, $methodName) = explode('@', $action);
-            $parameters = $this->getResolvedParameters($controllerName, $methodName, $this->currentRoute->parameters());
-            $controller = $this->resolve($controllerName);
-            return call_user_func_array([$controller, $methodName], $parameters);
+        return function() use ($controller, $action, $routeParameters) {
+            $resolvedParameters = $this->getResolvedParameters($controller, $action, $routeParameters);
+            $controller = $this->resolveController($controller);
+            return call_user_func_array([$controller, $action], $resolvedParameters);
         };
     }
 
-    protected function getResolvedParameters($controllerName, $methodName, $routeParameters)
+    /**
+     * @param string $controller
+     * @return Controller
+     */
+    private function resolveController(string $controller): Controller
+    {
+        $controller = $this->container->resolve($controller);
+
+        $r = new \ReflectionObject($controller);
+        $requestProperty = $r->getProperty('request');
+        $requestProperty->setAccessible(true);
+        $requestProperty->setValue($controller, $this->container->resolveInstance('request'));
+
+        return $controller;
+    }
+
+    /**
+     * @param string $controller
+     * @param string $action
+     * @param array $routeParameters
+     * @return array
+     */
+    private function getResolvedParameters(string $controller, string $action, array $routeParameters): array
     {
         $resolvedParameters = [];
-        $r = new ReflectionMethod($controllerName, $methodName);
+        $r = new ReflectionMethod($controller, $action);
 
         foreach ($r->getParameters() as $parameter)
         {
             $class = $parameter->getClass();
             if (!is_null($class))
             {
-                $resolvedParameters[] = $this->resolve($class->getName());
+                $resolvedParameters[] = $this->container->resolve($class->getName());
                 continue;
             }
 
@@ -218,47 +184,44 @@ class Router
                 continue;
             }
 
-            throw new RuntimeException('Could not resolve parameter '.$parameter->getName().' for route method '.$methodName);
-            return [];
+            throw new RuntimeException('Could not resolve parameter '.$parameter->getName().' for route method '.$action);
         }
 
         return $resolvedParameters;
     }
 
-    protected function resolve($class)
+    /**
+     * @param Closure $closure
+     * @param Request $request
+     * @param array $middlewares
+     * @return Response
+     */
+    private function executeActionClosure(Closure $closure, Request $request, array $middlewares): Response
     {
-        $instance = $this->container->resolve($class);
-
-        if ($instance instanceof \App\Http\Requests\Request)
+        if (sizeof($middlewares) == 0)
         {
-            if (!$this->processRequest($instance))
-            {
-                $response = new Response(Response::STATUS_NOT_FOUND, $this->validator->errors());
-                $response->executeResponse();
-            }
+            return $closure();
         }
 
-        return $instance;
+        $closure = $this->getActionClosureWithMiddlewares($closure, $request, sizeof($middlewares) - 1);
+
+        return $closure();
     }
 
-    protected function processRequest($request)
+    protected function getActionClosureWithMiddlewares(Closure $closure, Request $request, $index)
     {
-        if (!is_array($request->rules()))
-        {
-            if ($request->rules() && $request->authorize())
-            {
-                return true;
-            }
+        $middlewareName = '\\App\\Http\\Middleware\\'.$this->currentRoute->middlewares()[$index];
+        $middleware = $this->container->resolve($middlewareName);
 
-            return false;
+        if ($index == 0)
+        {
+            return function() use ($middleware, $closure, $request) {
+                return $middleware->handle($request, $closure);
+            };
         }
 
-        if (!$request->authorize() ||
-            !$this->validator->make($request->all(), $request->rules()))
-        {
-            return false;
-        }
-
-        return true;
+        return $this->getActionClosureWithMiddlewares(function() use ($middleware, $closure, $request) {
+            return $middleware->handle($request, $closure);
+        }, $request, $index - 1);
     }
 }

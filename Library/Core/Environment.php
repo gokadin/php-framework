@@ -72,7 +72,12 @@ class Environment
                 continue;
             }
 
-            putenv(trim(str_replace(PHP_EOL, '', $line)));
+            list($key, $value) = explode('=', trim(str_replace(PHP_EOL, '', $line)));
+            if (strtoupper($value) == 'FALSE')
+            {
+                $value = 0;
+            }
+            putenv($key.'='.$value);
         }
 
         fclose($content);

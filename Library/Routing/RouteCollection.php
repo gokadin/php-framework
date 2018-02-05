@@ -136,9 +136,14 @@ class RouteCollection implements Countable
      */
     public function match(Request $request): Route
     {
+        if (!isset($this->routesByMethod[$request->method()]))
+        {
+            throw new RouterException('Route for uri '.$request->uri().' and method '.$request->method().' not found.');
+        }
+
         foreach ($this->routesByMethod[$request->method()] as $route)
         {
-            if ($route->matches($request))
+            if ($route->matches($request->method(), $request->uri()))
             {
                 return $route;
             }
@@ -149,9 +154,14 @@ class RouteCollection implements Countable
 
     public function matchCatchAll(Request $request): Route
     {
+        if (!isset($this->catchAllRoutesByMethod[$request->method()]))
+        {
+            throw new RouterException('Catch all route for uri '.$request->uri().' and method '.$request->method().' not found.');
+        }
+
         foreach ($this->catchAllRoutesByMethod[$request->method()] as $route)
         {
-            if ($route->matchesCatchAll($request))
+            if ($route->matchesCatchAll($request->method()))
             {
                 return $route;
             }

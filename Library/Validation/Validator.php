@@ -6,7 +6,6 @@ use Carbon\Carbon;
 
 class Validator
 {
-    private $database;
     private $data = [];
     private $errors = [];
 

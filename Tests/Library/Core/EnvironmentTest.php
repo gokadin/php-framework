@@ -28,4 +28,13 @@ class EnvironmentTest extends BaseTest
         $this->assertEquals('test', getenv(Environment::APP_ENV_KEY));
         $this->assertEquals('test', getenv('DUMMY'));
     }
+
+    public function test_load_replacesFalseWithZero()
+    {
+        // Act
+        $this->environment->load();
+
+        // Assert
+        $this->assertEquals(0, getenv('BOOLEAN_TEST'));
+    }
 }
