@@ -36,4 +36,9 @@ class TestController extends Controller
     {
         return new Response(Response::STATUS_OK, ['resolvableOne' => $this->one]);
     }
+
+    public function validationCtorParameters()
+    {
+        return new Response(Response::STATUS_OK);
+    }
 }

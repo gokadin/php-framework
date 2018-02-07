@@ -126,4 +126,19 @@ class RouterTest extends BaseTest
         $this->assertEquals(Response::STATUS_OK, $response->statusCode());
         $this->assertTrue($response->data()['resolvableOne'] instanceof ResolvableOne);
     }
+
+    public function test_dispatch_validationCtorParametersAreResolved()
+    {
+        // Arrange
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationCtorParameters', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
 }
