@@ -6,7 +6,7 @@ use Library\Container\Container;
 use Library\Controller\Controller;
 use Library\Http\Request;
 use Library\Http\Response;
-use Library\Validation\Validator;
+use Library\Validation\ValidationBase;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 use ReflectionMethod;
 use Closure;
@@ -15,13 +15,24 @@ class Router
 {
     private const ALLOW_CORS_REQUESTS_KEY = 'ALLOW_CORS_REQUESTS';
 
-    protected $container;
-    protected $validator;
+    /**
+     * @var Container
+     */
+    private $container;
 
-    public function __construct(Container $container, Validator $validator)
+    /**
+     * @var bool
+     */
+    private $shouldValidate;
+
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->validator = $validator;
+    }
+
+    public function enableValidation()
+    {
+        $this->shouldValidate = true;
     }
 
     /**
@@ -117,40 +128,73 @@ class Router
      */
     private function executeRouteAction(Route $route, Request $request): Response
     {
-        $actionClosure = $this->getControllerClosure($route->controller(), $route->action(), $route->parameters());
+        if ($this->shouldValidate)
+        {
+            $this->executeValidation($route->controller(), $route->action(), $request);
+        }
+
+        $actionClosure = $this->getControllerClosure($route->controller(), $route->action(), $route->parameters(), $request);
 
         return $this->executeActionClosure($actionClosure, $request, $route->middlewares());
+    }
+
+    private function executeValidation(string $controller, string $action, Request $request)
+    {
+        $validation = str_replace('Http\\Controllers', 'Http\\Validations', $controller);
+        $validation = substr($validation, 0, strlen($validation) - 10).'Validation';
+        if (!class_exists($validation))
+        {
+            throw new RouterException('Could not find validation class.');
+        }
+
+        $validation = $this->resolveValidation($validation, $request);
+        $resolvedParameters = $this->container->resolveMethodParameters($validation, $action);
+        $result = call_user_func_array([$validation, $action], $resolvedParameters);
+        echo $result;
     }
 
     /**
      * @param string $controller
      * @param string $action
      * @param array $routeParameters
+     * @param Request $request
      * @return Closure
      */
-    private function getControllerClosure(string $controller, string $action, array $routeParameters): Closure
+    private function getControllerClosure(string $controller, string $action, array $routeParameters, Request $request): Closure
     {
-        return function() use ($controller, $action, $routeParameters) {
+        return function() use ($controller, $action, $routeParameters, $request) {
             $resolvedParameters = $this->getResolvedParameters($controller, $action, $routeParameters);
-            $controller = $this->resolveController($controller);
+            $controller = $this->resolveController($controller, $request);
             return call_user_func_array([$controller, $action], $resolvedParameters);
         };
     }
 
     /**
      * @param string $controller
+     * @param Request $request
      * @return Controller
      */
-    private function resolveController(string $controller): Controller
+    private function resolveController(string $controller, Request $request): Controller
     {
         $controller = $this->container->resolve($controller);
 
-        $r = new \ReflectionObject($controller);
-        $requestProperty = $r->getProperty('request');
-        $requestProperty->setAccessible(true);
-        $requestProperty->setValue($controller, $this->container->resolveInstance('request'));
+        $this->container->resolveObjectProperty($controller, 'request', $request);
 
         return $controller;
+    }
+
+    /**
+     * @param string $validation
+     * @param Request $request
+     * @return ValidationBase
+     */
+    private function resolveValidation(string $validation, Request $request): ValidationBase
+    {
+        $validation = $this->container->resolve($validation);
+
+        $this->container->resolveObjectProperty($validation, 'request', $request);
+
+        return $validation;
     }
 
     /**

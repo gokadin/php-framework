@@ -4,6 +4,7 @@ namespace Library\Container;
 
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionObject;
 
 class Container
 {
@@ -70,6 +71,25 @@ class Container
         }
 
         return $resolvedParameters;
+    }
+
+    public function resolveObjectProperty($obj, string $property, $class)
+    {
+        if (!is_object($obj))
+        {
+            throw new ContainerException('Expected object as first parameter.');
+        }
+
+        $r = new ReflectionObject($obj);
+        $p = $r->getProperty($property);
+        $p->setAccessible(true);
+        if (is_object($class))
+        {
+            $p->setValue($obj, $class);
+            return;
+        }
+
+        $p->setValue($obj, $this->resolve($class));
     }
 
     public function resolveInstance($name)

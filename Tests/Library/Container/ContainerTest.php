@@ -14,6 +14,7 @@ use Tests\TestData\Container\ConcreteWithMixedButValid;
 use Tests\TestData\Container\ConcreteWithMixedButValidIncludingInterfaces;
 use Tests\TestData\Container\ConcreteWithMultipleComplexTypeHint;
 use Tests\TestData\Container\ConcreteWithMultipleSimpleTypeHint;
+use Tests\TestData\Container\ConcreteWithProperties;
 use Tests\TestData\Container\ConcreteWithSimpleTypeHint;
 use Tests\TestData\Container\ConcreteWithMethodParameters;
 use Tests\TestData\Container\InterfaceOne;
@@ -314,5 +315,57 @@ class ContainerTest extends BaseTest
         // Assert
         $this->assertEquals(1, sizeof($resolvedParameters));
         $this->assertNull($value);
+    }
+
+    public function test_resolveObjectProperty_withPublicProperty()
+    {
+        // Arrange
+        $container = new Container();
+        $obj = new ConcreteWithProperties();
+
+        // Assert
+        $this->assertNull($obj->publicPropOne);
+
+        // Act
+        $container->resolveObjectProperty($obj, 'publicPropOne', ConcreteEmptyConstructor::class);
+
+        // Assert
+        $this->assertTrue($obj->publicPropOne instanceof ConcreteEmptyConstructor);
+    }
+
+    public function test_resolveObjectProperty_withPrivateProperty()
+    {
+        // Arrange
+        $container = new Container();
+        $obj = new ConcreteWithProperties();
+
+        // Assert
+        $this->assertNull($obj->privatePropOne());
+
+        // Act
+        $container->resolveObjectProperty($obj, 'privatePropOne', ConcreteEmptyConstructor::class);
+
+        // Assert
+        $this->assertTrue($obj->privatePropOne() instanceof ConcreteEmptyConstructor);
+    }
+
+    public function test_resolve_givesTheSameInstanceOfAPreviouslyResolvedClass()
+    {
+        // Arrange
+        $container = new Container();
+
+        // Act
+        $resolved = $container->resolve(ConcreteWithSimpleTypeHint::class);
+
+        // Assert
+        $this->assertTrue($resolved instanceof ConcreteWithSimpleTypeHint);
+        $this->assertTrue($resolved->getA() instanceof ConcreteNoConstructor);
+
+        // Act
+        $resolved2 = $container->resolve(ConcreteWithSimpleTypeHint::class);
+
+        // Assert
+        $this->assertTrue($resolved2 === $resolved);
+        $this->assertTrue($resolved2->getA() === $resolved->getA());
     }
 }

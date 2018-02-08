@@ -26,4 +26,14 @@ class TestValidation extends ValidationBase
 
         return true;
     }
+
+    public function validationMethodParameters(ResolvableOne $one)
+    {
+        if (!($one instanceof ResolvableOne))
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

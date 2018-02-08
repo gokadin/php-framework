@@ -3,9 +3,9 @@
 namespace Library\Core;
 
 use Library\Container\Container;
-use Library\Container\ContainerConfiguration;
 use Library\Routing\RouteBuilder;
 use Library\Routing\RouteCollection;
+use Library\Routing\Router;
 
 class Application
 {
@@ -55,8 +55,8 @@ class Application
         $this->container = new Container();
         $this->container->registerInstance('app', $this);
 
-        $containerConfiguration = new ContainerConfiguration($this->container, $this->basePath);
-        $containerConfiguration->configure();
+        $appConfigurator = new AppConfigurator($this->container, $this->basePath);
+        $appConfigurator->configure();
     }
 
     /**
@@ -80,10 +80,9 @@ class Application
      */
     public function processRoute(): void
     {
-        $router = $this->container->resolveInstance('router');
-        $request = $this->container->resolveInstance('request');
+        $router = $this->container->resolve(Router::class);
 
-        $this->response = $router->dispatch($this->buildRoutes(), $request);
+        $this->response = $router->dispatch($this->buildRoutes());
     }
 
     /**

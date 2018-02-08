@@ -31,7 +31,7 @@ class RouterTest extends BaseTest
         parent::setUp();
 
         $this->container = new Container();
-        $this->router = new Router($this->container, new Validator());
+        $this->router = new Router($this->container);
     }
 
     public function test_dispatch_handlesCorsRequestCorrectlyWhenCorsIsDeactivated()
@@ -132,6 +132,21 @@ class RouterTest extends BaseTest
         // Arrange
         $routes = new RouteCollection();
         $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationCtorParameters', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_validationMethodParametersAreResolved()
+    {
+        // Arrange
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationMethodParameters', [], 'name1'));
         $request = new Request('GET', '/', [], [], []);
         $this->container->registerInstance('request', $request);
 

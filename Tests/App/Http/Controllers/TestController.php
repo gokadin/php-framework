@@ -41,4 +41,9 @@ class TestController extends Controller
     {
         return new Response(Response::STATUS_OK);
     }
+
+    public function validationMethodParameters()
+    {
+        return new Response(Response::STATUS_OK);
+    }
 }
