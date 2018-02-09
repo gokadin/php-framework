@@ -127,9 +127,42 @@ class RouterTest extends BaseTest
         $this->assertTrue($response->data()['resolvableOne'] instanceof ResolvableOne);
     }
 
+    public function test_dispatch_validationHasRequest()
+    {
+        // Arrange
+        $this->router->enableValidation();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationHasRequest', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_validationHasValidator()
+    {
+        // Arrange
+        $this->router->enableValidation();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationHasValidator', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
     public function test_dispatch_validationCtorParametersAreResolved()
     {
         // Arrange
+        $this->router->enableValidation();
         $routes = new RouteCollection();
         $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationCtorParameters', [], 'name1'));
         $request = new Request('GET', '/', [], [], []);
@@ -145,6 +178,7 @@ class RouterTest extends BaseTest
     public function test_dispatch_validationMethodParametersAreResolved()
     {
         // Arrange
+        $this->router->enableValidation();
         $routes = new RouteCollection();
         $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationMethodParameters', [], 'name1'));
         $request = new Request('GET', '/', [], [], []);
@@ -155,5 +189,53 @@ class RouterTest extends BaseTest
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_whenValidationReturnsFalse()
+    {
+        // Arrange
+        $this->router->enableValidation();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationReturnsFalse', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_BAD_REQUEST, $response->statusCode());
+    }
+
+    public function test_dispatch_whenValidationReturnsValidValidationResult()
+    {
+        // Arrange
+        $this->router->enableValidation();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationReturnsValidValidationResult', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_whenValidationReturnsInvalidValidationResult()
+    {
+        // Arrange
+        $this->router->enableValidation();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'validationReturnsInvalidValidationResult', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_BAD_REQUEST, $response->statusCode());
     }
 }

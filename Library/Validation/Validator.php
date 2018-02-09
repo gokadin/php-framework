@@ -9,7 +9,7 @@ class Validator
     private $data = [];
     private $errors = [];
 
-    public function make(array $data, array $rules)
+    public function validate(array $data, array $rules)
     {
         $this->errors = [];
         $this->data = $data;
@@ -77,17 +77,7 @@ class Validator
             }
         }
 
-        return $isValid;
-    }
-
-    public function hasErrors()
-    {
-        return sizeof($this->errors) > 0;
-    }
-
-    public function errors()
-    {
-        return $this->errors;
+        return new ValidationResult($isValid, $this->errors);
     }
 
     private function callProperFunction($functionName, $value, array $args)

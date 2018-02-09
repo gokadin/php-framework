@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\DataMapper\Mapping\Drivers;
+namespace Tests\Library\DataMapper\Mapping\Drivers;
 
 use Library\DataMapper\Mapping\Drivers\AnnotationDriver;
 use Tests\BaseTest;
-use Tests\TestData\DataMapper\Mapping\AnnotationClasses\AssocEntity;
 
 class AnnotationDriverTest extends BaseTest
 {
@@ -13,8 +12,15 @@ class AnnotationDriverTest extends BaseTest
      */
     private $driver;
 
-    public function setUpDriver()
+    public function setUp()
     {
+        parent::setUp();
+
         $this->driver = new AnnotationDriver();
+    }
+
+    public function test_addSomeTests()
+    {
+        $this->assertTrue(false);
     }
 }

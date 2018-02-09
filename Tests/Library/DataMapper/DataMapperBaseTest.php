@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\DataMapper;
+namespace Tests\Library\DataMapper;
 
 use Tests\TestData\DataMapper\LazyEntityOne;
 use Tests\TestData\DataMapper\LazyEntityTwo;
@@ -8,7 +8,6 @@ use Tests\TestData\DataMapper\TimeEntity;
 use Tests\TestData\DataMapper\Event;
 use Tests\TestData\DataMapper\Lesson;
 use Library\DataMapper\DataMapper;
-use Library\DataMapper\EntityCollection;
 use Tests\BaseTest;
 use Tests\TestData\DataMapper\Address;
 use Tests\TestData\DataMapper\AddressTwo;
@@ -33,16 +32,18 @@ abstract class DataMapperBaseTest extends BaseTest
     {
         date_default_timezone_set('America/Montreal');
 
+        $this->loadEnvironment();
+
         $config = [
             'mappingDriver' => 'annotation',
 
             'databaseDriver' => 'mysql',
 
             'mysql' => [
-                'host' => env('DATABASE_HOST'),
-                'database' => env('DATABASE_NAME'),
-                'username' => env('DATABASE_USERNAME'),
-                'password' => env('DATABASE_PASSWORD')
+                'host' => getenv('DATABASE_HOST'),
+                'database' => getenv('DATABASE_NAME'),
+                'username' => getenv('DATABASE_USERNAME'),
+                'password' => getenv('DATABASE_PASSWORD')
             ],
 
             'classes' => $this->classes

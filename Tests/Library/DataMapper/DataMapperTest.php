@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\DataMapper;
+namespace Tests\Library\DataMapper;
 
 use Carbon\Carbon;
 use Library\DataMapper\Proxy\ProxyEntity;

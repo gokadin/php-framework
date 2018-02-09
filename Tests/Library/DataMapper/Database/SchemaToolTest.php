@@ -1,6 +1,6 @@
 <?php
 
-namespace FrameworkTest\DataMapper\Database;
+namespace Tests\Library\DataMapper\Database;
 
 use Library\DataMapper\Database\SchemaTool;
 use Tests\BaseTest;
@@ -17,16 +17,18 @@ class SchemaToolTest extends BaseTest
     {
         parent::setUp();
 
+        $this->loadEnvironment();
+
         $config = [
             'mappingDriver' => 'annotation',
 
             'databaseDriver' => 'mysql',
 
             'mysql' => [
-                'host' => env('DATABASE_HOST'),
-                'database' => env('DATABASE_NAME'),
-                'username' => env('DATABASE_USERNAME'),
-                'password' => env('DATABASE_PASSWORD')
+                'host' => getenv('DATABASE_HOST'),
+                'database' => getenv('DATABASE_NAME'),
+                'username' => getenv('DATABASE_USERNAME'),
+                'password' => getenv('DATABASE_PASSWORD')
             ],
 
             'classes' => [

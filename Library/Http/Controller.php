@@ -1,8 +1,6 @@
 <?php
 
-namespace Library\Controller;
-
-use Library\Http\Request;
+namespace Library\Http;
 
 abstract class Controller
 {

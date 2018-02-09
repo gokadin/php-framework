@@ -34,10 +34,10 @@ class EventManager
      * Returns all listeners class names
      * associated with the event
      *
-     * @param $event class name
+     * @param string $event
      * @return array
      */
-    public function getListeners($event)
+    public function getListeners(string $event)
     {
         if (!isset($this->listeners[$event]))
         {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\DataMapper\Proxy;
+namespace Tests\Library\DataMapper\Proxy;
 
 use Library\DataMapper\Proxy\ProxyEntity;
-use Tests\DataMapper\DataMapperBaseTest;
+use Tests\Library\DataMapper\DataMapperBaseTest;
 use Tests\TestData\DataMapper\LazyEntityOne;
 use Tests\TestData\DataMapper\LazyEntityTwo;
 

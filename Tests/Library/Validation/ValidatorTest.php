@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Validation;
+namespace Tests\Library\Validation;
 
 use Library\Validation\Validator;
 use Tests\BaseTest;
@@ -26,101 +26,129 @@ class ValidatorTest extends BaseTest
 
     public function testMakeWorksWithSimpleSingleValidationWhenValid()
     {
+        // Act
+        $result = $this->validator->validate(['one' => 1], ['one' => 'required']);
+
         // Assert
-        $this->assertTrue($this->validator->make(['one' => 1], ['one' => 'required']));
-        $this->assertFalse($this->validator->hasErrors());
+        $this->assertTrue($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) == 0);
     }
 
     public function testMakeWorksWithSimpleSingleValidationWhenInvalid()
     {
+        // Act
+        $result = $this->validator->validate(['one' => null], ['one' => 'required']);
+
         // Assert
-        $this->assertFalse($this->validator->make(['one' => null], ['one' => 'required']));
-        $this->assertTrue($this->validator->hasErrors());
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
     }
 
     public function testMakeWorksWithMultipleValidationsWhenAllValid()
     {
-        // Assert
-        $this->assertTrue($this->validator->make(
+        // Act
+        $result = $this->validator->validate(
             ['one' => 1, 'two' => 2, 'three' => 3],
             ['one' => 'required', 'two' => 'numeric', 'three' => 'required']
-        ));
-        $this->assertFalse($this->validator->hasErrors());
+        );
+
+        // Assert
+        $this->assertTrue($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) == 0);
     }
 
     public function testMakeWorksWithMultipleValidationsWhenOneInvalid()
     {
-        // Assert
-        $this->assertFalse($this->validator->make(
+        // Act
+        $result = $this->validator->validate(
             ['one' => 1, 'two' => 'text', 'three' => 3],
             ['one' => 'required', 'two' => 'numeric', 'three' => 'required']
-        ));
-        $this->assertTrue($this->validator->hasErrors());
+        );
+
+        // Assert
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
     }
 
     public function testMakeWorksWithMoreDataThanThereAreValidations()
     {
-        // Assert
-        $this->assertTrue($this->validator->make(
+        // Act
+        $result = $this->validator->validate(
             ['one' => 1, 'two' => 2, 'three' => 3],
             ['one' => 'required', 'three' => 'required']
-        ));
-        $this->assertFalse($this->validator->hasErrors());
+        );
+
+        // Assert
+        $this->assertTrue($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) == 0);
     }
 
     public function testMakeWorksWithComplexValidationRuleWhenValid()
     {
+        // Act
+        $result = $this->validator->validate(['one' => 20], ['one' => 'min:15']);
+
         // Assert
-        $this->assertTrue($this->validator->make(['one' => 20], ['one' => 'min:15']));
-        $this->assertFalse($this->validator->hasErrors());
+        $this->assertTrue($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) == 0);
     }
 
     public function testMakeWorksWithComplexValidationRuleWhenInvalid()
     {
+        // Act
+        $result = $this->validator->validate(['one' => 1], ['one' => 'min:15']);
+
         // Assert
-        $this->assertFalse($this->validator->make(['one' => 1], ['one' => 'min:15']));
-        $this->assertTrue($this->validator->hasErrors());
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
     }
 
     public function testMakeWorksWithMultipleValidationsOnSameFieldWhenAllValid()
     {
-        // Assert
-        $this->assertTrue($this->validator->make(
+        // Act
+        $result = $this->validator->validate(
             ['one' => 1],
             ['one' => ['required', 'numeric']]
-        ));
-        $this->assertFalse($this->validator->hasErrors());
+        );
+
+        // Assert
+        $this->assertTrue($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) == 0);
     }
 
     public function testMakeWorksWithMultipleValidationsOnSameFieldWhenOneIsInValid()
     {
-        // Assert
-        $this->assertFalse($this->validator->make(
+        // Act
+        $result = $this->validator->validate(
             ['one' => 'text'],
             ['one' => ['required', 'numeric']]
-        ));
-        $this->assertTrue($this->validator->hasErrors());
+        );
+
+        // Assert
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
     }
 
+    // ...
     public function testSingleCustomErrorWorks()
     {
         // Act
-        $result = $this->validator->make(
+        $result = $this->validator->validate(
             [],
             ['one' => ['required' => 'custom']]
         );
 
         // Assert
-        $this->assertFalse($result);
-        $this->assertTrue($this->validator->hasErrors());
-        $errors = $this->validator->errors();
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
+        $errors = $result->errors();
         $this->assertEquals('custom', $errors['one'][0]);
     }
 
     public function testMultipleCustomErrorsWork()
     {
         // Act
-        $result = $this->validator->make(
+        $result = $this->validator->validate(
             ['one' => 'text', 'two' => null],
             [
                 'one' => ['required', 'numeric', 'min:10' => 'customMin'],
@@ -129,9 +157,9 @@ class ValidatorTest extends BaseTest
         );
 
         // Assert
-        $this->assertFalse($result);
-        $this->assertTrue($this->validator->hasErrors());
-        $errors = $this->validator->errors();
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
+        $errors = $result->errors();
         $this->assertEquals(2, sizeof($errors['one']));
         $this->assertEquals('customMin', $errors['one'][1]);
         $this->assertEquals(2, sizeof($errors['two']));
@@ -141,7 +169,7 @@ class ValidatorTest extends BaseTest
     public function testCustomErrorFormatting()
     {
         // Act
-        $result = $this->validator->make(
+        $result = $this->validator->validate(
             ['one' => null],
             ['one' => [
                 'required' => '{field} is required',
@@ -149,9 +177,9 @@ class ValidatorTest extends BaseTest
             ]]
         );
 
-        $this->assertFalse($result);
-        $this->assertTrue($this->validator->hasErrors());
-        $errors = $this->validator->errors();
+        $this->assertFalse($result->isValid());
+        $this->assertTrue(sizeof($result->errors()) > 0);
+        $errors = $result->errors();
         $this->assertEquals('one is required', $errors['one'][0]);
         $this->assertEquals('one should be higher than 10', $errors['one'][1]);
     }
@@ -270,7 +298,7 @@ class ValidatorTest extends BaseTest
     public function testEqualsFieldWorksWhenValid()
     {
         // Arrange
-        $this->validator->make(['one' => 1], []);
+        $this->validator->validate(['one' => 1], []);
 
         // Assert
         $this->assertTrue($this->validator->equalsField(1, 'one'));

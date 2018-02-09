@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\DataMapper\Mapping;
+namespace Tests\Library\DataMapper\Mapping;
 
 use Library\DataMapper\Mapping\Metadata;
 use Tests\BaseTest;

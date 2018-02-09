@@ -3,10 +3,12 @@
 namespace Library\Routing;
 
 use Library\Container\Container;
-use Library\Controller\Controller;
+use Library\Http\Controller;
 use Library\Http\Request;
 use Library\Http\Response;
 use Library\Validation\ValidationBase;
+use Library\Validation\ValidationResult;
+use Library\Validation\Validator;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 use ReflectionMethod;
 use Closure;
@@ -130,7 +132,15 @@ class Router
     {
         if ($this->shouldValidate)
         {
-            $this->executeValidation($route->controller(), $route->action(), $request);
+            $result = $this->executeValidation($route->controller(), $route->action(), $request);
+            if (!$result)
+            {
+                return new Response(Response::STATUS_BAD_REQUEST);
+            }
+            else if ($result instanceof ValidationResult && !$result->isValid())
+            {
+                return new Response(Response::STATUS_BAD_REQUEST, $result->errors());
+            }
         }
 
         $actionClosure = $this->getControllerClosure($route->controller(), $route->action(), $route->parameters(), $request);
@@ -150,7 +160,7 @@ class Router
         $validation = $this->resolveValidation($validation, $request);
         $resolvedParameters = $this->container->resolveMethodParameters($validation, $action);
         $result = call_user_func_array([$validation, $action], $resolvedParameters);
-        echo $result;
+        return $result;
     }
 
     /**
@@ -193,6 +203,7 @@ class Router
         $validation = $this->container->resolve($validation);
 
         $this->container->resolveObjectProperty($validation, 'request', $request);
+        $this->container->resolveObjectProperty($validation, 'validator', new Validator());
 
         return $validation;
     }

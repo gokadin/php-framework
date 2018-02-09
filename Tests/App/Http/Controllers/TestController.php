@@ -37,12 +37,37 @@ class TestController extends Controller
         return new Response(Response::STATUS_OK, ['resolvableOne' => $this->one]);
     }
 
+    public function validationHasRequest()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function validationHasValidator()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
     public function validationCtorParameters()
     {
         return new Response(Response::STATUS_OK);
     }
 
     public function validationMethodParameters()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function validationReturnsFalse()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function validationReturnsValidValidationResult()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function validationReturnsInvalidValidationResult()
     {
         return new Response(Response::STATUS_OK);
     }

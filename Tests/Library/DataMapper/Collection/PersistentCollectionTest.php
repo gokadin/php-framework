@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\DataMapper\Collection;
+namespace Tests\Library\DataMapper\Collection;
 
 use Library\DataMapper\Collection\PersistentCollection;
-use Tests\DataMapper\DataMapperBaseTest;
+use Tests\Library\DataMapper\DataMapperBaseTest;
 use Tests\TestData\DataMapper\SimpleEntity;
 use Exception;
 

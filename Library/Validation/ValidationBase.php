@@ -16,8 +16,12 @@ class ValidationBase
      */
     protected $validator;
 
-    protected function validate(array $rules)
+    /**
+     * @param array $rules
+     * @return ValidationResult
+     */
+    protected function validate(array $rules): ValidationResult
     {
-        // ...
+        return $this->validator->validate($this->request->all(), $rules);
     }
 }
