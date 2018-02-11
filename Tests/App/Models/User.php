@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\TestData\Engine;
+namespace Tests\App\Models;
 
 use Library\DataMapper\DataMapperPrimaryKey;
 use Library\DataMapper\DataMapperTimestamps;
@@ -22,13 +22,23 @@ class User
         $this->age = $age;
     }
 
-    public function name()
+    public function getName()
     {
         return $this->name;
     }
 
-    public function age()
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getAge()
     {
         return $this->age;
+    }
+
+    public function setAge($age)
+    {
+        $this->age = $age;
     }
 }

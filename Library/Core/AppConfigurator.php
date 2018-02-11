@@ -21,6 +21,11 @@ class AppConfigurator
     /**
      * @var string
      */
+    private $basePath;
+
+    /**
+     * @var string
+     */
     private $configPath;
 
     /**
@@ -42,6 +47,7 @@ class AppConfigurator
     public function __construct(Container $container, string $basePath)
     {
         $this->container = $container;
+        $this->basePath = $basePath;
         $this->configPath = $basePath.'/'.self::CONFIG_DIRECTORY_NAME.'/';
         $this->featuresConfigPath = $this->configPath.self::FEATURES_CONFIG_DIRECTORY_NAME.'/';
     }
@@ -165,7 +171,9 @@ class AppConfigurator
             $schema = require $schemaFile;
         }
 
+        $config = $this->readFeatureConfig('engine');
+
         $this->container->registerInstance('engine',
-            new Engine($schema, $this->container->resolveInstance('dataMapper'), $this->container));
+            new Engine($this->basePath, $schema, $this->container->resolveInstance('dataMapper'), $this->container, $config));
     }
 }

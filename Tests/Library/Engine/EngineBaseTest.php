@@ -4,10 +4,10 @@ namespace Tests\Library\Engine;
 
 use Library\Container\Container;
 use Library\Engine\Engine;
+use Tests\App\Models\User;
 use Tests\Library\DataMapper\DataMapperBaseTest;
-use Tests\TestData\Engine\User;
 
-class EngineBaseTest extends DataMapperBaseTest
+abstract class EngineBaseTest extends DataMapperBaseTest
 {
     /**
      * @var Engine
@@ -16,7 +16,9 @@ class EngineBaseTest extends DataMapperBaseTest
 
     private function setUpEngine(array $schema)
     {
-        $this->engine = new Engine($schema, $this->dm, new Container());
+        $this->engine = new Engine($this->basePath(), $schema, $this->dm, new Container(), [
+            'modelsPath' => 'Tests/App/Models'
+        ]);
     }
 
     protected function setUpEngineWithUser()

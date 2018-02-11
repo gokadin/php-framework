@@ -22,6 +22,11 @@ class Engine
     private $basePath;
 
     /**
+     * @var string
+     */
+    private $modelsNamespace;
+
+    /**
      * @var array
      */
     private $schema;
@@ -43,13 +48,21 @@ class Engine
      * @param array $schema
      * @param DataMapper $dm
      * @param Container $container
+     * @param array $config
      */
-    public function __construct(string $basePath, array $schema, DataMapper $dm, Container $container)
+    public function __construct(string $basePath, array $schema, DataMapper $dm, Container $container, array $config)
     {
         $this->basePath = $basePath;
         $this->schema = $schema;
         $this->dm = $dm;
         $this->container = $container;
+
+        $this->readConfig($config);
+    }
+
+    private function readConfig(array $config)
+    {
+        $this->modelsNamespace = '\\'.str_replace('/', '\\', $config['modelsPath']).'\\';
     }
 
     /**
@@ -58,10 +71,20 @@ class Engine
      */
     public function run(array $data): array
     {
-        return [
-            'status' => Response::STATUS_OK,
-            'content' => $this->processData($data)
-        ];
+        try
+        {
+            return [
+                'status' => Response::STATUS_OK,
+                'content' => $this->processData($data)
+            ];
+        }
+        catch (EngineException $e)
+        {
+            return [
+                'status' => Response::STATUS_BAD_REQUEST,
+                'content' => $e->getMessage()
+            ];
+        }
     }
 
     /**
@@ -95,6 +118,8 @@ class Engine
             return $this->processCreate($action);
         case 'delete':
             return $this->processDelete($action);
+        case 'update':
+            return $this->processUpdate($action);
         default:
             throw new EngineException('Requested action does not exist: '.$type.'.');
         }
@@ -114,7 +139,7 @@ class Engine
 
     private function fetchEntities(string $entityName, $fetchData)
     {
-        $entityClassName = '\\App\\Domain\\Models\\'.ucfirst($entityName);
+        $entityClassName = $this->modelsNamespace.ucfirst($entityName);
         $metadata = $this->dm->getMetadata($entityClassName);
         $queryBuilder = $this->dm->queryBuilder()->table($metadata->table());
 
@@ -130,8 +155,24 @@ class Engine
         {
             foreach ($fetchData['conditions'] as $condition)
             {
-                $queryBuilder->where($condition[0], $condition[1], $condition[2]);
+                if (sizeof($condition) == 3)
+                {
+                    $queryBuilder->where($condition[0], $condition[1], $condition[2]);
+                    continue;
+                }
+
+                if (strtoupper($condition[0]) != 'OR')
+                {
+                    throw new EngineException('Invalid condition received.');
+                }
+
+                $queryBuilder->orWhere($condition[1], $condition[2], $condition[3]);
             }
+        }
+
+        if (isset($fetchData['limit']))
+        {
+            $queryBuilder->limit($fetchData['limit']);
         }
 
         $entities = $this->dm->processQueryResults($entityClassName, $queryBuilder->select());
@@ -174,20 +215,116 @@ class Engine
         return $result;
     }
 
+    private function processUpdate(array $action)
+    {
+        $results = [];
+        foreach ($action as $entityName => $updateObject)
+        {
+            $entityClassName = $this->modelsNamespace.ucfirst($entityName);
+            $metadata = $this->dm->getMetadata($entityClassName);
+            $queryBuilder = $this->dm->queryBuilder()->table($metadata->table());
+
+            if (!isset($updateObject['conditions']))
+            {
+                throw new EngineException('Cannot process update request without conditions.');
+            }
+
+            foreach ($updateObject['conditions'] as $condition)
+            {
+                if (is_string($condition) && strtoupper($condition) == 'ALL')
+                {
+                    break;
+                }
+
+                if (sizeof($condition) == 3)
+                {
+                    $queryBuilder->where($condition[0], $condition[1], $condition[2]);
+                    continue;
+                }
+
+                if (strtoupper($condition[0]) != 'OR')
+                {
+                    throw new EngineException('Invalid condition received.');
+                }
+
+                $queryBuilder->orWhere($condition[1], $condition[2], $condition[3]);
+            }
+            $entities = $this->dm->processQueryResults($entityClassName, $queryBuilder->select())->toArray();
+
+            $controller = $this->getController($entityName);
+
+            foreach ($entities as $entity)
+            {
+                foreach ($updateObject['values'] as $field => $value)
+                {
+                    $setter = 'set'.ucfirst($field);
+                    $entity->$setter($value);
+                }
+
+                if (isset($updateObject['fields']))
+                {
+                    $entityFields = [];
+                    foreach ($updateObject['fields'] as $field => $metadata)
+                    {
+                        $getter = 'get'.ucfirst($field);
+                        $entityFields[$metadata['as']] = $entity->$getter();
+                    }
+                    $results[$entityName][] = $entityFields;
+                }
+
+                if (is_null($controller))
+                {
+                    continue;
+                }
+                $controllerMethod = 'onUpdate';
+                if (method_exists($controller, $controllerMethod))
+                {
+                    $parameters = $this->getResolvedParameters($controller, $controllerMethod);
+                    call_user_func_array([$controller, $controllerMethod], array_merge([new DeleteEvent($entity)], $parameters));
+                }
+            }
+
+            if (sizeof($entities) > 0)
+            {
+                $this->dm->flush();
+            }
+        }
+
+        return $results;
+    }
+
     private function processDelete(array $action)
     {
         foreach ($action as $entityName => $deleteObjects)
         {
-            $entityClassName = '\\App\\Domain\\Models\\'.ucfirst($entityName);
+            $entityClassName = $this->modelsNamespace.ucfirst($entityName);
             $metadata = $this->dm->getMetadata($entityClassName);
             $queryBuilder = $this->dm->queryBuilder()->table($metadata->table());
 
-            if (isset($deleteObjects['conditions']))
+            if (!isset($deleteObjects['conditions']))
             {
-                foreach ($deleteObjects['conditions'] as $condition)
+                throw new EngineException('Cannot process delete request without conditions.');
+            }
+
+            foreach ($deleteObjects['conditions'] as $condition)
+            {
+                if (is_string($condition) && strtoupper($condition) == 'ALL')
+                {
+                    break;
+                }
+
+                if (sizeof($condition) == 3)
                 {
                     $queryBuilder->where($condition[0], $condition[1], $condition[2]);
+                    continue;
                 }
+
+                if (strtoupper($condition[0]) != 'OR')
+                {
+                    throw new EngineException('Invalid condition received.');
+                }
+
+                $queryBuilder->orWhere($condition[1], $condition[2], $condition[3]);
             }
             $entities = $this->dm->processQueryResults($entityClassName, $queryBuilder->select())->toArray();
 
@@ -214,16 +351,19 @@ class Engine
                 $this->dm->flush();
             }
         }
+
+        return [];
     }
 
     private function processCreate(array $action)
     {
+        $results = [];
         foreach ($action as $entityName => $createObjects)
         {
             $entities = [];
             foreach ($createObjects['values'] as $createData)
             {
-                $entities[] = $this->createForEntity($entityName, $createData, $createObjects['fields']);
+                $entities[] = $this->createForEntity($entityName, $createData);
             }
 
             if (sizeof($createObjects['values']) > 0)
@@ -234,13 +374,16 @@ class Engine
 
                 foreach ($entities as $entity)
                 {
-                    $entityFields = [];
-                    foreach ($createObjects['fields'] as $field => $metadata)
+                    if (isset($createObjects['fields']))
                     {
-                        $getter = 'get'.ucfirst($field);
-                        $entityFields[$metadata['as']] = $entity->$getter();
+                        $entityFields = [];
+                        foreach ($createObjects['fields'] as $field => $metadata)
+                        {
+                            $getter = 'get'.ucfirst($field);
+                            $entityFields[$metadata['as']] = $entity->$getter();
+                        }
+                        $results[$entityName][] = $entityFields;
                     }
-                    $results[$entityName][] = $entityFields;
 
                     if (is_null($controller))
                     {
@@ -260,9 +403,9 @@ class Engine
         return $results;
     }
 
-    private function createForEntity(string $entityName, array $createData, array $fields)
+    private function createForEntity(string $entityName, array $createData)
     {
-        $entityClassName = '\\App\\Domain\\Models\\'.ucfirst($entityName);
+        $entityClassName = $this->modelsNamespace.ucfirst($entityName);
         $reflector = new ReflectionClass($entityClassName);
         $entity = $reflector->newInstanceWithoutConstructor();
 
@@ -272,7 +415,7 @@ class Engine
             {
                 $schemaTypeName = substr($fieldName, 0, -2);
                 $setter = 'set'.ucfirst($schemaTypeName);
-                $parentClass = '\\App\\Domain\\Models\\'.ucfirst($schemaTypeName);
+                $parentClass = $this->modelsNamespace.ucfirst($schemaTypeName);
                 $parent = $this->dm->find($parentClass, $value);
                 if (is_null($parent))
                 {
