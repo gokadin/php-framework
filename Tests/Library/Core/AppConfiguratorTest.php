@@ -2,6 +2,8 @@
 
 namespace Tests\Library\Core;
 
+use Library\DataMapper\DataMapper;
+use Library\Engine\Engine;
 use Library\Routing\Router;
 use Tests\BaseTest;
 use Library\Container\Container;
@@ -23,6 +25,8 @@ class AppConfiguratorTest extends BaseTest
     {
         parent::setUp();
 
+        $this->loadEnvironment();
+
         $this->container = new Container();
         $this->appConfigurator = new AppConfigurator($this->container, $this->basePath());
     }
@@ -34,5 +38,23 @@ class AppConfiguratorTest extends BaseTest
 
         // Assert
         $this->assertNotNull($this->container->resolve(Router::class));
+    }
+
+    public function test_configure_registerDataMapperWhenEnabled()
+    {
+        // Act
+        $this->appConfigurator->configure();
+
+        // Assert
+        $this->assertNotNull($this->container->resolve(DataMapper::class));
+    }
+
+    public function test_configure_registerEngineWhenEnabled()
+    {
+        // Act
+        $this->appConfigurator->configure();
+
+        // Assert
+        $this->assertNotNull($this->container->resolve(Engine::class));
     }
 }

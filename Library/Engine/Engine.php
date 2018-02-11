@@ -314,7 +314,6 @@ class Engine
             }
 
             throw new RuntimeException('Could not resolve parameter '.$parameter->getName().' for controller method '.$controllerMethod);
-            return [];
         }
 
         return $resolvedParameters;

@@ -110,7 +110,7 @@ class SchemaToolTest extends BaseTest
         // Assert
         $this->assertFalse($this->tableExists('extra1'));
         $this->assertTrue($this->tableExists('simpleEntity'));
-        $this->assertTrue($this->tableExists('Address'));
+        $this->assertTrue($this->tableExists('address'));
         $this->assertEquals('dropped', $results['extra1']['status']);
     }
 
@@ -126,7 +126,7 @@ class SchemaToolTest extends BaseTest
         // Assert
         $this->assertTrue($this->tableExists('extra1'));
         $this->assertTrue($this->tableExists('simpleEntity'));
-        $this->assertTrue($this->tableExists('Address'));
+        $this->assertTrue($this->tableExists('address'));
         $this->assertEquals('unchanged', $results['extra1']['status']);
     }
 
@@ -187,7 +187,7 @@ class SchemaToolTest extends BaseTest
         $this->assertTrue($this->tableExists('simpleEntity'));
         $this->assertEquals('unchanged', $results['simpleEntity']['status']);
         $this->assertFalse(isset($results['simpleEntity']['columns']));
-        $this->assertEquals('unchanged', $results['Address']['status']);
+        $this->assertEquals('unchanged', $results['address']['status']);
         $this->assertFalse(isset($results['Address']['columns']));
     }
 

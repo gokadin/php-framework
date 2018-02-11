@@ -25,7 +25,15 @@ abstract class DataMapperBaseTest extends BaseTest
      * @var PDO
      */
     protected $dao;
+
+    /**
+     * @var DataMapper
+     */
     protected $dm;
+
+    /**
+     * @var array
+     */
     protected $classes;
 
     protected function setUpBase()

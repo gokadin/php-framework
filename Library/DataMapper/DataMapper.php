@@ -199,15 +199,15 @@ class DataMapper
         $metadata = $this->getMetadata($class);
 
         $queryBuilder = $this->queryBuilder->table($metadata->table());
-        foreach ($conditions as $condition)
+        foreach ($conditions as $prop => $value)
         {
-            $column = $metadata->getColumnByPropName($condition[0]);
+            $column = $metadata->getColumnByPropName($prop);
             if (is_null($column))
             {
-                throw new DataMapperException('DataMapper.findBy : Property '.$condition[0].' does not exist.');
+                throw new DataMapperException('DataMapper.findBy : Property '.$prop.' does not exist.');
             }
 
-            $queryBuilder->where($column->name(), $condition[1], $condition[2]);
+            $queryBuilder->where($column->name(), '=', $value);
         }
 
         return $queryBuilder;

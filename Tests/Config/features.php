@@ -10,6 +10,11 @@ return [
     /**
      * Enable persistence.
      */
-    'database' => true
+    'database' => true,
+
+    /**
+     * Enable auto CRUD and single request backend.
+     */
+    'Engine' => true
 
 ];

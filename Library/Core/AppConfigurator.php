@@ -3,13 +3,16 @@
 namespace Library\Core;
 
 use Library\Container\Container;
-use Library\Http\Request;
+use Library\DataMapper\DataMapper;
+use Library\Engine\Engine;
 use Library\Routing\Router;
 
 class AppConfigurator
 {
     private const CONFIG_DIRECTORY_NAME = 'Config';
     private const FEATURES_FILE_NAME = 'features.php';
+    private const DATAMAPPER_CONFIG_FILE_NAME = 'datamapper.php';
+    private const ENGINE_CONFIG_FILE_NAME = 'engine.php';
 
     /**
      * @var Container
@@ -44,7 +47,7 @@ class AppConfigurator
      */
     public function configure()
     {
-        $this->readConfiguration();
+        $this->readFeatures();
 
         $this->setUpContainer();
     }
@@ -54,15 +57,31 @@ class AppConfigurator
      *
      * @throws CoreException
      */
-    private function readConfiguration()
+    private function readFeatures(): void
     {
         $file = $this->configPath.self::FEATURES_FILE_NAME;
         if (!file_exists($file))
         {
-            throw new CoreException('Could not find features configuration file.');
+            throw new CoreException('Could not find features file.');
         }
 
         $this->features = require $file;
+    }
+
+    /**
+     * @param string $featureName
+     * @return array
+     * @throws CoreException
+     */
+    private function readFeatureConfig(string $featureName): array
+    {
+        $configFile = $this->configPath.$featureName.'.php';
+        if (!file_exists($configFile))
+        {
+            throw new CoreException('Could not find config file for '.$featureName.'.');
+        }
+
+        return require $configFile;
     }
 
     /**
@@ -72,6 +91,7 @@ class AppConfigurator
     private function setUpContainer(): void
     {
         $this->registerEssentials();
+        $this->registerFeatures();
     }
 
     /**
@@ -80,6 +100,17 @@ class AppConfigurator
     private function registerEssentials(): void
     {
         $this->registerRouter();
+    }
+
+    /**
+     * Registers optional features.
+     */
+    private function registerFeatures(): void
+    {
+        if ($this->features['database'])
+        {
+            $this->registerDataMapper();
+        }
     }
 
     /**
@@ -94,5 +125,25 @@ class AppConfigurator
         }
 
         $this->container->registerInstance('router', $router);
+    }
+
+    /**
+     * Register the data mapper ORM.
+     */
+    private function registerDataMapper(): void
+    {
+        $config = $this->readFeatureConfig('datamapper');
+
+        $this->container->registerInstance('dataMapper', new DataMapper($config));
+    }
+
+    /**
+     * Register the engine feature.
+     */
+    private function registerEngine(): void
+    {
+        $config = $this->readFeatureConfig('engine');
+
+        $this->container->registerInstance('engine', new Engine())
     }
 }

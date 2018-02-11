@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Events;
+namespace Tests\Library\Events;
 
 use Library\Container\Container;
 use Library\Events\EventManager;

@@ -161,7 +161,7 @@ class DataMapperTest extends DataMapperBaseTest
     {
         // Arrange
         $this->setUpSimpleEntity();
-        $se1 = new SimpleEntity(1, 12, 'one', 'two');
+        $se1 = new SimpleEntity(11, 12, 'one', 'two');
         $this->dm->persist($se1);
         $se2 = new SimpleEntity(11, 12, 'one2', 'two2');
         $this->dm->persist($se2);
@@ -170,11 +170,11 @@ class DataMapperTest extends DataMapperBaseTest
         $this->dm->flush();
 
         // Act
-        $collection = $this->dm->findBy(SimpleEntity::class, ['one' => 11, 'two' => 12]);
+        $collection = $this->dm->findBy(SimpleEntity::class, ['one' => 11, 'str1' => 'one']);
 
         // Assert
         $this->assertTrue($collection instanceof EntityCollection);
-        $this->assertEquals(2, $collection->count());
+        $this->assertEquals(1, $collection->count());
         $this->assertEquals(11, $collection->first()->getOne());
     }
 
@@ -375,8 +375,8 @@ class DataMapperTest extends DataMapperBaseTest
 
         // Assert
         $this->assertNotNull($a);
-        $this->assertTrue($a->createdAt() instanceof Carbon);
-        $this->assertTrue($a->updatedAt() instanceof Carbon);
+        $this->assertTrue($a->getCreatedAt() instanceof Carbon);
+        $this->assertTrue($a->getUpdatedAt() instanceof Carbon);
         $this->assertTrue($a->date() instanceof Carbon);
     }
 
@@ -395,8 +395,8 @@ class DataMapperTest extends DataMapperBaseTest
         $teacher->setAddress($address);
         $this->dm->persist($teacher);
         $this->dm->flush();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select();
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select()[0];
+        $addressData = $this->dm->queryBuilder()->table('address')->where('id', '=', $address->getId())->select();
 
         // Assert
         $this->assertEquals(0, sizeof($addressData));
@@ -420,7 +420,7 @@ class DataMapperTest extends DataMapperBaseTest
         $this->dm->persist($teacher);
         $teacher->setAddress($address);
         $this->dm->flush();
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select()[0];
+        $addressData = $this->dm->queryBuilder()->table('address')->where('id', '=', $address->getId())->select()[0];
 
         // Assert
         $this->assertEquals($address->getId(), $addressData['id']);
@@ -430,14 +430,6 @@ class DataMapperTest extends DataMapperBaseTest
     /*
      * HAS ONE REMOVALS
      */
-
-    // DO THESE 2 AND THEN CONTINUE TO FIND...
-    // DONW" FORGET TO REMOVE COMMENTED IN UOW AND METADATA AND WHAT NOT...
-
-    public function testHasOneWhenDeletingWillNotDeleteIfCascadeDeleteDisabledAndChildEntityStillExists()
-    {
-        $this->assertTrue(false);
-    }
 
     public function testHasOneWhenDeletingEntityWithCascadeDeleteEnabled()
     {
@@ -454,8 +446,8 @@ class DataMapperTest extends DataMapperBaseTest
         // Act
         $this->dm->delete($teacher);
         $this->dm->flush();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select();
-        $addressData = $this->dm->queryBuilder()->table('Address')->where('id', '=', $address->getId())->select();
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select();
+        $addressData = $this->dm->queryBuilder()->table('address')->where('id', '=', $address->getId())->select();
 
         // Assert
         $this->assertEquals(0, sizeof($addressData));
@@ -555,8 +547,8 @@ class DataMapperTest extends DataMapperBaseTest
         $this->dm->persist($student);
         $this->dm->flush();
         $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $studentData = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student->getId())->select()[0];
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select()[0];
+        $studentData = $this->dm->queryBuilder()->table('student')->where('id', '=', $student->getId())->select()[0];
 
         // Assert
         $this->assertEquals($teacher->getId(), $teacherData['id']);
@@ -577,8 +569,8 @@ class DataMapperTest extends DataMapperBaseTest
         $this->dm->persist($student);
         $this->dm->flush();
         $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $studentData = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student->getId())->select()[0];
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select()[0];
+        $studentData = $this->dm->queryBuilder()->table('student')->where('id', '=', $student->getId())->select()[0];
 
         // Assert
         $this->assertEquals($teacher->getId(), $teacherData['id']);
@@ -620,9 +612,9 @@ class DataMapperTest extends DataMapperBaseTest
         $student->setTeacher($teacher2);
         $this->dm->flush();
         $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $teacher2Data = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher2->getId())->select()[0];
-        $studentData = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student->getId())->select()[0];
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select()[0];
+        $teacher2Data = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher2->getId())->select()[0];
+        $studentData = $this->dm->queryBuilder()->table('student')->where('id', '=', $student->getId())->select()[0];
 
         // Assert
         $this->assertEquals($teacher->getId(), $teacherData['id']);
@@ -648,9 +640,9 @@ class DataMapperTest extends DataMapperBaseTest
         $student->setTeacher($teacher2);
         $this->dm->flush();
         $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $teacher2Data = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher2->getId())->select()[0];
-        $studentData = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student->getId())->select()[0];
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select()[0];
+        $teacher2Data = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher2->getId())->select()[0];
+        $studentData = $this->dm->queryBuilder()->table('student')->where('id', '=', $student->getId())->select()[0];
 
         // Assert
         $this->assertEquals($teacher->getId(), $teacherData['id']);
@@ -695,8 +687,8 @@ class DataMapperTest extends DataMapperBaseTest
         $this->dm->delete($student);
         $this->dm->flush();
         $this->dm->detachAll();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select()[0];
-        $studentData = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student->getId())->select();
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select()[0];
+        $studentData = $this->dm->queryBuilder()->table('student')->where('id', '=', $student->getId())->select();
 
         // Assert
         $this->assertEquals($teacher->getId(), $teacherData['id']);
@@ -820,7 +812,7 @@ class DataMapperTest extends DataMapperBaseTest
 
         // Act
         $this->dm->flush();
-        $allStudentData = $this->dm->queryBuilder()->table('Student')->select();
+        $allStudentData = $this->dm->queryBuilder()->table('student')->select();
 
         // Assert
         $this->assertTrue($teacher->students() instanceof PersistentCollection);
@@ -909,8 +901,8 @@ class DataMapperTest extends DataMapperBaseTest
         $teacher->addStudent($extraS1);
         $teacher->addStudent($extraS2);
         $this->dm->flush();
-        $student0Data = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student0->getId())->select()[0];
-        $extraS1Data = $this->dm->queryBuilder()->table('Student')->where('id', '=', $extraS1->getId())->select()[0];
+        $student0Data = $this->dm->queryBuilder()->table('student')->where('id', '=', $student0->getId())->select()[0];
+        $extraS1Data = $this->dm->queryBuilder()->table('student')->where('id', '=', $extraS1->getId())->select()[0];
 
         // Assert
         $this->assertTrue($teacher->students() instanceof PersistentCollection);
@@ -945,8 +937,8 @@ class DataMapperTest extends DataMapperBaseTest
         $teacher->addStudent($extraS1);
         $teacher->addStudent($extraS2);
         $this->dm->flush();
-        $student0Data = $this->dm->queryBuilder()->table('Student')->where('id', '=', $student0->getId())->select()[0];
-        $extraS1Data = $this->dm->queryBuilder()->table('Student')->where('id', '=', $extraS1->getId())->select()[0];
+        $student0Data = $this->dm->queryBuilder()->table('student')->where('id', '=', $student0->getId())->select()[0];
+        $extraS1Data = $this->dm->queryBuilder()->table('student')->where('id', '=', $extraS1->getId())->select()[0];
 
         // Assert
         $this->assertTrue($teacher->students() instanceof PersistentCollection);
@@ -976,8 +968,8 @@ class DataMapperTest extends DataMapperBaseTest
         // Act
         $this->dm->delete($teacher);
         $this->dm->flush();
-        $studentData = $this->dm->queryBuilder()->table('Student')->where('teacher_id', '=', $teacher->getId())->select();
-        $teacherData = $this->dm->queryBuilder()->table('Teacher')->where('id', '=', $teacher->getId())->select();
+        $studentData = $this->dm->queryBuilder()->table('student')->where('teacher_id', '=', $teacher->getId())->select();
+        $teacherData = $this->dm->queryBuilder()->table('teacher')->where('id', '=', $teacher->getId())->select();
 
         // Assert
         $this->assertEquals(0, sizeof($studentData));
