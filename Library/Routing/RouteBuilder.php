@@ -46,7 +46,7 @@ class RouteBuilder
      */
     public function __construct(string $basePath)
     {
-        $this->routesFile = $basePath.'/App/Http/routes.php';
+        $this->routesFile = $basePath.'/Config/routes.php';
 
         $this->routes = new RouteCollection();
     }

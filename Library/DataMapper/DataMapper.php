@@ -53,6 +53,11 @@ class DataMapper
         $this->queryBuilder = new QueryBuilder($config);
     }
 
+    public function disconnect()
+    {
+        $this->queryBuilder()->disconnect();
+    }
+
     /**
      * Initializes the mapping driver.
      *

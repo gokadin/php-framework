@@ -118,5 +118,7 @@ abstract class DataMapperBaseTest extends BaseTest
         $this->schemaTool->drop();
 
         $this->dao = null;
+
+        $this->dm->disconnect();
     }
 }

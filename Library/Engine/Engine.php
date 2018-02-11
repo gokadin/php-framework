@@ -17,6 +17,11 @@ class Engine
     const CONTROLLER_NAMESPACE = '\\App\\Http\\Controllers';
 
     /**
+     * @var string
+     */
+    private $basePath;
+
+    /**
      * @var array
      */
     private $schema;
@@ -31,14 +36,27 @@ class Engine
      */
     private $container;
 
-    public function __construct(array $schema, DataMapper $dm, Container $container)
+    /**
+     * Engine constructor.
+     *
+     * @param string $basePath
+     * @param array $schema
+     * @param DataMapper $dm
+     * @param Container $container
+     */
+    public function __construct(string $basePath, array $schema, DataMapper $dm, Container $container)
     {
+        $this->basePath = $basePath;
         $this->schema = $schema;
         $this->dm = $dm;
         $this->container = $container;
     }
 
-    public function run(array $data)
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function run(array $data): array
     {
         return [
             'status' => Response::STATUS_OK,
@@ -46,7 +64,11 @@ class Engine
         ];
     }
 
-    private function processData(array $data)
+    /**
+     * @param array $data
+     * @return array
+     */
+    private function processData(array $data): array
     {
         $result = [];
 
@@ -74,7 +96,7 @@ class Engine
         case 'delete':
             return $this->processDelete($action);
         default:
-            return 'not implemented';
+            throw new EngineException('Requested action does not exist: '.$type.'.');
         }
     }
 

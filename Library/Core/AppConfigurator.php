@@ -10,9 +10,8 @@ use Library\Routing\Router;
 class AppConfigurator
 {
     private const CONFIG_DIRECTORY_NAME = 'Config';
+    private const FEATURES_CONFIG_DIRECTORY_NAME = 'FeaturesConfig';
     private const FEATURES_FILE_NAME = 'features.php';
-    private const DATAMAPPER_CONFIG_FILE_NAME = 'datamapper.php';
-    private const ENGINE_CONFIG_FILE_NAME = 'engine.php';
 
     /**
      * @var Container
@@ -23,6 +22,11 @@ class AppConfigurator
      * @var string
      */
     private $configPath;
+
+    /**
+     * @var string
+     */
+    private $featuresConfigPath;
 
     /**
      * @var array
@@ -39,6 +43,7 @@ class AppConfigurator
     {
         $this->container = $container;
         $this->configPath = $basePath.'/'.self::CONFIG_DIRECTORY_NAME.'/';
+        $this->featuresConfigPath = $this->configPath.self::FEATURES_CONFIG_DIRECTORY_NAME.'/';
     }
 
     /**
@@ -48,7 +53,6 @@ class AppConfigurator
     public function configure()
     {
         $this->readFeatures();
-
         $this->setUpContainer();
     }
 
@@ -75,7 +79,7 @@ class AppConfigurator
      */
     private function readFeatureConfig(string $featureName): array
     {
-        $configFile = $this->configPath.$featureName.'.php';
+        $configFile = $this->featuresConfigPath.$featureName.'.php';
         if (!file_exists($configFile))
         {
             throw new CoreException('Could not find config file for '.$featureName.'.');
@@ -111,6 +115,11 @@ class AppConfigurator
         {
             $this->registerDataMapper();
         }
+
+        if ($this->features['engine'])
+        {
+            $this->registerEngine();
+        }
     }
 
     /**
@@ -142,8 +151,21 @@ class AppConfigurator
      */
     private function registerEngine(): void
     {
-        $config = $this->readFeatureConfig('engine');
+        //$config = $this->readFeatureConfig('engine'); // no config for now
 
-        $this->container->registerInstance('engine', new Engine())
+        if (!$this->features['database'])
+        {
+            throw new CoreException('Engine feature required database to be enabled.');
+        }
+
+        $schema = [];
+        $schemaFile = $this->configPath.'schema.php';
+        if (!file_exists($schemaFile))
+        {
+            $schema = require $schemaFile;
+        }
+
+        $this->container->registerInstance('engine',
+            new Engine($schema, $this->container->resolveInstance('dataMapper'), $this->container));
     }
 }

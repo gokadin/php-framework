@@ -27,6 +27,16 @@ class QueryBuilder
         }
     }
 
+    public function disconnect()
+    {
+        if (is_null($this->databaseDriver))
+        {
+            return;
+        }
+
+        $this->databaseDriver->disconnect();
+    }
+
     public function beginTransaction()
     {
         $this->databaseDriver->beginTransaction();

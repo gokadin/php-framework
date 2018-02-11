@@ -21,6 +21,11 @@ class MySqlDriver
         $this->dao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
+    public function disconnect()
+    {
+        $this->dao = null;
+    }
+
     public function name()
     {
         return self::NAME;

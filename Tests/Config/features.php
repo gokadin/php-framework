@@ -14,7 +14,10 @@ return [
 
     /**
      * Enable auto CRUD and single request backend.
+     *
+     * Dependencies:
+     * -> database
      */
-    'Engine' => true
+    'engine' => true
 
 ];

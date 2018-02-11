@@ -27,6 +27,12 @@ class SchemaSynchronizer
      */
     private $modelGenerator;
 
+    /**
+     * SchemaSynchronizer constructor.
+     *
+     * @param array $schema
+     * @param array $previousSchema
+     */
     public function __construct(array $schema, array $previousSchema)
     {
         $this->schema = $schema;
