@@ -2,7 +2,9 @@
 
 namespace Tests\App\Http\Controllers;
 
+use Library\Http\Request;
 use Library\Http\Response;
+use Library\Validation\Validator;
 use Tests\TestData\Router\ResolvableOne;
 
 class TestController extends Controller
@@ -35,6 +37,26 @@ class TestController extends Controller
     public function ctorParameters()
     {
         return new Response(Response::STATUS_OK, ['resolvableOne' => $this->one]);
+    }
+
+    public function controllerHasRequest()
+    {
+        if (is_null($this->request) || !($this->request instanceof Request))
+        {
+            return new Response(Response::STATUS_BAD_REQUEST);
+        }
+
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function controllerHasValidator()
+    {
+        if (is_null($this->validator) || !($this->validator instanceof Validator))
+        {
+            return new Response(Response::STATUS_BAD_REQUEST);
+        }
+
+        return new Response(Response::STATUS_OK);
     }
 
     public function validationHasRequest()

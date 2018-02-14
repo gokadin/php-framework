@@ -8,7 +8,6 @@ use Library\Http\Response;
 use Library\Routing\Route;
 use Library\Routing\RouteCollection;
 use Library\Routing\Router;
-use Library\Validation\Validator;
 use Tests\BaseTest;
 use Tests\TestData\Router\ResolvableOne;
 
@@ -125,6 +124,36 @@ class RouterTest extends BaseTest
         // Assert
         $this->assertEquals(Response::STATUS_OK, $response->statusCode());
         $this->assertTrue($response->data()['resolvableOne'] instanceof ResolvableOne);
+    }
+
+    public function test_dispatch_controllerHasRequest()
+    {
+        // Arrange
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'controllerHasRequest', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_controllerHasValidator()
+    {
+        // Arrange
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'controllerHasValidator', [], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
     }
 
     public function test_dispatch_validationHasRequest()

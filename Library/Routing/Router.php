@@ -189,6 +189,7 @@ class Router
         $controller = $this->container->resolve($controller);
 
         $this->container->resolveObjectProperty($controller, 'request', $request);
+        $this->container->resolveObjectProperty($controller, 'validator', new Validator());
 
         return $controller;
     }
