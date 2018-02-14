@@ -602,7 +602,7 @@ class EngineTest extends EngineBaseTest
                     'conditions' => [
                         'all'
                     ],
-                    'felds' => [
+                    'fields' => [
                         'name' => ['as' => 'name'],
                         'age' => ['as' => 'age']
                     ]
@@ -635,7 +635,7 @@ class EngineTest extends EngineBaseTest
                     'conditions' => [
                         ['id', '=', 2]
                     ],
-                    'felds' => [
+                    'fields' => [
                         'name' => ['as' => 'name'],
                         'age' => ['as' => 'age']
                     ]
@@ -646,7 +646,7 @@ class EngineTest extends EngineBaseTest
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['User' => [
-            ['name' => 'one', 'age' => 1], ['name' => 'updatedName', 'age' => 2]
+            ['name' => 'updatedName', 'age' => 2]
         ]], $result['content']);
     }
 }
