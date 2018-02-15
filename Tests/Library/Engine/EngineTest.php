@@ -25,15 +25,8 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -48,15 +41,8 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -74,15 +60,8 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -100,17 +79,12 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id'],
-                        'name' => ['as' => 'name'],
-                        'age' => ['as' => 'age']
-                    ]
-                ]
-            ]
+        $this->engine->fetch('User', [
+            'id' => ['as' => 'id'],
+            'name' => ['as' => 'name'],
+            'age' => ['as' => 'age']
         ]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -136,15 +110,8 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'something']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'something']]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -163,6 +130,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
+        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
         $result = $this->engine->run([
             'fetch' => [
                 'User' => [

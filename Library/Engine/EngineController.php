@@ -2,7 +2,7 @@
 
 namespace Library\Engine;
 
-class EngineController
+abstract class EngineController
 {
 
 }

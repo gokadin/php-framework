@@ -2,8 +2,6 @@
 
 namespace Library\DataMapper\Database;
 
-use Library\DataMapper\Database\Drivers\MySqlDriver;
-
 class QueryBuilder
 {
     protected $databaseDriver;
@@ -12,29 +10,9 @@ class QueryBuilder
     protected $sortingRules = [];
     protected $limit;
 
-    public function __construct($config)
+    public function __construct($databaseDriver)
     {
-        $this->initializeDatabaseDriver($config);
-    }
-
-    protected function initializeDatabaseDriver($config)
-    {
-        switch ($config['databaseDriver'])
-        {
-            default:
-                $this->databaseDriver = new MySqlDriver($config[$config['databaseDriver']]);
-                break;
-        }
-    }
-
-    public function disconnect()
-    {
-        if (is_null($this->databaseDriver))
-        {
-            return;
-        }
-
-        $this->databaseDriver->disconnect();
+        $this->databaseDriver = $databaseDriver;
     }
 
     public function beginTransaction()

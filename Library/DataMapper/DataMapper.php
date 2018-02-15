@@ -3,6 +3,7 @@
 namespace Library\DataMapper;
 
 use Library\DataMapper\Collection\EntityCollection;
+use Library\DataMapper\Database\Drivers\MySqlDriver;
 use Library\DataMapper\Database\QueryBuilder;
 use Library\DataMapper\Mapping\Drivers\AnnotationDriver;
 use Library\DataMapper\Mapping\Metadata;
@@ -22,6 +23,8 @@ class DataMapper
      * @var MappingDriverInterface
      */
     protected $mappingDriver;
+
+    protected $databaseDriver;
 
     /**
      * Used to build a queries differently
@@ -49,13 +52,29 @@ class DataMapper
         $this->unitOfWork = new UnitOfWork($this);
 
         $this->initializeMappingDriver($config['mappingDriver']);
+        $this->initializeDatabaseDriver($config);
 
-        $this->queryBuilder = new QueryBuilder($config);
+        $this->queryBuilder = new QueryBuilder($this->databaseDriver);
+    }
+
+    protected function initializeDatabaseDriver($config)
+    {
+        switch ($config['databaseDriver'])
+        {
+            default:
+                $this->databaseDriver = new MySqlDriver($config[$config['databaseDriver']]);
+                break;
+        }
     }
 
     public function disconnect()
     {
-        $this->queryBuilder()->disconnect();
+        if (is_null($this->databaseDriver))
+        {
+            return;
+        }
+
+        $this->databaseDriver->disconnect();
     }
 
     /**
@@ -277,7 +296,7 @@ class DataMapper
      */
     public function queryBuilder()
     {
-        return $this->queryBuilder;
+        return new QueryBuilder($this->databaseDriver);
     }
 
     public function processQueryResults($class, $results)

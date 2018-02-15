@@ -2,6 +2,8 @@
 
 namespace Library\Engine;
 
+use Library\Engine\Queries\EngineQuery;
+use Library\Engine\Queries\FetchQuery;
 use Library\Http\Response;
 use Library\DataMapper\Collection\EntityCollection;
 use Library\DataMapper\DataMapper;
@@ -15,6 +17,10 @@ use \ReflectionMethod;
 class Engine
 {
     const CONTROLLER_NAMESPACE = '\\App\\Http\\Controllers';
+    private const FETCH_KEY = 'FETCH';
+    private const CREATE_KEY = 'CREATE';
+    private const UPDATE_KEY = 'UPDATE';
+    private const DELETE_KEY = 'DELETE';
 
     /**
      * @var string
@@ -42,6 +48,11 @@ class Engine
     private $container;
 
     /**
+     * @var array
+     */
+    private $commands = [];
+
+    /**
      * Engine constructor.
      *
      * @param string $basePath
@@ -60,22 +71,88 @@ class Engine
         $this->readConfig($config);
     }
 
+    /**
+     * @param array $config
+     */
     private function readConfig(array $config)
     {
         $this->modelsNamespace = '\\'.str_replace('/', '\\', $config['modelsPath']).'\\';
     }
 
     /**
+     * @param $type
+     * @param array $fields
+     * @return FetchQuery
+     */
+    public function fetch($type, array $fields): FetchQuery
+    {
+        $entityClassName = $this->modelsNamespace.ucfirst($type);
+        $metadata = $this->dm->getMetadata($entityClassName);
+        $queryBuilder = $this->dm->queryBuilder()->table($metadata->table());
+
+        $entityClassName = $this->getEntityClassName($type);
+
+        $query = new FetchQuery($queryBuilder);
+        $this->commands[] = [
+            'type' => $type,
+            'entityClassName' => $entityClassName,
+            'queryBuilder' => $queryBuilder,
+            'action' => self::FETCH_KEY,
+            'fields' => $fields
+        ];
+        return $query;
+    }
+
+    /**
+     * @param $type
      * @param array $data
+     * @param array $fields
+     */
+    public function create($type, array $data, array $fields = [])
+    {
+        $data['fields'] = $fields;
+        $this->commands[] = ['type' => $type, 'action' => self::CREATE_KEY, 'data' => $data];
+    }
+
+    /**
+     * @param $type
+     * @param array $data
+     * @param array $fields
+     */
+    public function update($type, array $data, array $fields = [])
+    {
+        $data['fields'] = $fields;
+        $this->commands[] = ['type' => $type, 'action' => self::UPDATE_KEY, 'data' => $data];
+    }
+
+    /**
+     * @param $type
+     * @param array $data
+     */
+    public function delete($type, array $data)
+    {
+        $this->commands[] = ['type' => $type, 'action' => self::DELETE_KEY, 'data' => $data];
+    }
+
+    /**
+     * @param string $type
+     * @return string
+     */
+    private function getEntityClassName(string $type): string
+    {
+        return $this->modelsNamespace.ucfirst($type);
+    }
+
+    /**
      * @return array
      */
-    public function run(array $data): array
+    public function run(): array
     {
         try
         {
             return [
                 'status' => Response::STATUS_OK,
-                'content' => $this->processData($data)
+                'content' => $this->runCommands()
             ];
         }
         catch (EngineException $e)
@@ -85,108 +162,62 @@ class Engine
                 'content' => $e->getMessage()
             ];
         }
+        finally
+        {
+            $this->commands = [];
+        }
     }
 
     /**
-     * @param array $data
      * @return array
      */
-    private function processData(array $data): array
+    private function runCommands(): array
     {
-        $result = [];
-
-        foreach ($data as $type => $action)
+        $results = [];
+        foreach ($this->commands as $command)
         {
-            $result[$type] = $this->processAction($type, $action);
-
-            if (sizeof($data) == 1)
-            {
-                return $result[$type];
-            }
+            $results[$command['type']] = $this->runCommand($command);
         }
 
-        return $result;
+        return $results;
     }
 
-    private function processAction(string $type, array $action)
+    /**
+     * @param array $command
+     * @return array
+     * @throws EngineException
+     */
+    private function runCommand(array $command): array
     {
-        switch ($type)
+        switch ($command['action'])
         {
-        case 'fetch':
-            return $this->processFetch($action);
-        case 'create':
-            return $this->processCreate($action);
-        case 'delete':
-            return $this->processDelete($action);
-        case 'update':
-            return $this->processUpdate($action);
-        default:
-            throw new EngineException('Requested action does not exist: '.$type.'.');
+            case self::FETCH_KEY:
+                return $this->processFetch($command);
+            case self::CREATE_KEY:
+                return $this->processCreate($command);
+            case self::UPDATE_KEY:
+                return $this->processDelete($command);
+            case self::DELETE_KEY:
+                return $this->processUpdate($command);
+            default:
+                throw new EngineException('Requested action does not exist: '.$command['action'].'.');
         }
     }
 
-    private function processFetch(array $action)
+    private function processFetch(array $command)
     {
-        $data = [];
+        $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select());
 
-        foreach ($action as $entityName => $fetchObject)
-        {
-            $data[$entityName] = $this->fetchEntities($entityName, $fetchObject);
-        }
-
-        return $data;
+        return $this->buildEntities($entities, $command['fields']);
     }
 
-    private function fetchEntities(string $entityName, $fetchData)
-    {
-        $entityClassName = $this->modelsNamespace.ucfirst($entityName);
-        $metadata = $this->dm->getMetadata($entityClassName);
-        $queryBuilder = $this->dm->queryBuilder()->table($metadata->table());
-
-        if (isset($fetchData['sort']))
-        {
-            foreach ($fetchData['sort'] as $field => $direction)
-            {
-                $queryBuilder->sortBy($field, strtoupper($direction) == 'ASC');
-            }
-        }
-
-        if (isset($fetchData['conditions']))
-        {
-            foreach ($fetchData['conditions'] as $condition)
-            {
-                if (sizeof($condition) == 3)
-                {
-                    $queryBuilder->where($condition[0], $condition[1], $condition[2]);
-                    continue;
-                }
-
-                if (strtoupper($condition[0]) != 'OR')
-                {
-                    throw new EngineException('Invalid condition received.');
-                }
-
-                $queryBuilder->orWhere($condition[1], $condition[2], $condition[3]);
-            }
-        }
-
-        if (isset($fetchData['limit']))
-        {
-            $queryBuilder->limit($fetchData['limit']);
-        }
-
-        $entities = $this->dm->processQueryResults($entityClassName, $queryBuilder->select());
-
-        return $this->buildEntities($entities, $fetchData);
-    }
-
-    private function buildEntities($entities, array $fetchData)
+    private function buildEntities($entities, array $fields)
     {
         $results = [];
 
         foreach ($entities as $entity)
         {
-            $results[] = $this->buildEntityFields($entity, $fetchData['fields']);
+            $results[] = $this->buildEntityFields($entity, $fields);
         }
 
         return $results;
