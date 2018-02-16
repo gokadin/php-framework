@@ -4,11 +4,11 @@ namespace Library\Engine\Queries;
 
 use Library\Container\Container;
 use Library\DataMapper\DataMapper;
+use Library\Engine\Engine;
 
 class EngineQueryExecutor
 {
-    private const HOOK_PRE_PREFIX = 'pre';
-    private const HOOK_POST_PREFIX = 'post';
+    private const HOOK_PREFIX = 'on';
 
     /**
      * @var array
@@ -57,35 +57,42 @@ class EngineQueryExecutor
 
     public function execute(array $command)
     {
-        $controller = $this->getController($command['type']);
+        $result = [];
+        switch ($command['action'])
+        {
+            case Engine::FETCH_KEY:
+                $result = $this->executeFetch($command);
+                break;
+            case Engine::CREATE_KEY:
+                $result = $this->executeCreate($command);
+                break;
+        }
 
-        $this->executeHook($controller, self::HOOK_PRE_PREFIX, $command['action']);
+        $this->executeHook($command, $result);
 
+        return $result;
+    }
+
+    private function executeFetch(array $command)
+    {
         $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select());
-
-        $this->executeHook($controller, self::HOOK_POST_PREFIX, $command['action']);
-
         return $this->buildEntities($entities, $command['fields']);
     }
 
-    private function executeFetch()
+    private function executeCreate(array $command)
     {
 
     }
 
-    private function executeCreate()
+    private function executeHook(array $command, array $result)
     {
-
-    }
-
-    private function executeHook($controller, string $prefix, string $action)
-    {
+        $controller = $this->getController($command['type']);
         if (is_null($controller))
         {
             return;
         }
 
-        $methodName = $prefix.ucfirst(strtolower($action));
+        $methodName = self::HOOK_PREFIX.ucfirst(strtolower($command['action']));
         if (!method_exists($controller, $methodName))
         {
             return;
@@ -100,12 +107,12 @@ class EngineQueryExecutor
      * @param array $fields
      * @return array
      */
-    private function buildEntities($entities, array $fields): array
+    private function buildFieldsFromEntities($entities, array $fields): array
     {
         $results = [];
         foreach ($entities as $entity)
         {
-            $results[] = $this->buildEntityFields($entity, $fields);
+            $results[] = $this->buildFieldsFromEntity($entity, $fields);
         }
 
         return $results;
@@ -116,7 +123,7 @@ class EngineQueryExecutor
      * @param array $fields
      * @return array
      */
-    private function buildEntityFields($entity, array $fields): array
+    private function buildFieldsFromEntity($entity, array $fields): array
     {
         $result = [];
         foreach ($fields as $field => $metadata)
@@ -127,7 +134,7 @@ class EngineQueryExecutor
             if (array_key_exists($field, $this->schema))
             {
                 $relation = $entity->$getter();
-                $result[$alias] = $this->buildEntities($relation->toArray(), $metadata);
+                $result[$alias] = $this->buildFieldsFromEntities($relation->toArray(), $metadata);
 
                 continue;
             }
@@ -146,5 +153,44 @@ class EngineQueryExecutor
     {
         $controllerClassName = $this->controllersNamespace.ucfirst($entityName).'Controller';
         return class_exists($controllerClassName) ? $this->container->resolve($controllerClassName) : null;
+    }
+
+    private function BuildEntityFromData(string $entityName, array $createData)
+    {
+        $entityClassName = $this->modelsNamespace.ucfirst($entityName);
+        $reflector = new ReflectionClass($entityClassName);
+        $entity = $reflector->newInstanceWithoutConstructor();
+
+        foreach ($createData as $fieldName => $value)
+        {
+            if (strlen($fieldName) > 2 && substr($fieldName, strlen($fieldName) - 2) == 'Id')
+            {
+                $schemaTypeName = substr($fieldName, 0, -2);
+                $setter = 'set'.ucfirst($schemaTypeName);
+                $parentClass = $this->modelsNamespace.ucfirst($schemaTypeName);
+                $parent = $this->dm->find($parentClass, $value);
+                if (is_null($parent))
+                {
+                    throw new EngineException('Could not find parent type '.$schemaTypeName.' having an id of '.$value);
+                }
+                $entity->$setter($parent);
+
+                continue;
+            }
+
+            $setter = 'set'.ucfirst($fieldName);
+
+            if (is_array($value))
+            {
+                $entity->$setter(new EntityCollection());
+                continue;
+            }
+
+            $entity->$setter($value);
+        }
+
+        $this->dm->persist($entity);
+
+        return $entity;
     }
 }

@@ -15,10 +15,10 @@ use \Exception;
 
 class Engine
 {
-    private const FETCH_KEY = 'FETCH';
-    private const CREATE_KEY = 'CREATE';
-    private const UPDATE_KEY = 'UPDATE';
-    private const DELETE_KEY = 'DELETE';
+    const FETCH_KEY = 'FETCH';
+    const CREATE_KEY = 'CREATE';
+    const UPDATE_KEY = 'UPDATE';
+    const DELETE_KEY = 'DELETE';
 
     /**
      * @var DataMapper
@@ -93,7 +93,8 @@ class Engine
             'entityClassName' => $this->getEntityClassName($type),
             'queryBuilder' => $queryBuilder,
             'action' => self::FETCH_KEY,
-            'fields' => $fields
+            'fields' => $fields,
+            'data' => $data
         ];
 
         return new CreateQuery($queryBuilder);
@@ -364,44 +365,5 @@ class Engine
         }
 
         return $results;
-    }
-
-    private function createForEntity(string $entityName, array $createData)
-    {
-        $entityClassName = $this->modelsNamespace.ucfirst($entityName);
-        $reflector = new ReflectionClass($entityClassName);
-        $entity = $reflector->newInstanceWithoutConstructor();
-
-        foreach ($createData as $fieldName => $value)
-        {
-            if (strlen($fieldName) > 2 && substr($fieldName, strlen($fieldName) - 2) == 'Id')
-            {
-                $schemaTypeName = substr($fieldName, 0, -2);
-                $setter = 'set'.ucfirst($schemaTypeName);
-                $parentClass = $this->modelsNamespace.ucfirst($schemaTypeName);
-                $parent = $this->dm->find($parentClass, $value);
-                if (is_null($parent))
-                {
-                    throw new EngineException('Could not find parent type '.$schemaTypeName.' having an id of '.$value);
-                }
-                $entity->$setter($parent);
-
-                continue;
-            }
-
-            $setter = 'set'.ucfirst($fieldName);
-
-            if (is_array($value))
-            {
-                $entity->$setter(new EntityCollection());
-                continue;
-            }
-
-            $entity->$setter($value);
-        }
-
-        $this->dm->persist($entity);
-
-        return $entity;
     }
 }
