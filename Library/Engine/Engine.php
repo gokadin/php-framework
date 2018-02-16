@@ -2,40 +2,23 @@
 
 namespace Library\Engine;
 
-use Library\Engine\Queries\EngineQuery;
+use Library\DataMapper\Database\QueryBuilder;
+use Library\Engine\Queries\CreateQuery;
+use Library\Engine\Queries\EngineQueryExecutor;
 use Library\Engine\Queries\FetchQuery;
 use Library\Http\Response;
 use Library\DataMapper\Collection\EntityCollection;
 use Library\DataMapper\DataMapper;
 use Library\Container\Container;
-use Library\Engine\Events\CreateEvent;
-use Library\Engine\Events\DeleteEvent;
 use \ReflectionClass;
-use \RuntimeException;
-use \ReflectionMethod;
+use \Exception;
 
 class Engine
 {
-    const CONTROLLER_NAMESPACE = '\\App\\Http\\Controllers';
     private const FETCH_KEY = 'FETCH';
     private const CREATE_KEY = 'CREATE';
     private const UPDATE_KEY = 'UPDATE';
     private const DELETE_KEY = 'DELETE';
-
-    /**
-     * @var string
-     */
-    private $basePath;
-
-    /**
-     * @var string
-     */
-    private $modelsNamespace;
-
-    /**
-     * @var array
-     */
-    private $schema;
 
     /**
      * @var DataMapper
@@ -43,32 +26,35 @@ class Engine
     private $dm;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var array
      */
     private $commands = [];
 
     /**
+     * @var EngineQueryExecutor
+     */
+    private $queryExecutor;
+
+    /**
+     * @var string
+     */
+    private $modelsNamespace;
+
+    /**
      * Engine constructor.
      *
-     * @param string $basePath
      * @param array $schema
      * @param DataMapper $dm
      * @param Container $container
      * @param array $config
      */
-    public function __construct(string $basePath, array $schema, DataMapper $dm, Container $container, array $config)
+    public function __construct(array $schema, DataMapper $dm, Container $container, array $config)
     {
-        $this->basePath = $basePath;
-        $this->schema = $schema;
         $this->dm = $dm;
-        $this->container = $container;
 
         $this->readConfig($config);
+
+        $this->queryExecutor = new EngineQueryExecutor($schema, $dm, $container, $config);
     }
 
     /**
@@ -76,7 +62,7 @@ class Engine
      */
     private function readConfig(array $config)
     {
-        $this->modelsNamespace = '\\'.str_replace('/', '\\', $config['modelsPath']).'\\';
+        $this->modelsNamespace = str_replace('/', '\\', $config['modelsPath']).'\\';
     }
 
     /**
@@ -86,32 +72,31 @@ class Engine
      */
     public function fetch($type, array $fields): FetchQuery
     {
-        $entityClassName = $this->modelsNamespace.ucfirst($type);
-        $metadata = $this->dm->getMetadata($entityClassName);
-        $queryBuilder = $this->dm->queryBuilder()->table($metadata->table());
-
-        $entityClassName = $this->getEntityClassName($type);
-
-        $query = new FetchQuery($queryBuilder);
+        $queryBuilder = $this->getTypeQueryBuilder($type);
         $this->commands[] = [
             'type' => $type,
-            'entityClassName' => $entityClassName,
+            'entityClassName' => $this->getEntityClassName($type),
             'queryBuilder' => $queryBuilder,
             'action' => self::FETCH_KEY,
             'fields' => $fields
         ];
-        return $query;
+
+        return new FetchQuery($queryBuilder);
     }
 
-    /**
-     * @param $type
-     * @param array $data
-     * @param array $fields
-     */
-    public function create($type, array $data, array $fields = [])
+
+    public function create($type, array $data, array $fields = []): CreateQuery
     {
-        $data['fields'] = $fields;
-        $this->commands[] = ['type' => $type, 'action' => self::CREATE_KEY, 'data' => $data];
+        $queryBuilder = $this->getTypeQueryBuilder($type);
+        $this->commands[] = [
+            'type' => $type,
+            'entityClassName' => $this->getEntityClassName($type),
+            'queryBuilder' => $queryBuilder,
+            'action' => self::FETCH_KEY,
+            'fields' => $fields
+        ];
+
+        return new CreateQuery($queryBuilder);
     }
 
     /**
@@ -136,6 +121,17 @@ class Engine
 
     /**
      * @param string $type
+     * @return QueryBuilder
+     */
+    private function getTypeQueryBuilder(string $type): QueryBuilder
+    {
+        $entityClassName = $this->modelsNamespace.ucfirst($type);
+        $metadata = $this->dm->getMetadata($entityClassName);
+        return $this->dm->queryBuilder()->table($metadata->table());
+    }
+
+    /**
+     * @param string $type
      * @return string
      */
     private function getEntityClassName(string $type): string
@@ -155,7 +151,7 @@ class Engine
                 'content' => $this->runCommands()
             ];
         }
-        catch (EngineException $e)
+        catch (Exception $e)
         {
             return [
                 'status' => Response::STATUS_BAD_REQUEST,
@@ -176,74 +172,10 @@ class Engine
         $results = [];
         foreach ($this->commands as $command)
         {
-            $results[$command['type']] = $this->runCommand($command);
+            $results[$command['type']] = $this->queryExecutor->execute($command);
         }
 
         return $results;
-    }
-
-    /**
-     * @param array $command
-     * @return array
-     * @throws EngineException
-     */
-    private function runCommand(array $command): array
-    {
-        switch ($command['action'])
-        {
-            case self::FETCH_KEY:
-                return $this->processFetch($command);
-            case self::CREATE_KEY:
-                return $this->processCreate($command);
-            case self::UPDATE_KEY:
-                return $this->processDelete($command);
-            case self::DELETE_KEY:
-                return $this->processUpdate($command);
-            default:
-                throw new EngineException('Requested action does not exist: '.$command['action'].'.');
-        }
-    }
-
-    private function processFetch(array $command)
-    {
-        $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select());
-
-        return $this->buildEntities($entities, $command['fields']);
-    }
-
-    private function buildEntities($entities, array $fields)
-    {
-        $results = [];
-
-        foreach ($entities as $entity)
-        {
-            $results[] = $this->buildEntityFields($entity, $fields);
-        }
-
-        return $results;
-    }
-     
-    private function buildEntityFields($entity, array $fields)
-    {
-        $result = [];
-
-        foreach ($fields as $field => $metadata)
-        {
-            $getter = 'get'.ucfirst($field);
-            $alias = isset($metadata['as']) ? $metadata['as'] : $field;
-
-            if (array_key_exists($field, $this->schema))
-            {
-                $relation = $entity->$getter();
-                $result[$alias] = $this->buildEntities($relation->toArray(), $metadata);
-
-                continue;
-            }
-
-            $result[$alias] = $entity->$getter();
-        }
-        
-        return $result;
     }
 
     private function processUpdate(array $action)
@@ -471,47 +403,5 @@ class Engine
         $this->dm->persist($entity);
 
         return $entity;
-    }
-
-    private function getController(string $entityName)
-    {
-        $controllerClassName = self::CONTROLLER_NAMESPACE.'\\'.ucfirst($entityName).'Controller';
-        $controller = null;
-        if (class_exists($controllerClassName))
-        {
-            $controller = $this->container->resolve($controllerClassName);
-        }
-
-        return $controller;
-    }
-
-    private function getResolvedParameters($controller, string $controllerMethod)
-    {
-        $resolvedParameters = [];
-        $r = new ReflectionMethod($controller, $controllerMethod);
-
-        foreach ($r->getParameters() as $parameter)
-        {
-            if ($parameter->getName() == 'event')
-            {
-                continue;
-            }
-
-            $class = $parameter->getClass();
-            if (!is_null($class))
-            {
-                $resolvedParameters[] = $this->container->resolve($class->getName());
-                continue;
-            }
-
-            if ($parameter->isOptional())
-            {
-                continue;
-            }
-
-            throw new RuntimeException('Could not resolve parameter '.$parameter->getName().' for controller method '.$controllerMethod);
-        }
-
-        return $resolvedParameters;
     }
 }

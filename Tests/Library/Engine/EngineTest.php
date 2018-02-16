@@ -3,6 +3,7 @@
 namespace Tests\Library\Engine;
 
 use Library\Http\Response;
+use Tests\App\Http\Engine\Controllers\UserController;
 use Tests\App\Models\User;
 
 class EngineTest extends EngineBaseTest
@@ -130,19 +131,9 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'conditions' => [
-                        ['name', '=', 'two']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->where('name', '=', 'two');
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -161,19 +152,10 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'conditions' => [
-                        ['name', '=', 'one'],
-                        ['age', '>', 1]
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->where('name', '=', 'one')
+            ->where('age', '>', 1);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -192,19 +174,10 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'conditions' => [
-                        ['id', '=', 1],
-                        ['or', 'age', '=', 3]
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->where('id', '=', 1)
+            ->orWhere('age', '=', 3);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -219,19 +192,10 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'conditions' => [
-                        ['id', '=', 1],
-                        ['rubbish', 'age', '=', 3]
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->where('id', '=', 1)
+            ->orWhere('rubbish', '=', 3);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_BAD_REQUEST, $result['status']);
@@ -247,18 +211,9 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'sort' => [
-                        'id' => 'DESC'
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->sort('id', false);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -277,18 +232,9 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'sort' => [
-                        'name' => 'ASC'
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->sort('name');
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -307,22 +253,45 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'fetch' => [
-                'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ],
-                    'limit' => 2
-                ]
-            ]
-        ]);
+        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+            ->limit(2);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['User' => [
             ['id' => 1], ['id' => 2]
         ]], $result['content']);
+    }
+
+    public function test_run_fetchCallsThepreFetchHook()
+    {
+        // Arrange
+        $this->setUpEngineWithUser();
+
+        // Act
+        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $result = $this->engine->run();
+
+        // Assert
+        $controller = $this->container->resolve(UserController::class);
+        $this->assertTrue($controller->isPreFetchCalled());
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
+    }
+
+    public function test_run_fetchCallsThepostFetchHook()
+    {
+        // Arrange
+        $this->setUpEngineWithUser();
+
+        // Act
+        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $result = $this->engine->run();
+
+        // Assert
+        $controller = $this->container->resolve(UserController::class);
+        $this->assertTrue($controller->isPostFetchCalled());
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
     }
 
     /**
@@ -617,4 +586,10 @@ class EngineTest extends EngineBaseTest
             ['name' => 'updatedName', 'age' => 2]
         ]], $result['content']);
     }
+
+    /**
+     * HOOKS
+     */
+
+    // ...
 }

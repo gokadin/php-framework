@@ -1,18 +1,38 @@
 <?php
 
-namespace Tests\Ap\Http\Engine\Controllers;
+namespace Tests\App\Http\Engine\Controllers;
 
 use Library\Engine\EngineController;
 
 class UserController extends EngineController
 {
-    public function preAdd()
+    /**
+     * @var bool
+     */
+    private $preFetchCalled = false;
+
+    /**
+     * @var bool
+     */
+    private $postFetchCalled = false;
+
+    public function preFetch()
     {
-        
+        $this->preFetchCalled = true;
     }
 
-    public function postAdd()
+    public function postFetch()
     {
+        $this->postFetchCalled = true;
+    }
 
+    public function isPreFetchCalled(): bool
+    {
+        return $this->preFetchCalled;
+    }
+
+    public function isPostFetchCalled(): bool
+    {
+        return $this->postFetchCalled;
     }
 }

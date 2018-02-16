@@ -2,20 +2,8 @@
 
 namespace Library\Engine\Queries;
 
-use Library\DataMapper\Database\QueryBuilder;
-
 class FetchQuery extends EngineQuery
 {
-    /**
-     * FetchQuery constructor.
-     *
-     * @param QueryBuilder $queryBuilder
-     */
-    public function __construct(QueryBuilder $queryBuilder)
-    {
-        parent::__construct($queryBuilder);
-    }
-
     /**
      * @param string $field
      * @param string $operator
@@ -37,6 +25,27 @@ class FetchQuery extends EngineQuery
     public function orWhere(string $field, string $operator, string $value): FetchQuery
     {
         $this->queryBuilder->orWhere($field, $operator, $value);
+        return $this;
+    }
+
+    /**
+     * @param string $field
+     * @param bool $ascending
+     * @return FetchQuery
+     */
+    public function sort(string $field, bool $ascending = true): FetchQuery
+    {
+        $this->queryBuilder->sortBy($field, $ascending);
+        return $this;
+    }
+
+    /**
+     * @param int $limit
+     * @return FetchQuery
+     */
+    public function limit(int $limit): FetchQuery
+    {
+        $this->queryBuilder->limit($limit);
         return $this;
     }
 }
