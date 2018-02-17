@@ -2,7 +2,7 @@
 
 namespace Library\Engine;
 
-class EngineRequestExecutor
+class EngineDataParser
 {
     /**
      * @var Engine
@@ -23,7 +23,7 @@ class EngineRequestExecutor
      * @param array $data
      * @return array
      */
-    public function execute(array $data): array
+    public function parse(array $data): array
     {
         
     }

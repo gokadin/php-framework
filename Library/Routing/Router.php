@@ -3,7 +3,8 @@
 namespace Library\Routing;
 
 use Library\Container\Container;
-use Library\Engine\EngineRequestExecutor;
+use Library\Engine\Engine;
+use Library\Engine\EngineDataParser;
 use Library\Http\Controller;
 use Library\Http\Request;
 use Library\Http\Response;
@@ -34,6 +35,11 @@ class Router
     private $engineEnabled;
 
     /**
+     * @var Engine
+     */
+    private $engine;
+
+    /**
      * Router constructor.
      *
      * @param Container $container
@@ -57,6 +63,7 @@ class Router
     public function enableEngine(bool $value = true)
     {
         $this->engineEnabled = $value;
+        $this->engine = $this->container->resolve('engine');
     }
 
     /**
@@ -114,17 +121,17 @@ class Router
      */
     private function handleHttpRequest(RouteCollection $routes, Request $request): Response
     {
+        if ($this->engineEnabled && $this->isEngineRoute($request))
+        {
+            return $this->executeEngineRoute($request);
+        }
+
         try
         {
             $route = $this->findRoute($routes, $request);
         }
         catch (RouterException $e)
         {
-            if ($this->engineEnabled)
-            {
-                return $this->container->resolve(EngineRequestExecutor::class)->execute($request->data('data'));
-            }
-
             return new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
         }
 
@@ -148,6 +155,25 @@ class Router
         {
             return $routes->matchCatchAll($request);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    private function isEngineRoute(Request $request): bool
+    {
+        return $request->uri() == $this->engine->getUri() && $request->method() == Engine::ROUTE_METHOD;
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    private function executeEngineRoute(Request $request): Response
+    {
+        $result = $this->engine->processData($request->data('data'));
+        return new Response($result['status'], $result['content']);
     }
 
     /**

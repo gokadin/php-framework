@@ -15,6 +15,7 @@ use \Exception;
 
 class Engine
 {
+    const ROUTE_METHOD = 'POST';
     const FETCH_KEY = 'FETCH';
     const CREATE_KEY = 'CREATE';
     const UPDATE_KEY = 'UPDATE';
@@ -41,6 +42,16 @@ class Engine
     private $modelsNamespace;
 
     /**
+     * @var string
+     */
+    private $uri;
+
+    /**
+     * @var EngineDataParser
+     */
+    private $dataParser;
+
+    /**
      * Engine constructor.
      *
      * @param array $schema
@@ -55,6 +66,7 @@ class Engine
         $this->readConfig($config);
 
         $this->queryExecutor = new EngineQueryExecutor($schema, $dm, $container, $config);
+        $this->dataParser = new EngineDataParser($this);
     }
 
     /**
@@ -63,6 +75,26 @@ class Engine
     private function readConfig(array $config)
     {
         $this->modelsNamespace = str_replace('/', '\\', $config['modelsPath']).'\\';
+        $this->uri = $config['uri'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function processData(array $data): array
+    {
+        $this->dataParser->parse($data);
+
+        return $this->run();
     }
 
     /**

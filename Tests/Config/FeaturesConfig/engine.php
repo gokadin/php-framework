@@ -3,6 +3,12 @@
 return [
 
     /**
+     * The uri for engine requests.
+     * The http verb is always POST.
+     */
+    'uri' => '/engine',
+
+    /**
      * Path to model classes.
      */
     'modelsPath' => 'Tests/App/Models',

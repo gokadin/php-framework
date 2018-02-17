@@ -100,8 +100,8 @@ class AppConfigurator
      */
     private function setUpContainer(): void
     {
-        $this->registerEssentials();
         $this->registerFeatures();
+        $this->registerEssentials();
     }
 
     /**
@@ -126,25 +126,6 @@ class AppConfigurator
         {
             $this->registerEngine();
         }
-    }
-
-    /**
-     * Register the router.
-     */
-    private function registerRouter(): void
-    {
-        $router = new Router($this->container);
-        if ($this->features['validation'])
-        {
-            $router->enableValidation();
-        }
-
-        if ($this->features['engine'])
-        {
-            $router->enableEngine();
-        }
-
-        $this->container->registerInstance('router', $router);
     }
 
     /**
@@ -178,5 +159,24 @@ class AppConfigurator
 
         $this->container->registerInstance('engine',
             new Engine($schema, $this->container->resolveInstance('dataMapper'), $this->container, $config));
+    }
+
+    /**
+     * Register the router.
+     */
+    private function registerRouter(): void
+    {
+        $router = new Router($this->container);
+        if ($this->features['validation'])
+        {
+            $router->enableValidation();
+        }
+
+        if ($this->features['engine'])
+        {
+            $router->enableEngine();
+        }
+
+        $this->container->registerInstance('router', $router);
     }
 }
