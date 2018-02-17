@@ -139,6 +139,11 @@ class AppConfigurator
             $router->enableValidation();
         }
 
+        if ($this->features['engine'])
+        {
+            $router->enableEngine();
+        }
+
         $this->container->registerInstance('router', $router);
     }
 
@@ -157,8 +162,6 @@ class AppConfigurator
      */
     private function registerEngine(): void
     {
-        //$config = $this->readFeatureConfig('engine'); // no config for now
-
         if (!$this->features['database'])
         {
             throw new CoreException('Engine feature required database to be enabled.');
@@ -174,6 +177,6 @@ class AppConfigurator
         $config = $this->readFeatureConfig('engine');
 
         $this->container->registerInstance('engine',
-            new Engine($this->basePath, $schema, $this->container->resolveInstance('dataMapper'), $this->container, $config));
+            new Engine($schema, $this->container->resolveInstance('dataMapper'), $this->container, $config));
     }
 }

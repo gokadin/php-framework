@@ -3,8 +3,11 @@
 namespace Library\Engine\Queries;
 
 use Library\Container\Container;
+use Library\DataMapper\Collection\EntityCollection;
 use Library\DataMapper\DataMapper;
 use Library\Engine\Engine;
+use Library\Engine\EngineException;
+use ReflectionClass;
 
 class EngineQueryExecutor
 {
@@ -31,6 +34,11 @@ class EngineQueryExecutor
     private $controllersNamespace;
 
     /**
+     * @var string
+     */
+    private $modelsNamespace;
+
+    /**
      * EngineQueryExecutor constructor.
      *
      * @param array $schema
@@ -53,9 +61,14 @@ class EngineQueryExecutor
     private function readConfig(array $config)
     {
         $this->controllersNamespace = str_replace('/', '\\', $config['controllersPath']).'\\';
+        $this->modelsNamespace = str_replace('/', '\\', $config['modelsPath']).'\\';
     }
 
-    public function execute(array $command)
+    /**
+     * @param array $command
+     * @return array
+     */
+    public function execute(array $command): array
     {
         $result = [];
         switch ($command['action'])
@@ -66,6 +79,12 @@ class EngineQueryExecutor
             case Engine::CREATE_KEY:
                 $result = $this->executeCreate($command);
                 break;
+            case Engine::DELETE_KEY:
+                $result = $this->executeDelete($command);
+                break;
+            case Engine::UPDATE_KEY:
+                $result = $this->executeUpdate($command);
+                break;
         }
 
         $this->executeHook($command, $result);
@@ -73,17 +92,112 @@ class EngineQueryExecutor
         return $result;
     }
 
-    private function executeFetch(array $command)
+    /**
+     * @param array $command
+     * @return array
+     */
+    private function executeFetch(array $command): array
     {
         $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select());
-        return $this->buildEntities($entities, $command['fields']);
+        return $this->buildFieldsFromEntities($entities, $command['fields']);
     }
 
-    private function executeCreate(array $command)
+    /**
+     * @param array $command
+     * @return array
+     */
+    private function executeCreate(array $command): array
     {
+        if (sizeof($command['data']) == 0)
+        {
+            return [];
+        }
 
+        return isset($command['data'][0]) && is_array($command['data'][0])
+            ? $this->executeMultipleCreate($command)
+            : $this->executeSingleCreate($command);
     }
 
+    /**
+     * @param array $command
+     * @return array
+     */
+    private function executeMultipleCreate(array $command): array
+    {
+        $entities = [];
+        foreach ($command['data'] as $values)
+        {
+            $entity = $this->buildEntityFromData($command['entityClassName'], $values);
+            $this->dm->persist($entity);
+            $entities[] = $entity;
+        }
+
+        $this->dm->flush();
+
+        return $this->buildFieldsFromEntities($entities, $command['fields']);
+    }
+
+    /**
+     * @param array $command
+     * @return array
+     */
+    private function executeSingleCreate(array $command): array
+    {
+        $entity = $this->buildEntityFromData($command['entityClassName'], $command['data']);
+        $this->dm->persist($entity);
+        $this->dm->flush();
+
+        return [$this->buildFieldsFromEntity($entity, $command['fields'])];
+    }
+
+    /**
+     * @param array $command
+     * @return array
+     */
+    private function executeDelete(array $command): array
+    {
+        $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select())->toArray();
+        foreach ($entities as $entity)
+        {
+            $this->dm->delete($entity);
+        }
+
+        if (sizeof($entities) > 0)
+        {
+            $this->dm->flush();
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array $command
+     * @return array
+     */
+    private function executeUpdate(array $command): array
+    {
+        $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select())->toArray();
+        foreach ($entities as $entity)
+        {
+            foreach ($command['data'] as $field => $value)
+            {
+                $setter = 'set'.ucfirst($field);
+                $entity->$setter($value);
+            }
+        }
+
+        if (sizeof($entities) > 0)
+        {
+            $this->dm->flush();
+        }
+
+        return $this->buildFieldsFromEntities($entities, $command['fields']);
+    }
+
+    /**
+     * @param array $command
+     * @param array $result
+     */
     private function executeHook(array $command, array $result)
     {
         $controller = $this->getController($command['type']);
@@ -155,9 +269,14 @@ class EngineQueryExecutor
         return class_exists($controllerClassName) ? $this->container->resolve($controllerClassName) : null;
     }
 
-    private function BuildEntityFromData(string $entityName, array $createData)
+    /**
+     * @param string $entityClassName
+     * @param array $createData
+     * @return object
+     * @throws EngineException
+     */
+    private function buildEntityFromData(string $entityClassName, array $createData)
     {
-        $entityClassName = $this->modelsNamespace.ucfirst($entityName);
         $reflector = new ReflectionClass($entityClassName);
         $entity = $reflector->newInstanceWithoutConstructor();
 
@@ -188,8 +307,6 @@ class EngineQueryExecutor
 
             $entity->$setter($value);
         }
-
-        $this->dm->persist($entity);
 
         return $entity;
     }

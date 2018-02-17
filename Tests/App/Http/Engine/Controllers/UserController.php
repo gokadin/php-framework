@@ -9,30 +9,60 @@ class UserController extends EngineController
     /**
      * @var bool
      */
-    private $preFetchCalled = false;
+    private $fetchHookCalled = false;
 
     /**
      * @var bool
      */
-    private $postFetchCalled = false;
+    private $createHookCalled = false;
 
-    public function preFetch()
+    /**
+     * @var bool
+     */
+    private $updateHookCalled = false;
+
+    /**
+     * @var bool
+     */
+    private $deleteHookCalled = false;
+
+    public function onFetch()
     {
-        $this->preFetchCalled = true;
+        $this->fetchHookCalled = true;
     }
 
-    public function postFetch()
+    public function onCreate()
     {
-        $this->postFetchCalled = true;
+        $this->createHookCalled = true;
     }
 
-    public function isPreFetchCalled(): bool
+    public function onUpdate()
     {
-        return $this->preFetchCalled;
+        $this->updateHookCalled = true;
     }
 
-    public function isPostFetchCalled(): bool
+    public function onDelete()
     {
-        return $this->postFetchCalled;
+        $this->deleteHookCalled = true;
+    }
+
+    public function isFetchHookCalled(): bool
+    {
+        return $this->fetchHookCalled;
+    }
+
+    public function isCreateHookCalled(): bool
+    {
+        return $this->createHookCalled;
+    }
+
+    public function isUpdateHookCalled(): bool
+    {
+        return $this->updateHookCalled;
+    }
+
+    public function isDeleteHookCalled(): bool
+    {
+        return $this->deleteHookCalled;
     }
 }

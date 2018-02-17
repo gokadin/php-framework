@@ -8,18 +8,6 @@ use Tests\App\Models\User;
 
 class EngineTest extends EngineBaseTest
 {
-    public function test_run_whenActionIsNotValid()
-    {
-        // Arrange
-        $this->setUpEngineWithUser();
-
-        // Act
-        $result = $this->engine->run(['rubbish' => []]);
-
-        // Assert
-        $this->assertEquals(Response::STATUS_BAD_REQUEST, $result['status']);
-    }
-
     public function test_run_fetchSimplestWithoutData()
     {
         // Arrange
@@ -264,7 +252,7 @@ class EngineTest extends EngineBaseTest
         ]], $result['content']);
     }
 
-    public function test_run_fetchCallsThepreFetchHook()
+    public function test_run_fetchCallsHook()
     {
         // Arrange
         $this->setUpEngineWithUser();
@@ -275,22 +263,7 @@ class EngineTest extends EngineBaseTest
 
         // Assert
         $controller = $this->container->resolve(UserController::class);
-        $this->assertTrue($controller->isPreFetchCalled());
-        $this->assertEquals(Response::STATUS_OK, $result['status']);
-    }
-
-    public function test_run_fetchCallsThepostFetchHook()
-    {
-        // Arrange
-        $this->setUpEngineWithUser();
-
-        // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
-        $result = $this->engine->run();
-
-        // Assert
-        $controller = $this->container->resolve(UserController::class);
-        $this->assertTrue($controller->isPostFetchCalled());
+        $this->assertTrue($controller->isFetchHookCalled());
         $this->assertEquals(Response::STATUS_OK, $result['status']);
     }
 
@@ -304,18 +277,11 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $result = $this->engine->run([
-            'create' => [
-                'User' => [
-                    'values' => [
-                        [
-                            'name' => 'one',
-                            'age' => 1
-                        ]
-                    ]
-                ]
-            ]
+        $this->engine->create('User', [
+            'name' => 'one',
+            'age' => 1
         ]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -332,21 +298,11 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $result = $this->engine->run([
-            'create' => [
-                'User' => [
-                    'values' => [
-                        [
-                            'name' => 'one',
-                            'age' => 1
-                        ]
-                    ],
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->create('User', [
+            'name' => 'one',
+            'age' => 1
+        ], ['id' => ['as' => 'id']]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -361,26 +317,20 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $result = $this->engine->run([
-            'create' => [
-                'User' => [
-                    'values' => [
-                        [
-                            'name' => 'one',
-                            'age' => 1
-                        ],
-                        [
-                            'name' => 'two',
-                            'age' => 2
-                        ]
-                    ],
-                    'fields' => [
-                        'id' => ['as' => 'id'],
-                        'name' => ['as' => 'name']
-                    ]
-                ]
+        $this->engine->create('User', [
+            [
+                'name' => 'one',
+                'age' => 1
+            ],
+            [
+                'name' => 'two',
+                'age' => 2
             ]
+        ], [
+            'id' => ['as' => 'id'],
+            'name' => ['as' => 'name']
         ]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -389,25 +339,27 @@ class EngineTest extends EngineBaseTest
         ]], $result['content']);
     }
 
-    /**
-     * DELETE
-     */
-
-    public function test_run_deleteWithoutConditions()
+    public function test_run_createCallsHook()
     {
         // Arrange
         $this->setUpEngineWithUser();
 
         // Act
-        $result = $this->engine->run([
-            'delete' => [
-                'User' => []
-            ]
+        $this->engine->create('User', [
+            'name' => 'one',
+            'age' => 1
         ]);
+        $result = $this->engine->run();
 
         // Assert
-        $this->assertEquals(Response::STATUS_BAD_REQUEST, $result['status']);
+        $controller = $this->container->resolve(UserController::class);
+        $this->assertTrue($controller->isCreateHookCalled());
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
     }
+
+    /**
+     * DELETE
+     */
 
     public function test_run_deleteAll()
     {
@@ -419,15 +371,8 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'delete' => [
-                'User' => [
-                    'conditions' => [
-                        'all'
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->delete('User');
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -444,48 +389,32 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'delete' => [
-                'User' => [
-                    'conditions' => [
-                        ['age', '>', 1]
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->delete('User')->where('age', '>', 1);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(1, $this->dm->findAll(User::class)->count());
     }
 
-    /**
-     * UPDATE
-     */
-
-    public function test_run_updateWithoutConditions()
+    public function test_run_deleteCallsHook()
     {
         // Arrange
         $this->setUpEngineWithUser();
-        $this->dm->persist(new User('one', 1));
-        $this->dm->persist(new User('two', 2));
-        $this->dm->persist(new User('three', 3));
-        $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'update' => [
-                'User' => [
-                    'values' => [
-                        'name' => 'updatedName'
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->delete('User');
+        $result = $this->engine->run();
 
         // Assert
-        $this->assertEquals(Response::STATUS_BAD_REQUEST, $result['status']);
+        $controller = $this->container->resolve(UserController::class);
+        $this->assertTrue($controller->isDeleteHookCalled());
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
     }
+
+    /**
+     * UPDATE
+     */
 
     public function test_run_updateAll()
     {
@@ -496,18 +425,10 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'update' => [
-                'User' => [
-                    'values' => [
-                        'name' => 'updatedName'
-                    ],
-                    'conditions' => [
-                        'all'
-                    ]
-                ]
-            ]
+        $this->engine->update('User', [
+            'name' => 'updatedName'
         ]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -530,22 +451,13 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'update' => [
-                'User' => [
-                    'values' => [
-                        'name' => 'updatedName'
-                    ],
-                    'conditions' => [
-                        'all'
-                    ],
-                    'fields' => [
-                        'name' => ['as' => 'name'],
-                        'age' => ['as' => 'age']
-                    ]
-                ]
-            ]
+        $this->engine->update('User', [
+            'name' => 'updatedName'
+        ], [
+            'name' => ['as' => 'name'],
+            'age' => ['as' => 'age']
         ]);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
@@ -563,28 +475,36 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $result = $this->engine->run([
-            'update' => [
-                'User' => [
-                    'values' => [
-                        'name' => 'updatedName'
-                    ],
-                    'conditions' => [
-                        ['id', '=', 2]
-                    ],
-                    'fields' => [
-                        'name' => ['as' => 'name'],
-                        'age' => ['as' => 'age']
-                    ]
-                ]
-            ]
-        ]);
+        $this->engine->update('User', [
+            'name' => 'updatedName'
+        ], [
+            'name' => ['as' => 'name'],
+            'age' => ['as' => 'age']
+        ])->where('id', '=', 2);
+        $result = $this->engine->run();
 
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['User' => [
             ['name' => 'updatedName', 'age' => 2]
         ]], $result['content']);
+    }
+
+    public function test_run_updateCallsHook()
+    {
+        // Arrange
+        $this->setUpEngineWithUser();
+
+        // Act
+        $this->engine->update('User', [
+            'name' => 'updatedName'
+        ]);
+        $result = $this->engine->run();
+
+        // Assert
+        $controller = $this->container->resolve(UserController::class);
+        $this->assertTrue($controller->isUpdateHookCalled());
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
     }
 
     /**

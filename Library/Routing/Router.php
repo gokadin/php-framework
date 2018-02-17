@@ -3,6 +3,7 @@
 namespace Library\Routing;
 
 use Library\Container\Container;
+use Library\Engine\EngineRequestExecutor;
 use Library\Http\Controller;
 use Library\Http\Request;
 use Library\Http\Response;
@@ -27,14 +28,35 @@ class Router
      */
     private $shouldValidate;
 
+    /**
+     * @var bool
+     */
+    private $engineEnabled;
+
+    /**
+     * Router constructor.
+     *
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function enableValidation()
+    /**
+     * @param bool $value
+     */
+    public function enableValidation(bool $value = true)
     {
-        $this->shouldValidate = true;
+        $this->shouldValidate = $value;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function enableEngine(bool $value = true)
+    {
+        $this->engineEnabled = $value;
     }
 
     /**
@@ -98,6 +120,11 @@ class Router
         }
         catch (RouterException $e)
         {
+            if ($this->engineEnabled)
+            {
+                return $this->container->resolve(EngineRequestExecutor::class)->execute($request->data('data'));
+            }
+
             return new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
         }
 
