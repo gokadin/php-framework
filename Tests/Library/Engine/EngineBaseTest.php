@@ -23,6 +23,7 @@ abstract class EngineBaseTest extends DataMapperBaseTest
     {
         $this->container = new Container();
         $this->engine = new Engine($schema, $this->dm, $this->container, [
+            'uri' => '/engine',
             'modelsPath' => 'Tests/App/Models',
             'controllersPath' => 'Tests/App/Http/Engine/Controllers'
         ]);

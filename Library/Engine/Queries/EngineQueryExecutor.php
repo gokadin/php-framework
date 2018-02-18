@@ -134,7 +134,9 @@ class EngineQueryExecutor
 
         $this->dm->flush();
 
-        return $this->buildFieldsFromEntities($entities, $command['fields']);
+        return sizeof($command['fields']) > 0
+            ? $this->buildFieldsFromEntities($entities, $command['fields'])
+            : [];
     }
 
     /**
@@ -147,7 +149,9 @@ class EngineQueryExecutor
         $this->dm->persist($entity);
         $this->dm->flush();
 
-        return [$this->buildFieldsFromEntity($entity, $command['fields'])];
+        return sizeof($command['fields']) > 0
+            ? [$this->buildFieldsFromEntity($entity, $command['fields'])]
+            : [];
     }
 
     /**

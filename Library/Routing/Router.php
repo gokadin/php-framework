@@ -63,7 +63,7 @@ class Router
     public function enableEngine(bool $value = true)
     {
         $this->engineEnabled = $value;
-        $this->engine = $this->container->resolve('engine');
+        $this->engine = $this->container->resolveInstance('engine');
     }
 
     /**
