@@ -6,21 +6,35 @@ use Library\Utils\StringUtils;
 
 class SchemaSynchronizer
 {
-    const MODEL_DIR = __DIR__.'/../../../App/Domain/Models';
-    const MODEL_NAMESPACE = 'App\\Domain\\Models';
-    const DATAMAPPER_CONFIG_FILE = __DIR__.'/../../../Config/Datamapper/datamapper.php';
-    const CONTROLLER_DIR = __DIR__.'/../../../App/Http/Controllers';
-    const CONTROLLER_NAMESPACE = 'App\Http\Controllers';
+    /**
+     * @var string
+     */
+    private $basePath;
 
     /**
-     * @var array
+     * @var string
      */
-    private $schema;
+    private $modelsNamespace;
 
     /**
-     * @var array
+     * @var string
      */
-    private $previousSchema;
+    private $modelsDirectoryPath;
+
+    /**
+     * @var string
+     */
+    private $controllersNamespace;
+
+    /**
+     * @var string
+     */
+    private $controllersDirectoryPath;
+
+    /**
+     * @var string
+     */
+    private $dataMapperConfigFile;
 
     /**
      * @var ModelGenerator
@@ -30,34 +44,55 @@ class SchemaSynchronizer
     /**
      * SchemaSynchronizer constructor.
      *
-     * @param array $schema
-     * @param array $previousSchema
+     * @param string $basePath
+     * @param array $engineConfig
+     * @param string $dataMapperConfigFile
      */
-    public function __construct(array $schema, array $previousSchema)
+    public function __construct(string $basePath, array $engineConfig, string $dataMapperConfigFile)
     {
-        $this->schema = $schema;
-        $this->previousSchema = $previousSchema;
+        $this->basePath = $basePath;
+        $this->dataMapperConfigFile = $dataMapperConfigFile;
+
+        $this->readConfig($engineConfig);
 
         $this->modelGenerator = new ModelGenerator();
     }
 
-    public function synchronize()
+    /**
+     * @param array $config
+     */
+    private function readConfig(array $config): void
+    {
+        $this->modelsNamespace = str_replace('/', '\\', $config['modelsPath']).'\\';
+        $this->modelsDirectoryPath = $this->basePath.'/'.$config['modelsPath'];
+
+        $this->controllersNamespace = str_replace('/', '\\', $config['controllersPath']).'\\';
+        $this->controllersDirectoryPath = $this->basePath.'/'.$config['controllersPath'];
+        echo $this->controllersDirectoryPath;
+    }
+
+    /**
+     * @param array $schema
+     * @param array $previousSchema
+     * @return array
+     */
+    public function synchronize(array $schema, array $previousSchema): array
     {
         try
         {
-            foreach (array_diff_key($this->schema, $this->previousSchema) as $typeName => $fields)
+            foreach (array_diff_key($schema, $previousSchema) as $typeName => $fields)
             {
                 $this->addType($typeName, $fields);
             }
 
-            foreach (array_diff_key($this->previousSchema, $this->schema) as $typeName => $fields)
+            foreach (array_diff_key($previousSchema, $schema) as $typeName => $fields)
             {
                 $this->removeType($typeName);
             }
 
-            foreach (array_intersect_key($this->schema, $this->previousSchema) as $typeName => $fields)
+            foreach (array_intersect_key($schema, $previousSchema) as $typeName => $fields)
             {
-                $this->synchronizeType($typeName, $fields);
+                $this->synchronizeType($typeName, $fields, $previousSchema);
             }
         }
         catch (SchemaException $e)
@@ -71,9 +106,9 @@ class SchemaSynchronizer
         return ['success' => true];
     }
 
-    private function synchronizeType(string $typeName, array $fields)
+    private function synchronizeType(string $typeName, array $fields, array $previousSchema)
     {
-        if ($fields != $this->previousSchema[$typeName])
+        if ($fields != $previousSchema[$typeName])
         {
             $this->generateModel($typeName, $fields);
         }
@@ -99,14 +134,14 @@ class SchemaSynchronizer
 
     private function generateModel(string $typeName, array $fields)
     {
-        $file = self::MODEL_DIR.'/'.ucfirst($typeName).'.php';
+        $file = $this->modelsDirectoryPath.'/'.ucfirst($typeName).'.php';
         $content = $this->modelGenerator->generate($typeName, $fields);
         file_put_contents($file, $content);
     }
 
     private function removeModel(string $typeName)
     {
-        $file = self::MODEL_DIR.'/'.ucfirst($typeName).'.php';
+        $file = $this->modelsDirectoryPath.'/'.ucfirst($typeName).'.php';
         if (file_exists($file))
         {
             unlink($file);
@@ -115,14 +150,14 @@ class SchemaSynchronizer
 
     private function generateController(string $typeName)
     {
-        $file = self::CONTROLLER_DIR.'/'.ucfirst($typeName).'Controller.php';
+        $file = $this->controllersDirectoryPath.'/'.ucfirst($typeName).'Controller.php';
         if (file_exists($file))
         {
             return;
         }
 
         $str = '<?php'.PHP_EOL.PHP_EOL;
-        $str .= 'namespace '.self::CONTROLLER_NAMESPACE.';'.PHP_EOL.PHP_EOL;
+        $str .= 'namespace '.$this->controllersNamespace.';'.PHP_EOL.PHP_EOL;
         $str .= 'use Library\Engine\EngineController;'.PHP_EOL.PHP_EOL;
         $str .= 'class '.ucfirst($typeName).'Controller extends EngineController'.PHP_EOL;
         $str .= '{'.PHP_EOL.PHP_EOL;
@@ -133,7 +168,7 @@ class SchemaSynchronizer
 
     private function removeController(string $typeName)
     {
-        $file = self::CONTROLLER_DIR.'/'.ucfirst($typeName).'Controller.php';
+        $file = $this->controllersDirectoryPath.'/'.ucfirst($typeName).'Controller.php';
         if (file_exists($file))
         {
             unlink($file);
@@ -142,11 +177,11 @@ class SchemaSynchronizer
 
     private function addToDataMapperConfig(string $typeName)
     {
-        $configContent = file_get_contents(self::DATAMAPPER_CONFIG_FILE);
+        $configContent = file_get_contents($this->dataMapperConfigFile);
 
-        $str = '    '.self::MODEL_NAMESPACE.'\\'.ucfirst($typeName).'::class,'.PHP_EOL.'    ';
+        $str = '    '.$this->modelsNamespace.'\\'.ucfirst($typeName).'::class,'.PHP_EOL.'    ';
 
-        if (strpos($configContent, self::MODEL_NAMESPACE.'\\'.ucfirst($typeName)) !== false)
+        if (strpos($configContent, $this->modelsNamespace.'\\'.ucfirst($typeName)) !== false)
         {
             return;
         }
@@ -155,15 +190,15 @@ class SchemaSynchronizer
         $offset = strpos($configContent, ']', $classesPos);
         $configContent = substr($configContent, 0, $offset).$str.substr($configContent, $offset);
 
-        file_put_contents(self::DATAMAPPER_CONFIG_FILE, $configContent);
+        file_put_contents($this->dataMapperConfigFile, $configContent);
     }
 
     private function removeFromDataMapperConfig(string $typeName)
     {
-        $configContent = file_get_contents(self::DATAMAPPER_CONFIG_FILE);
+        $configContent = file_get_contents($this->dataMapperConfigFile);
 
-        $str = self::MODEL_NAMESPACE.'\\'.ucfirst($typeName).'::class';
+        $str = $this->modelsNamespace.'\\'.ucfirst($typeName).'::class';
         $configContent = StringUtils::removeLinesContainingString($configContent, $str);
-        file_put_contents(self::DATAMAPPER_CONFIG_FILE, $configContent);
+        file_put_contents($this->dataMapperConfigFile, $configContent);
     }
 }

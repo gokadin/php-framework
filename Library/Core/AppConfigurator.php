@@ -9,9 +9,13 @@ use Library\Routing\Router;
 
 class AppConfigurator
 {
-    private const CONFIG_DIRECTORY_NAME = 'Config';
-    private const FEATURES_CONFIG_DIRECTORY_NAME = 'FeaturesConfig';
-    private const FEATURES_FILE_NAME = 'features.php';
+    const CONFIG_DIRECTORY_NAME = 'Config';
+    const FEATURES_CONFIG_DIRECTORY_NAME = 'FeaturesConfig';
+    const FEATURES_FILE_NAME = 'features.php';
+    const SCHEMA_DIRECTORY_NAME = 'Schema';
+    const SCHEMA_FILE_NAME = 'schema.php';
+    const STORAGE_DIRECTORY_NAME = 'Storage';
+    const PREVIOUS_SCHEMA_FILE_NAME = 'previousSchema.json';
 
     /**
      * @var Container
@@ -149,8 +153,8 @@ class AppConfigurator
         }
 
         $schema = [];
-        $schemaFile = $this->configPath.'schema.php';
-        if (!file_exists($schemaFile))
+        $schemaFile = $this->configPath.self::SCHEMA_DIRECTORY_NAME.'/'.self::SCHEMA_FILE_NAME;
+        if (file_exists($schemaFile))
         {
             $schema = require $schemaFile;
         }
