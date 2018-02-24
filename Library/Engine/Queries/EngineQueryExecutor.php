@@ -246,8 +246,20 @@ class EngineQueryExecutor
         $result = [];
         foreach ($fields as $field => $metadata)
         {
+            if (is_string($metadata))
+            {
+                $field = $metadata;
+            }
+
             $getter = 'get'.ucfirst($field);
-            $alias = isset($metadata['as']) ? $metadata['as'] : $field;
+            $alias = $field;
+            if (is_array($metadata))
+            {
+                if (isset($metadata['as']))
+                {
+                    $alias = $metadata['as'];
+                }
+            }
 
             if (array_key_exists($field, $this->schema))
             {

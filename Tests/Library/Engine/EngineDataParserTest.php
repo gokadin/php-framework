@@ -18,9 +18,7 @@ class EngineDataParserTest extends EngineBaseTest
         $result = $this->engine->processData([
             'fetch' => [
                 'User' => [
-                    'fields' => [
-                        'id' => ['as' => 'id']
-                    ]
+                    'fields' => ['id']
                 ]
             ]
         ]);
@@ -29,6 +27,31 @@ class EngineDataParserTest extends EngineBaseTest
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['User' => [
             ['id' => 1]
+        ]], $result['content']);
+    }
+
+    public function test_processData_fetchWithAs()
+    {
+        // Arrange
+        $this->setUpEngineWithUser();
+        $this->dm->persist(new User('one', 1));
+        $this->dm->flush();
+
+        // Act
+        $result = $this->engine->processData([
+            'fetch' => [
+                'User' => [
+                    'fields' => [
+                        'id' => ['as' => 'some']
+                    ]
+                ]
+            ]
+        ]);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
+        $this->assertEquals(['User' => [
+            ['some' => 1]
         ]], $result['content']);
     }
 
