@@ -3,6 +3,7 @@
 namespace Library\Core;
 
 use Library\Container\Container;
+use Library\Http\Request;
 use Library\Routing\RouteBuilder;
 use Library\Routing\RouteCollection;
 use Library\Routing\Router;
@@ -81,8 +82,9 @@ class Application
     public function processRoute(): void
     {
         $router = $this->container->resolve(Router::class);
+        $request = $this->container->resolve(Request::class);
 
-        $this->response = $router->dispatch($this->buildRoutes());
+        $this->response = $router->dispatch($this->buildRoutes(), $request);
     }
 
     /**

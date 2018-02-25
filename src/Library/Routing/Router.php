@@ -3,15 +3,14 @@
 namespace Library\Routing;
 
 use Library\Container\Container;
+use Library\Container\ContainerException;
 use Library\Engine\Engine;
-use Library\Engine\EngineDataParser;
 use Library\Http\Controller;
 use Library\Http\Request;
 use Library\Http\Response;
 use Library\Validation\ValidationBase;
 use Library\Validation\ValidationResult;
 use Library\Validation\Validator;
-use Symfony\Component\Yaml\Exception\RuntimeException;
 use ReflectionMethod;
 use Closure;
 
@@ -267,6 +266,7 @@ class Router
      * @param string $action
      * @param array $routeParameters
      * @return array
+     * @throws ContainerException
      */
     private function getResolvedParameters(string $controller, string $action, array $routeParameters): array
     {
@@ -293,7 +293,7 @@ class Router
                 continue;
             }
 
-            throw new RuntimeException('Could not resolve parameter '.$parameter->getName().' for route method '.$action);
+            throw new ContainerException('Could not resolve parameter '.$parameter->getName().' for route method '.$action);
         }
 
         return $resolvedParameters;
