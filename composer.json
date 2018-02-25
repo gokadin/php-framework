@@ -1,4 +1,9 @@
 {
+  "name": "guiviko/yotoga",
+  "description": "Yotoga framework",
+  "keywords": ["framework", "yotoga"],
+  "license": "MIT",
+  "type": "project",
   "require": {
     "nesbot/carbon": "~1.14",
     "swiftmailer/swiftmailer": "^5.4",
