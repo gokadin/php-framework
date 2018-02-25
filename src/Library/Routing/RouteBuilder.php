@@ -236,7 +236,7 @@ class RouteBuilder
      */
     private function buildNamespace(): string
     {
-        return implode('\\', $this->namespaces).sizeof($this->namespaces) > 0 ? '\\' : '';
+        return implode('\\', $this->namespaces).(sizeof($this->namespaces) > 0 ? '\\' : '');
     }
 
     /**
