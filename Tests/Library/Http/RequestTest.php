@@ -7,6 +7,14 @@ use Tests\BaseTest;
 
 class RequestTest extends BaseTest
 {
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $_GET = [];
+        $_POST = [];
+    }
+
     public function test_ctor_methodIsOverridenIfPassedInCtor()
     {
         // Arrange
@@ -122,6 +130,7 @@ class RequestTest extends BaseTest
     public function test_all_whenHavingBothGetAndDataValues()
     {
         // Arrange
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_GET = ['a' => 'b'];
         $_POST = ['c' => 'd'];
         $request = new Request();

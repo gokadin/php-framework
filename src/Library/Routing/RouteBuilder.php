@@ -2,6 +2,8 @@
 
 namespace Library\Routing;
 
+use Library\Core\Paths;
+
 class RouteBuilder
 {
     /**
@@ -35,11 +37,6 @@ class RouteBuilder
     private $names = [];
 
     /**
-     * @var Route
-     */
-    private $catchAll;
-
-    /**
      * RouteBuilder constructor.
      *
      * @param string $basePath
@@ -56,7 +53,7 @@ class RouteBuilder
      */
     public function getRoutes(): RouteCollection
     {
-        $this->group(['namespace' => 'App\\Http\\Controllers'], function() {
+        $this->group(['namespace' => Paths::CONTROLLERS_NAMESPACE_PREFIX], function() {
             require $this->routesFile;
         });
 
@@ -222,7 +219,7 @@ class RouteBuilder
         $uri = $this->buildPrefix().$uri;
 
         list($controller, $action) = explode('@', $description);
-        $controller = $this->buildNamespace().$controller;
+        $controller = $this->buildNamespace().ucfirst($controller);
 
         $middlewares = $this->buildMiddlewares($parameters);
 

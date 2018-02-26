@@ -2,6 +2,7 @@
 
 namespace Tests\LibraryRouting;
 
+use Library\Core\Paths;
 use Library\Routing\RouteBuilder;
 use Tests\BaseTest;
 
@@ -46,7 +47,7 @@ class RouteBuilderTest extends BaseTest
         $route = $routes->get('simple-get');
         $this->assertEquals(['GET'], $route->methods());
         $this->assertEquals('/simple-get', $route->uri());
-        $this->assertEquals('controllerA', $route->controller());
+        $this->assertEquals(Paths::CONTROLLERS_NAMESPACE_PREFIX.'\\ControllerA', $route->controller());
         $this->assertEquals('actionA', $route->action());
         $this->assertEquals(0, sizeof($route->middlewares()));
     }
@@ -110,7 +111,7 @@ class RouteBuilderTest extends BaseTest
         $route = $routes->get('groupA.group-get');
         $this->assertEquals(['GET'], $route->methods());
         $this->assertEquals('prefixA/group-get', $route->uri());
-        $this->assertEquals('controllerA', $route->controller());
+        $this->assertEquals(Paths::CONTROLLERS_NAMESPACE_PREFIX.'\\NamespaceA\\ControllerA', $route->controller());
         $this->assertEquals('actionA', $route->action());
         $this->assertEquals(1, sizeof($route->middlewares()));
         $this->assertEquals('m1', $route->middlewares()[0]);
@@ -125,7 +126,7 @@ class RouteBuilderTest extends BaseTest
         $route = $routes->get('groupA.groupB.name1');
         $this->assertNotNull($route);
         $this->assertEquals(['GET'], $route->methods());
-        $this->assertEquals('controllerA', $route->controller());
+        $this->assertEquals(Paths::CONTROLLERS_NAMESPACE_PREFIX.'\\NamespaceA\\NamespaceB\\ControllerA', $route->controller());
         $this->assertEquals('actionA', $route->action());
     }
 
@@ -165,7 +166,7 @@ class RouteBuilderTest extends BaseTest
         $route = $routes->getCatchAll('catchAll');
         $this->assertNotNull($route);
         $this->assertEquals(['GET', 'POST'], $route->methods());
-        $this->assertEquals('controllerA', $route->controller());
+        $this->assertEquals(Paths::CONTROLLERS_NAMESPACE_PREFIX.'\\ControllerA', $route->controller());
         $this->assertEquals('actionA', $route->action());
         $this->assertEquals(1, sizeof($route->middlewares()));
         $this->assertEquals('m1', $route->middlewares()[0]);
