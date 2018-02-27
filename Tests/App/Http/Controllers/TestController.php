@@ -93,4 +93,24 @@ class TestController extends Controller
     {
         return new Response(Response::STATUS_OK);
     }
+
+    public function middlewaresSimplest()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function middlewareHasRequest()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function middlewareCtorParameters()
+    {
+        return new Response(Response::STATUS_OK);
+    }
+
+    public function middlewareMethodParameters()
+    {
+        return new Response(Response::STATUS_OK);
+    }
 }

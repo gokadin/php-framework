@@ -181,6 +181,11 @@ class AppConfigurator
             $router->enableEngine();
         }
 
+        if ($this->features['middlewares'])
+        {
+            $router->enableMiddlewares();
+        }
+
         $this->container->registerInstance('router', $router);
     }
 }

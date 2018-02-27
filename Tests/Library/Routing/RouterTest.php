@@ -14,6 +14,7 @@ use Tests\TestData\Router\ResolvableOne;
 class RouterTest extends BaseTest
 {
     private const TEST_CONTROLLERS_ROOT_NAMESPACE = 'Tests\\App\\Http\\Controllers\\';
+    private const TEST_MIDDLEWARES_ROOT_NAMESPACE = 'Tests\\App\\Http\\Middlewares\\';
 
     /**
      * @var Router
@@ -266,5 +267,101 @@ class RouterTest extends BaseTest
 
         // Assert
         $this->assertEquals(Response::STATUS_BAD_REQUEST, $response->statusCode());
+    }
+
+    public function test_dispatch_middlewareIsProcessed()
+    {
+        // Arrange
+        $this->router->enableMiddlewares();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'middlewaresSimplest', [
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'MidOne'
+        ], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_middlewareIsProcessedWhenNotTrue()
+    {
+        // Arrange
+        $this->router->enableMiddlewares();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'middlewaresSimplest', [
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'MidTwo'
+        ], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_UNAUTHORIZED, $response->statusCode());
+    }
+
+    public function test_dispatch_middlewareHasRequest()
+    {
+        // Arrange
+        $this->router->enableMiddlewares();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'middlewareHasRequest', [
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'MidThree'
+        ], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_middlewareCtorParametersAreResolved()
+    {
+        // Arrange
+        $this->router->enableMiddlewares();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'middlewareCtorParameters', [
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'MidFour'
+        ], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_middlewareMethodParametersAreResolved()
+    {
+        // Arrange
+        $this->router->enableMiddlewares();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'middlewareMethodParameters', [
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'MidFive'
+        ], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
+    }
+
+    public function test_dispatch_middlewareOrder()
+    {
+        // Assert
+        $this->assertTrue(false);
     }
 }

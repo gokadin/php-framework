@@ -8,6 +8,11 @@ return [
     'validation' => true,
 
     /**
+     * Enable middlewares.
+     */
+    'middlewares' => true,
+
+    /**
      * Enable persistence.
      */
     'database' => true,

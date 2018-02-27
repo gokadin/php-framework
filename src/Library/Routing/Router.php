@@ -4,8 +4,10 @@ namespace Library\Routing;
 
 use Library\Container\Container;
 use Library\Container\ContainerException;
+use Library\Core\Paths;
 use Library\Engine\Engine;
 use Library\Http\Controller;
+use Library\Http\Middleware;
 use Library\Http\Request;
 use Library\Http\Response;
 use Library\Validation\ValidationBase;
@@ -39,6 +41,11 @@ class Router
     private $engine;
 
     /**
+     * @var bool
+     */
+    private $middlewaresEnabled;
+
+    /**
      * Router constructor.
      *
      * @param Container $container
@@ -63,6 +70,11 @@ class Router
     {
         $this->engineEnabled = $value;
         $this->engine = $this->container->resolveInstance('engine');
+    }
+
+    public function enableMiddlewares(bool $value = true)
+    {
+        $this->middlewaresEnabled = $value;
     }
 
     /**
@@ -225,10 +237,67 @@ class Router
     private function getControllerClosure(string $controller, string $action, array $routeParameters, Request $request): Closure
     {
         return function() use ($controller, $action, $routeParameters, $request) {
-            $resolvedParameters = $this->getResolvedParameters($controller, $action, $routeParameters);
+            $resolvedParameters = $this->container->resolveMethodParameters($controller, $action);
             $controller = $this->resolveController($controller, $request);
             return call_user_func_array([$controller, $action], $resolvedParameters);
         };
+    }
+
+    /**
+     * @param Closure $closure
+     * @param Request $request
+     * @param array $middlewares
+     * @return Response
+     */
+    private function executeActionClosure(Closure $closure, Request $request, array $middlewares): Response
+    {
+        if ($this->middlewaresEnabled)
+        {
+            $result = $this->executeMiddlewares($request, $middlewares);
+            if ($result !== true)
+            {
+                return $result;
+            }
+        }
+
+        return $closure();
+    }
+
+    /**
+     * @param Request $request
+     * @param array $middlewares
+     * @return mixed
+     * @throws RouterException
+     */
+    private function executeMiddlewares(Request $request, array $middlewares)
+    {
+        foreach ($middlewares as $middleware)
+        {
+            $result = $this->executeMiddleware($request, $middleware);
+            if ($result !== true)
+            {
+                if (!($result instanceof Response))
+                {
+                    throw new RouterException('Middlewares should either return true or a response object.');
+                }
+
+                return $result;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Request $request
+     * @param string $middleware
+     * @return mixed
+     */
+    private function executeMiddleware(Request $request, string $middleware)
+    {
+        $resolvedParameters = $this->container->resolveMethodParameters($middleware, 'handle');
+        $middleware = $this->resolveMiddleware($middleware, $request);
+        return call_user_func_array([$middleware, 'handle'], $resolvedParameters);
     }
 
     /**
@@ -262,75 +331,16 @@ class Router
     }
 
     /**
-     * @param string $controller
-     * @param string $action
-     * @param array $routeParameters
-     * @return array
-     * @throws ContainerException
-     */
-    private function getResolvedParameters(string $controller, string $action, array $routeParameters): array
-    {
-        $resolvedParameters = [];
-        $r = new ReflectionMethod($controller, $action);
-
-        foreach ($r->getParameters() as $parameter)
-        {
-            $class = $parameter->getClass();
-            if (!is_null($class))
-            {
-                $resolvedParameters[] = $this->container->resolve($class->getName());
-                continue;
-            }
-
-            if (in_array($parameter->getName(), array_keys($routeParameters)))
-            {
-                $resolvedParameters[] = $routeParameters[$parameter->getName()];
-                continue;
-            }
-
-            if ($parameter->isOptional())
-            {
-                continue;
-            }
-
-            throw new ContainerException('Could not resolve parameter '.$parameter->getName().' for route method '.$action);
-        }
-
-        return $resolvedParameters;
-    }
-
-    /**
-     * @param Closure $closure
+     * @param string $middleware
      * @param Request $request
-     * @param array $middlewares
-     * @return Response
+     * @return Middleware
      */
-    private function executeActionClosure(Closure $closure, Request $request, array $middlewares): Response
+    private function resolveMiddleware(string $middleware, Request $request): Middleware
     {
-        if (sizeof($middlewares) == 0)
-        {
-            return $closure();
-        }
+        $middleware = $this->container->resolve($middleware);
 
-        $closure = $this->getActionClosureWithMiddlewares($closure, $request, sizeof($middlewares) - 1);
+        $this->container->resolveObjectProperty($middleware, 'request', $request);
 
-        return $closure();
-    }
-
-    protected function getActionClosureWithMiddlewares(Closure $closure, Request $request, $index)
-    {
-        $middlewareName = '\\App\\Http\\Middleware\\'.$this->currentRoute->middlewares()[$index];
-        $middleware = $this->container->resolve($middlewareName);
-
-        if ($index == 0)
-        {
-            return function() use ($middleware, $closure, $request) {
-                return $middleware->handle($request, $closure);
-            };
-        }
-
-        return $this->getActionClosureWithMiddlewares(function() use ($middleware, $closure, $request) {
-            return $middleware->handle($request, $closure);
-        }, $request, $index - 1);
+        return $middleware;
     }
 }
