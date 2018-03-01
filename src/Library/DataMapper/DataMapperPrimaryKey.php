@@ -5,7 +5,7 @@ namespace Library\DataMapper;
 trait DataMapperPrimaryKey
 {
     /** @Id */
-    protected $id;
+    private $id;
 
     public function getId()
     {

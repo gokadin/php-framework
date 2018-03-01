@@ -5,10 +5,10 @@ namespace Library\DataMapper;
 trait DataMapperTimestamps
 {
     /** @Column(name="created_at", type="datetime") */
-    protected $createdAt;
+    private $createdAt;
 
     /** @Column(name="updated_at", type="datetime") */
-    protected $updatedAt;
+    private $updatedAt;
 
     public function getCreatedAt()
     {
