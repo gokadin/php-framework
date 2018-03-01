@@ -5,6 +5,7 @@ namespace Tests\App\Http\Controllers;
 use Library\Http\Request;
 use Library\Http\Response;
 use Library\Validation\Validator;
+use Tests\App\Http\Middlewares\OrderTests\MidOrderResolvable;
 use Tests\TestData\Router\ResolvableOne;
 
 class TestController extends Controller
@@ -112,5 +113,15 @@ class TestController extends Controller
     public function middlewareMethodParameters()
     {
         return new Response(Response::STATUS_OK);
+    }
+
+    public function middlewareOrder(MidOrderResolvable $resolvable)
+    {
+        if ($resolvable->isCalled())
+        {
+            return new Response(Response::STATUS_OK);
+        }
+
+        return new Response(Response::STATUS_BAD_REQUEST);
     }
 }

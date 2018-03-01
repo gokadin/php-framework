@@ -22,6 +22,21 @@ class SchemaSynchronizerTest extends BaseTest
         ], $this->basePath().'/Config/FeaturesConfig/schemaTestDatamapper.php');
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $files = glob($this->basePath().'/App/SchemaTestModels/*');
+        $files = array_merge($files, glob($this->basePath().'/App/Http/SchemaTestControllers/*'));
+        foreach($files as $file)
+        {
+            if(is_file($file))
+            {
+                unlink($file);
+            }
+        }
+    }
+
     public function test_synchronize_AddsModelFile()
     {
         // Act
@@ -32,6 +47,19 @@ class SchemaSynchronizerTest extends BaseTest
         ], []);
 
         // Assert
-        $this->assertTrue(true);
+        $this->assertTrue(class_exists('\\Tests\\App\\SchemaTestModels\\User'));
+    }
+
+    public function test_synchronize_AddsControllerFile()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'name' => ['type' => 'string']
+            ]
+        ], []);
+
+        // Assert
+        $this->assertTrue(class_exists('\\Tests\\App\\Http\\SchemaTestControllers\\UserController'));
     }
 }

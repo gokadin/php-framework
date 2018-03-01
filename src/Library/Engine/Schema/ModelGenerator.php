@@ -4,12 +4,29 @@ namespace Library\Engine\Schema;
 
 class ModelGenerator
 {
-    const MODEL_NAMESPACE = 'App\Domain\Models';
+    /**
+     * @var string
+     */
+    private $modelsNamespace;
 
-    public function generate(string $typeName, array $fields)
+    /**
+     * ModelGenerator constructor.
+     * @param string $modelsNamespace
+     */
+    public function __construct(string $modelsNamespace)
+    {
+        $this->modelsNamespace = $modelsNamespace;
+    }
+
+    /**
+     * @param string $typeName
+     * @param array $fields
+     * @return string
+     */
+    public function generate(string $typeName, array $fields): string
     {
         $str = '<?php'.PHP_EOL.PHP_EOL;
-        $str .= 'namespace '.self::MODEL_NAMESPACE.';'.PHP_EOL.PHP_EOL;
+        $str .= 'namespace '.$this->modelsNamespace.';'.PHP_EOL.PHP_EOL;
         $str .= 'use Library\DataMapper\DataMapperPrimaryKey;'.PHP_EOL;
         $str .= 'use Library\DataMapper\DataMapperTimestamps;'.PHP_EOL.PHP_EOL;
         $str .= '/** @Entity */'.PHP_EOL;

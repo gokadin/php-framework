@@ -361,7 +361,20 @@ class RouterTest extends BaseTest
 
     public function test_dispatch_middlewareOrder()
     {
+        // Arrange
+        $this->router->enableMiddlewares();
+        $routes = new RouteCollection();
+        $routes->add(new Route(['GET'], '/', self::TEST_CONTROLLERS_ROOT_NAMESPACE . 'TestController', 'middlewareOrder', [
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'OrderTests\\MidOrderOne',
+            self::TEST_MIDDLEWARES_ROOT_NAMESPACE.'OrderTests\\MidOrderTwo'
+        ], 'name1'));
+        $request = new Request('GET', '/', [], [], []);
+        $this->container->registerInstance('request', $request);
+
+        // Act
+        $response = $this->router->dispatch($routes, $request);
+
         // Assert
-        $this->assertTrue(false);
+        $this->assertEquals(Response::STATUS_OK, $response->statusCode());
     }
 }

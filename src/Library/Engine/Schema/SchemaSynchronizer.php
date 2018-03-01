@@ -55,7 +55,7 @@ class SchemaSynchronizer
 
         $this->readConfig($engineConfig);
 
-        $this->modelGenerator = new ModelGenerator();
+        $this->modelGenerator = new ModelGenerator($this->modelsNamespace);
     }
 
     /**
@@ -63,12 +63,11 @@ class SchemaSynchronizer
      */
     private function readConfig(array $config): void
     {
-        $this->modelsNamespace = str_replace('/', '\\', $config['modelsPath']).'\\';
+        $this->modelsNamespace = str_replace('/', '\\', $config['modelsPath']);
         $this->modelsDirectoryPath = $this->basePath.'/'.$config['modelsPath'];
 
-        $this->controllersNamespace = str_replace('/', '\\', $config['controllersPath']).'\\';
+        $this->controllersNamespace = str_replace('/', '\\', $config['controllersPath']);
         $this->controllersDirectoryPath = $this->basePath.'/'.$config['controllersPath'];
-        echo $this->controllersDirectoryPath;
     }
 
     /**
