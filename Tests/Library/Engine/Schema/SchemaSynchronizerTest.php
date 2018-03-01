@@ -239,6 +239,20 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('setName'));
     }
 
+    public function test_synchronize_modelPropertyNameHasCorrectAnnotation()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'name' => ['type' => 'string']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertNotFalse(strpos($r->getProperty('name')->getDocComment(), '@Column(type="string")'));
+    }
+
     public function test_synchronize_AddsControllerFile()
     {
         // Act
@@ -250,5 +264,19 @@ class SchemaSynchronizerTest extends BaseTest
 
         // Assert
         $this->assertTrue(class_exists(self::USER_CONTROLLER_CLASS));
+    }
+
+    public function test_synchronize_controllerExtendsFromEngineController()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'name' => ['type' => 'string']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_CONTROLLER_CLASS);
+        $this->assertEquals('Library\\Engine\\EngineController', $r->getParentClass()->getName());
     }
 }
