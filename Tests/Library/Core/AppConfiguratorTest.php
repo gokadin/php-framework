@@ -2,6 +2,7 @@
 
 namespace Tests\Library\Core;
 
+use Library\Authentication\Authenticator;
 use Library\DataMapper\DataMapper;
 use Library\Engine\Engine;
 use Library\Routing\Router;
@@ -56,5 +57,14 @@ class AppConfiguratorTest extends BaseTest
 
         // Assert
         $this->assertNotNull($this->container->resolve(Engine::class));
+    }
+
+    public function test_configure_registerAuthenticationWhenEnabled()
+    {
+        // Act
+        $this->appConfigurator->configure();
+
+        // Assert
+        $this->assertNotNull($this->container->resolve(Authenticator::class));
     }
 }

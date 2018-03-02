@@ -18,6 +18,15 @@ return [
     'database' => true,
 
     /**
+     * Enable API authentication
+     *
+     * Dependencies:
+     * -> database
+     * -> middlewares
+     */
+    'authentication' => true,
+
+    /**
      * Enable auto CRUD and single request backend.
      *
      * Dependencies:

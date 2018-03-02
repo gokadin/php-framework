@@ -2,6 +2,7 @@
 
 namespace Library\Core;
 
+use Library\Authentication\Authenticator;
 use Library\Container\Container;
 use Library\DataMapper\DataMapper;
 use Library\Engine\Engine;
@@ -126,6 +127,11 @@ class AppConfigurator
             $this->registerDataMapper();
         }
 
+        if ($this->features['authentication'])
+        {
+            $this->registerAuthentication();
+        }
+
         if ($this->features['engine'])
         {
             $this->registerEngine();
@@ -140,6 +146,13 @@ class AppConfigurator
         $config = $this->readFeatureConfig('datamapper');
 
         $this->container->registerInstance('dataMapper', new DataMapper($config));
+    }
+
+    private function registerAuthentication(): void
+    {
+        $config = $this->readFeatureConfig('authentication');
+
+        $this->container->registerInstance('authenticator', new Authenticator($config));
     }
 
     /**
