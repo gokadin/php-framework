@@ -8,8 +8,14 @@ use Tests\BaseTest;
 
 class SchemaSynchronizerTest extends BaseTest
 {
-    private const USER_MODEL_CLASS = '\\Tests\\App\\SchemaTestModels\\User';
-    private const USER_CONTROLLER_CLASS = '\\Tests\\App\\Http\\SchemaTestControllers\\UserController';
+    private const USER_MODEL_CLASS = 'Tests\\App\\SchemaTestModels\\User';
+    private const USER_CONTROLLER_CLASS = 'Tests\\App\\Http\\SchemaTestControllers\\UserController';
+    private const POST_MODEL_CLASS = 'Tests\\App\\SchemaTestModels\\Post';
+
+    /**
+     * @var string
+     */
+    private $datamapperConfigFile;
 
     /**
      * @var SchemaSynchronizer
@@ -20,11 +26,17 @@ class SchemaSynchronizerTest extends BaseTest
     {
         parent::setUp();
 
+        $this->datamapperConfigFile = $this->basePath().'/Config/FeaturesConfig/schemaTestDatamapper.php';
+
         $this->synchronizer = new SchemaSynchronizer($this->basePath().'/..', [
             'modelsPath' => 'Tests/App/SchemaTestModels',
             'controllersPath' => 'Tests/App/Http/SchemaTestControllers'
-        ], $this->basePath().'/Config/FeaturesConfig/schemaTestDatamapper.php');
+        ], $this->datamapperConfigFile);
     }
+
+    /**
+     * CREATE
+     */
 
     public function tearDown()
     {
@@ -39,6 +51,10 @@ class SchemaSynchronizerTest extends BaseTest
                 unlink($file);
             }
         }
+
+        unlink($this->datamapperConfigFile);
+        $template = file_get_contents($this->basePath().'/Config/FeaturesConfig/schemaTestDatamapperTemplate.php');
+        file_put_contents($this->datamapperConfigFile, $template);
     }
 
     public function test_synchronize_AddsModelFile()
@@ -278,5 +294,83 @@ class SchemaSynchronizerTest extends BaseTest
         // Assert
         $r = new \ReflectionClass(self::USER_CONTROLLER_CLASS);
         $this->assertEquals('Library\\Engine\\EngineController', $r->getParentClass()->getName());
+    }
+
+    public function test_synchronize_classIsAddedToDataMapperConfig()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'name' => ['type' => 'string']
+            ]
+        ], []);
+
+        // Assert
+        $config = require $this->datamapperConfigFile;
+        $classes = $config['classes'];
+        $this->assertEquals(1, sizeof($classes));
+        $this->assertEquals(self::USER_MODEL_CLASS, $classes[0]);
+    }
+
+    /**
+     * UPDATE
+     */
+
+    public function test_synchronize_additionalClassIsAddedToDataMapperConfig()
+    {
+        // Arrange
+        $this->synchronizer->synchronize([
+            'user' => [
+                'name' => ['type' => 'string']
+            ]
+        ], []);
+
+        // Act
+        $this->synchronizer->synchronize([
+            'post' => [
+                'title' => ['type' => 'string']
+            ]
+        ], []);
+
+        // Assert
+        $config = require $this->datamapperConfigFile;
+        $classes = $config['classes'];
+        $this->assertEquals(2, sizeof($classes));
+        $this->assertEquals(self::USER_MODEL_CLASS, $classes[0]);
+        $this->assertEquals(self::POST_MODEL_CLASS, $classes[1]);
+    }
+
+    public function test_synchronize_classIsRemovedFromDataMapperConfig()
+    {
+        // Arrange
+        $previousSchema = [
+            'user' => [
+                'name' => ['type' => 'string']
+            ],
+            'post' => [
+                'title' => ['type' => 'string']
+            ]
+        ];
+        $this->synchronizer->synchronize($previousSchema, []);
+
+        // Assert
+        $config = require $this->datamapperConfigFile;
+        $classes = $config['classes'];
+        $this->assertEquals(2, sizeof($classes));
+        $this->assertEquals(self::USER_MODEL_CLASS, $classes[0]);
+        $this->assertEquals(self::POST_MODEL_CLASS, $classes[1]);
+
+        // Act
+        $this->synchronizer->synchronize([
+            'post' => [
+                'title' => ['type' => 'string']
+            ]
+        ], $previousSchema);
+
+        // Assert
+        $config = require $this->datamapperConfigFile;
+        $classes = $config['classes'];
+        $this->assertEquals(1, sizeof($classes));
+        $this->assertEquals(self::POST_MODEL_CLASS, $classes[0]);
     }
 }
