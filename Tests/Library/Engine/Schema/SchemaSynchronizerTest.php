@@ -3,7 +3,6 @@
 namespace Tests\Library\Engine\Schema;
 
 use Library\Engine\Schema\SchemaSynchronizer;
-use ReflectionException;
 use Tests\BaseTest;
 
 class SchemaSynchronizerTest extends BaseTest
@@ -11,6 +10,7 @@ class SchemaSynchronizerTest extends BaseTest
     private const USER_MODEL_CLASS = 'Tests\\App\\SchemaTestModels\\User';
     private const USER_CONTROLLER_CLASS = 'Tests\\App\\Http\\SchemaTestControllers\\UserController';
     private const POST_MODEL_CLASS = 'Tests\\App\\SchemaTestModels\\Post';
+    private const ADDRESS_MODEL_CLASS = 'Tests\\App\\SchemaTestModels\\Address';
 
     /**
      * @var string
@@ -372,5 +372,69 @@ class SchemaSynchronizerTest extends BaseTest
         $classes = $config['classes'];
         $this->assertEquals(1, sizeof($classes));
         $this->assertEquals(self::POST_MODEL_CLASS, $classes[0]);
+    }
+
+    /**
+     * RELATIONSHIPS
+     */
+
+    public function test_synchronize_modelHasHasOneProperty()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'address' => ['hasOne' => 'address']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertTrue($r->hasProperty('address'));
+    }
+
+    public function test_synchronize_modelHasHasOnePropertyAnnotations()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'address' => ['hasOne' => 'address']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertTrue($r->hasProperty('address'));
+        $doc = $r->getProperty('address')->getDocComment();
+        $this->assertNotFalse(strpos($doc, '@HasOne(target="'.self::ADDRESS_MODEL_CLASS.'")'));
+    }
+
+    public function test_synchronize_modelHasHasManyProperty()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'posts' => ['hasMany' => 'post']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertTrue($r->hasProperty('posts'));
+    }
+
+    public function test_synchronize_modelHasHasManyPropertyAnnotations()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'posts' => ['hasMany' => 'post']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertTrue($r->hasProperty('posts'));
+        $doc = $r->getProperty('posts')->getDocComment();
+        $this->assertNotFalse(strpos($doc, '@HasMany(target="'.self::POST_MODEL_CLASS.'")'));
     }
 }

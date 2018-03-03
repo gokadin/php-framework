@@ -2,6 +2,8 @@
 
 namespace Library\Engine\Schema;
 
+use Library\Engine\EngineException;
+
 class ModelGenerator
 {
     /**
@@ -34,7 +36,7 @@ class ModelGenerator
         $str .= '{'.PHP_EOL;
         $str .= '    use DataMapperPrimaryKey, DataMapperTimestamps;'.PHP_EOL;
 
-        $str .= $this->generateScalarFields($fields);
+        $str .= $this->generateFields($fields);
 
         $str .= $this->generateConstructor();
 
@@ -55,7 +57,7 @@ class ModelGenerator
         return $str;
     }
 
-    private function generateScalarFields(array $fields)
+    private function generateFields(array $fields)
     {
         $str = '';
 
@@ -64,7 +66,10 @@ class ModelGenerator
             if (isset($attributes['type']))
             {
                 $str .= $this->generateScalarField($name, $attributes);
+                continue;
             }
+
+            $str .= $this->generateRelationshipField($name, $attributes);
         }
 
         return $str;
@@ -74,6 +79,36 @@ class ModelGenerator
     {
         $str = PHP_EOL;
         $str .= '    /** @Column(type="'.$attributes['type'].'") */'.PHP_EOL;
+        $str .= '    private $'.$name.';'.PHP_EOL;
+
+        return $str;
+    }
+
+    private function generateRelationshipField(string $name, array $attributes)
+    {
+        $str = PHP_EOL;
+        $str .= '    /** @';
+        $key = '';
+        if (isset($attributes['hasOne']))
+        {
+            $key = 'hasOne';
+        }
+        else if (isset($attributes['hasMany']))
+        {
+            $key = 'hasMany';
+        }
+        else if (isset($attributes['belongsTo']))
+        {
+            $key = 'belongsTo';
+        }
+        else
+        {
+            throw new EngineException('Invalid schema declaration for field '.$name);
+        }
+
+        $str .= ucfirst($key).'(target="'.$this->modelsNamespace.'\\'.ucfirst($attributes[$key]);
+
+        $str .= '") */'.PHP_EOL;
         $str .= '    private $'.$name.';'.PHP_EOL;
 
         return $str;

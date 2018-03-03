@@ -26,6 +26,17 @@ class UserController extends EngineController
      */
     private $deleteHookCalled = false;
 
+    /**
+     * @EngineAction
+     */
+    public function onLogin()
+    {
+
+    }
+
+    /**
+     * @Allow('admin', )
+     */
     public function onFetch()
     {
         $this->fetchHookCalled = true;

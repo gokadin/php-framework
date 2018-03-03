@@ -50,7 +50,7 @@ class Authenticator
 
     public function shouldAuthenticate(string $uri)
     {
-
+        return true;
     }
 
     public function authenticate(string $encodedJwt, string $uri)
