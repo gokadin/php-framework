@@ -4,6 +4,8 @@ namespace Tests\Library\Engine;
 
 use Library\Container\Container;
 use Library\Engine\Engine;
+use Tests\App\Models\Comment;
+use Tests\App\Models\Post;
 use Tests\App\Models\User;
 use Tests\Library\DataMapper\DataMapperBaseTest;
 
@@ -40,6 +42,28 @@ abstract class EngineBaseTest extends DataMapperBaseTest
                 'id' => [
                     'type' => 'string'
                 ]
+            ]
+        ];
+
+        $this->setUpBase();
+        $this->setUpEngine($schema);
+    }
+
+    protected function setUpEngineWithPostsComments()
+    {
+        $this->classes = [
+            Post::class,
+            Comment::class
+        ];
+
+        $schema = [
+            'post' => [
+                'title' => ['type' => 'string'],
+                'comments' => ['hasMany' => 'comment']
+            ],
+            'comment' => [
+                'text' => ['type' => 'string'],
+                'post' => ['belongsTo' => 'post']
             ]
         ];
 

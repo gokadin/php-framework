@@ -261,7 +261,7 @@ class EngineQueryExecutor
                 }
             }
 
-            if (array_key_exists($field, $this->schema))
+            if (is_array($metadata) && sizeof($metadata) > 0 && isset($metadata[0]))
             {
                 $relation = $entity->$getter();
                 $result[$alias] = $this->buildFieldsFromEntities($relation->toArray(), $metadata);

@@ -4,6 +4,8 @@ namespace Tests\Library\Engine;
 
 use Library\Http\Response;
 use Tests\App\Http\Engine\Controllers\UserController;
+use Tests\App\Models\Comment;
+use Tests\App\Models\Post;
 use Tests\App\Models\User;
 
 class EngineTest extends EngineBaseTest
@@ -14,7 +16,7 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $this->engine->fetch('User', ['id']);
         $result = $this->engine->run();
 
         // Assert
@@ -30,7 +32,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $this->engine->fetch('User', ['id']);
         $result = $this->engine->run();
 
         // Assert
@@ -49,7 +51,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']]);
+        $this->engine->fetch('User', ['id']);
         $result = $this->engine->run();
 
         // Assert
@@ -69,9 +71,9 @@ class EngineTest extends EngineBaseTest
 
         // Act
         $this->engine->fetch('User', [
-            'id' => ['as' => 'id'],
-            'name' => ['as' => 'name'],
-            'age' => ['as' => 'age']
+            'id',
+            'name',
+            'age'
         ]);
         $result = $this->engine->run();
 
@@ -119,7 +121,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->where('name', '=', 'two');
         $result = $this->engine->run();
 
@@ -140,7 +142,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->where('name', '=', 'one')
             ->where('age', '>', 1);
         $result = $this->engine->run();
@@ -162,7 +164,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->where('id', '=', 1)
             ->orWhere('age', '=', 3);
         $result = $this->engine->run();
@@ -180,7 +182,7 @@ class EngineTest extends EngineBaseTest
         $this->setUpEngineWithUser();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->where('id', '=', 1)
             ->orWhere('rubbish', '=', 3);
         $result = $this->engine->run();
@@ -199,7 +201,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->sort('id', false);
         $result = $this->engine->run();
 
@@ -220,7 +222,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->sort('name');
         $result = $this->engine->run();
 
@@ -241,7 +243,7 @@ class EngineTest extends EngineBaseTest
         $this->dm->flush();
 
         // Act
-        $this->engine->fetch('User', ['id' => ['as' => 'id']])
+        $this->engine->fetch('User', ['id'])
             ->limit(2);
         $result = $this->engine->run();
 
@@ -249,6 +251,26 @@ class EngineTest extends EngineBaseTest
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['User' => [
             ['id' => 1], ['id' => 2]
+        ]], $result['content']);
+    }
+
+    public function test_run_fetchRelationships()
+    {
+        // Arrange
+        $this->setUpEngineWithPostsComments();
+        $post = new Post('title');
+        $this->dm->persist($post);
+        $this->dm->persist(new Comment('text', $post));
+        $this->dm->flush();
+
+        // Act
+        $this->engine->fetch('post', ['title', 'comments' => ['id', 'text']]);
+        $result = $this->engine->run();
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
+        $this->assertEquals(['post' => [
+            ['title' => 'title', 'comments' =>]// ...
         ]], $result['content']);
     }
 

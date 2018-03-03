@@ -12,6 +12,36 @@ class ModelGenerator
     private $modelsNamespace;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var array
+     */
+    private $imports = [];
+
+    /**
+     * @var array
+     */
+    private $ctorLines = [];
+
+    /**
+     * @var array
+     */
+    private $fields = [];
+
+    /**
+     * @var array
+     */
+    private $methods = [];
+
+    /**
+     * @var bool
+     */
+    private $collectionImportAdded;
+
+    /**
      * ModelGenerator constructor.
      * @param string $modelsNamespace
      */
@@ -21,22 +51,35 @@ class ModelGenerator
     }
 
     /**
-     * @param string $typeName
+     * @param string $type
      * @param array $fields
      * @return string
      */
-    public function generate(string $typeName, array $fields): string
+    public function generate(string $type, array $fields): string
     {
+        $this->type = $type;
+        $this->collectionImportAdded = false;
+
         $str = '<?php'.PHP_EOL.PHP_EOL;
         $str .= 'namespace '.$this->modelsNamespace.';'.PHP_EOL.PHP_EOL;
-        $str .= 'use Library\DataMapper\DataMapperPrimaryKey;'.PHP_EOL;
-        $str .= 'use Library\DataMapper\DataMapperTimestamps;'.PHP_EOL.PHP_EOL;
+
+        $this->generateImports();
+        $this->generateFields($fields);
+
+        foreach ($this->imports as $import)
+        {
+            $str .= $import.PHP_EOL;
+        }
+        $str .= PHP_EOL;
         $str .= '/** @Entity */'.PHP_EOL;
-        $str .= 'class '.ucfirst($typeName).PHP_EOL;
+        $str .= 'class '.ucfirst($this->type).PHP_EOL;
         $str .= '{'.PHP_EOL;
         $str .= '    use DataMapperPrimaryKey, DataMapperTimestamps;'.PHP_EOL;
 
-        $str .= $this->generateFields($fields);
+        foreach ($this->fields as $field)
+        {
+            $str .= $field.PHP_EOL;
+        }
 
         $str .= $this->generateConstructor();
 
@@ -48,10 +91,24 @@ class ModelGenerator
         return $str;
     }
 
+    private function generateImports()
+    {
+        $this->imports[] = 'use Library\DataMapper\DataMapperPrimaryKey;';
+        $this->imports[] = 'use Library\DataMapper\DataMapperTimestamps;';
+    }
+
     private function generateConstructor()
     {
         $str = PHP_EOL;
-        $str .= '    public function __construct() {'.PHP_EOL.PHP_EOL;
+        $str .= '    public function __construct() {'.PHP_EOL;
+        foreach ($this->ctorLines as $line)
+        {
+            $str .= '        '.$line.PHP_EOL;
+        }
+        if (sizeof($this->ctorLines) == 0)
+        {
+            $str .= PHP_EOL;
+        }
         $str .= '    }';
 
         return $str;
@@ -59,27 +116,23 @@ class ModelGenerator
 
     private function generateFields(array $fields)
     {
-        $str = '';
-
         foreach ($fields as $name => $attributes)
         {
             if (isset($attributes['type']))
             {
-                $str .= $this->generateScalarField($name, $attributes);
+                $this->fields[] = $this->generateScalarField($name, $attributes);
                 continue;
             }
 
-            $str .= $this->generateRelationshipField($name, $attributes);
+            $this->fields[] = $this->generateRelationshipField($name, $attributes);
         }
-
-        return $str;
     }
 
     private function generateScalarField(string $name, array $attributes)
     {
         $str = PHP_EOL;
         $str .= '    /** @Column(type="'.$attributes['type'].'") */'.PHP_EOL;
-        $str .= '    private $'.$name.';'.PHP_EOL;
+        $str .= '    private $'.$name.';';
 
         return $str;
     }
@@ -107,11 +160,30 @@ class ModelGenerator
         }
 
         $str .= ucfirst($key).'(target="'.$this->modelsNamespace.'\\'.ucfirst($attributes[$key]);
+        if ($key == 'hasMany')
+        {
+            $str .= '", mappedBy="'.$this->type;
+            $this->addCollectionImport($name);
+        }
 
         $str .= '") */'.PHP_EOL;
-        $str .= '    private $'.$name.';'.PHP_EOL;
+        $str .= '    private $'.$name.';';
 
         return $str;
+    }
+
+    private function addCollectionImport($name)
+    {
+        $this->ctorLines[] = '$this->'.$name.' = new EntityCollection();';
+
+        if ($this->collectionImportAdded)
+        {
+            return;
+        }
+
+        $this->collectionImportAdded = true;
+
+        $this->imports[] = 'use Library\DataMapper\Collection\EntityCollection;';
     }
 
     private function generateGetters(array $fields)

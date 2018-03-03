@@ -2,6 +2,7 @@
 
 namespace Tests\Library\Engine\Schema;
 
+use Library\DataMapper\Collection\EntityCollection;
 use Library\Engine\Schema\SchemaSynchronizer;
 use Tests\BaseTest;
 
@@ -38,6 +39,9 @@ class SchemaSynchronizerTest extends BaseTest
      * CREATE
      */
 
+    /**
+     * @runInSeparateProcess
+     */
     public function tearDown()
     {
         parent::tearDown();
@@ -48,7 +52,7 @@ class SchemaSynchronizerTest extends BaseTest
         {
             if(is_file($file))
             {
-                unlink($file);
+                //unlink($file);
             }
         }
 
@@ -57,6 +61,9 @@ class SchemaSynchronizerTest extends BaseTest
         file_put_contents($this->datamapperConfigFile, $template);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_AddsModelFile()
     {
         // Act
@@ -70,6 +77,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue(class_exists(self::USER_MODEL_CLASS));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasEntityAnnotation()
     {
         // Act
@@ -84,6 +94,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertNotFalse(strpos($r->getDocComment(), '@Entity'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasIdProperty()
     {
         // Act
@@ -98,6 +111,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasProperty('id'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasIdGetter()
     {
         // Act
@@ -113,7 +129,7 @@ class SchemaSynchronizerTest extends BaseTest
     }
 
     /**
-     * @
+     * @runInSeparateProcess
      */
     public function test_synchronize_modelHasNoIdSetter()
     {
@@ -129,6 +145,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertFalse($r->hasMethod('setId'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasCreatedAtProperty()
     {
         // Act
@@ -143,6 +162,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasProperty('createdAt'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasCreatedAtGetter()
     {
         // Act
@@ -157,6 +179,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('getCreatedAt'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasCreatedAtSetter()
     {
         // Act
@@ -171,6 +196,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('setCreatedAt'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasPrivateUpdatedAtProperty()
     {
         // Act
@@ -185,6 +213,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasProperty('updatedAt'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasUpdatedAtGetter()
     {
         // Act
@@ -199,6 +230,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('getUpdatedAt'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasUpdatedAtSetter()
     {
         // Act
@@ -213,6 +247,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('setUpdatedAt'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasNameProperty()
     {
         // Act
@@ -227,6 +264,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasProperty('name'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasNameGetter()
     {
         // Act
@@ -241,6 +281,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('getName'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasNameSetter()
     {
         // Act
@@ -255,6 +298,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasMethod('setName'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelPropertyNameHasCorrectAnnotation()
     {
         // Act
@@ -269,6 +315,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertNotFalse(strpos($r->getProperty('name')->getDocComment(), '@Column(type="string")'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_AddsControllerFile()
     {
         // Act
@@ -282,6 +331,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue(class_exists(self::USER_CONTROLLER_CLASS));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_controllerExtendsFromEngineController()
     {
         // Act
@@ -296,6 +348,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertEquals('Library\\Engine\\EngineController', $r->getParentClass()->getName());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_classIsAddedToDataMapperConfig()
     {
         // Act
@@ -316,6 +371,9 @@ class SchemaSynchronizerTest extends BaseTest
      * UPDATE
      */
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_additionalClassIsAddedToDataMapperConfig()
     {
         // Arrange
@@ -340,6 +398,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertEquals(self::POST_MODEL_CLASS, $classes[1]);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_classIsRemovedFromDataMapperConfig()
     {
         // Arrange
@@ -378,6 +439,9 @@ class SchemaSynchronizerTest extends BaseTest
      * RELATIONSHIPS
      */
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasHasOneProperty()
     {
         // Act
@@ -389,9 +453,13 @@ class SchemaSynchronizerTest extends BaseTest
 
         // Assert
         $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        var_dump($r->getProperties());
         $this->assertTrue($r->hasProperty('address'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasHasOnePropertyAnnotations()
     {
         // Act
@@ -408,6 +476,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertNotFalse(strpos($doc, '@HasOne(target="'.self::ADDRESS_MODEL_CLASS.'")'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasHasManyProperty()
     {
         // Act
@@ -422,6 +493,9 @@ class SchemaSynchronizerTest extends BaseTest
         $this->assertTrue($r->hasProperty('posts'));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function test_synchronize_modelHasHasManyPropertyAnnotations()
     {
         // Act
@@ -435,6 +509,60 @@ class SchemaSynchronizerTest extends BaseTest
         $r = new \ReflectionClass(self::USER_MODEL_CLASS);
         $this->assertTrue($r->hasProperty('posts'));
         $doc = $r->getProperty('posts')->getDocComment();
-        $this->assertNotFalse(strpos($doc, '@HasMany(target="'.self::POST_MODEL_CLASS.'")'));
+        $this->assertNotFalse(strpos($doc, '@HasMany(target="'.self::POST_MODEL_CLASS.'", mappedBy="user")'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function test_synchronize_modelHasManyPropertyIsInitializedToEntityCollection()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'posts' => ['hasMany' => 'post']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $instance = $r->newInstance();
+        $this->assertTrue($instance->getPosts() instanceof EntityCollection);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function test_synchronize_modelHasBelongsToProperty()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'post' => ['belongsTo' => 'post']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertTrue($r->hasProperty('post'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function test_synchronize_modelHasBelongsToPropertyAnnotations()
+    {
+        // Act
+        $this->synchronizer->synchronize([
+            'user' => [
+                'post' => ['belongsTo' => 'post']
+            ]
+        ], []);
+
+        // Assert
+        $r = new \ReflectionClass(self::USER_MODEL_CLASS);
+        $this->assertTrue($r->hasProperty('post'));
+        $doc = $r->getProperty('post')->getDocComment();
+        $this->assertNotFalse(strpos($doc, '@BelongsTo(target="'.self::POST_MODEL_CLASS.'")'));
     }
 }

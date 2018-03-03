@@ -3,6 +3,8 @@
 namespace Tests\Library\Engine;
 
 use Library\Http\Response;
+use Tests\App\Models\Comment;
+use Tests\App\Models\Post;
 use Tests\App\Models\User;
 
 class EngineDataParserTest extends EngineBaseTest
@@ -89,6 +91,51 @@ class EngineDataParserTest extends EngineBaseTest
         $this->assertEquals(['User' => [
             ['id' => 6], ['id' => 4], ['id' => 3]
         ]], $result['content']);
+    }
+
+    public function test_processData_fetchHasMany()
+    {
+        // Arrange
+        $this->setUpEngineWithPostsComments();
+        $post = new Post('title');
+        $comment1 = new Comment('text1', $post);
+        $this->dm->persist($comment1);
+        $post->getComments()->add($comment1);
+        $comment2 = new Comment('text2', $post);
+        $this->dm->persist($comment2);
+        $post->getComments()->add($comment2);
+        $this->dm->persist($post);
+        $this->dm->flush();
+
+        // Act
+        $result = $this->engine->processData([
+            'fetch' => [
+                'post' => [
+                    'fields' => [
+                        'title',
+                        'comments' => [
+                            'id',
+                            'text'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
+        $this->assertEquals([
+            'post' => [
+                [
+                    'title' => 'title',
+                    'comments' => [
+                        [
+                            'id' => 1,
+                            'text' => 'text'
+                        ]
+                    ]
+                ]
+            ]], $result['content']);
     }
 
     public function test_processData_createSingle()
