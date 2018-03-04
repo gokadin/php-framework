@@ -270,7 +270,7 @@ class EngineTest extends EngineBaseTest
         // Assert
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['post' => [
-            ['title' => 'title', 'comments' =>]// ...
+            ['title' => 'title', 'comments' => [['id' => 1, 'text' => 'text']]]
         ]], $result['content']);
     }
 
@@ -358,6 +358,42 @@ class EngineTest extends EngineBaseTest
         $this->assertEquals(Response::STATUS_OK, $result['status']);
         $this->assertEquals(['User' => [
             ['id' => 1, 'name' => 'one'], ['id' => 2, 'name' => 'two']
+        ]], $result['content']);
+    }
+
+    public function test_run_createRelationships()
+    {
+        // Arrange
+        $this->setUpEngineWithPostsComments();
+
+        // Act
+        $this->engine->create('post', [
+            [
+                'title' => 'title',
+                'comments' => [
+                    [
+                        'text' => 'comment1'
+                    ],
+                    [
+                        'text' => 'comment2'
+                    ]
+                ]
+            ]
+        ], [
+            'title',
+            'comments' => [
+                'id',
+                'text'
+            ]
+        ]);
+        $result = $this->engine->run();
+
+        // Assert
+        $this->assertEquals(Response::STATUS_OK, $result['status']);
+        $this->assertEquals(['post' => [
+            ['title' => 'title', 'comments' => [
+                ['id' => 1, 'text' => 'comment1'], ['id' => 2, 'text' => 'comment2']
+            ]]
         ]], $result['content']);
     }
 

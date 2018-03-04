@@ -98,13 +98,8 @@ class EngineDataParserTest extends EngineBaseTest
         // Arrange
         $this->setUpEngineWithPostsComments();
         $post = new Post('title');
-        $comment1 = new Comment('text1', $post);
-        $this->dm->persist($comment1);
-        $post->getComments()->add($comment1);
-        $comment2 = new Comment('text2', $post);
-        $this->dm->persist($comment2);
-        $post->getComments()->add($comment2);
         $this->dm->persist($post);
+        $this->dm->persist(new Comment('text', $post));
         $this->dm->flush();
 
         // Act
