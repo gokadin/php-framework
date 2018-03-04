@@ -127,8 +127,7 @@ class EngineQueryExecutor
         $entities = [];
         foreach ($command['data'] as $values)
         {
-            $entity = $this->buildEntityFromData($command['entityClassName'], $values);
-            $this->dm->persist($entity);
+            $entity = $this->buildEntityFromData($command['type'], $values);
             $entities[] = $entity;
         }
 
@@ -145,8 +144,7 @@ class EngineQueryExecutor
      */
     private function executeSingleCreate(array $command): array
     {
-        $entity = $this->buildEntityFromData($command['entityClassName'], $command['data']);
-        $this->dm->persist($entity);
+        $entity = $this->buildEntityFromData($command['type'], $command['data']);
         $this->dm->flush();
 
         return sizeof($command['fields']) > 0
@@ -286,15 +284,17 @@ class EngineQueryExecutor
     }
 
     /**
-     * @param string $entityClassName
+     * @param string $type
      * @param array $createData
      * @return object
      * @throws EngineException
      */
-    private function buildEntityFromData(string $entityClassName, array $createData)
+    private function buildEntityFromData(string $type, array $createData)
     {
+        $entityClassName = $this->modelsNamespace.ucfirst($type);
         $reflector = new ReflectionClass($entityClassName);
         $entity = $reflector->newInstanceWithoutConstructor();
+        $this->dm->persist($entity);
 
         foreach ($createData as $fieldName => $value)
         {
@@ -313,14 +313,23 @@ class EngineQueryExecutor
                 continue;
             }
 
-            $setter = 'set'.ucfirst($fieldName);
-
             if (is_array($value))
             {
-                $entity->$setter(new EntityCollection());
-                continue;
+                $collection = new EntityCollection();
+                foreach ($value as $relData)
+                {
+                    $relType = $this->schema[$type][$fieldName]['hasMany'];
+                    $relEntity = $this->buildEntityFromData($relType, $relData);
+                    $parentSetter = 'set'.ucfirst($reflector->getShortName());
+                    $relEntity->$parentSetter($entity);
+                    $this->dm->persist($relEntity);
+                    $collection->add($relEntity);
+                }
+
+                $value = $collection;
             }
 
+            $setter = 'set'.ucfirst($fieldName);
             $entity->$setter($value);
         }
 
