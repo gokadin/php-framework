@@ -89,7 +89,14 @@ class Router
             return $this->handleCorsRequest();
         }
 
-        return $this->handleHttpRequest($routes, $request);
+        $response = $this->handleHttpRequest($routes, $request);
+
+        if ($this->isCorsEnabled())
+        {
+            $this->setCorsHeaders($response);
+        }
+
+        return $response;
     }
 
     private function isCorsRequest(Request $request)
@@ -151,14 +158,7 @@ class Router
             return new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
         }
 
-        $response = $this->executeRouteAction($route, $request);
-
-        if ($this->isCorsEnabled())
-        {
-            $this->setCorsHeaders($response);
-        }
-
-        return $response;
+        return $this->executeRouteAction($route, $request);
     }
 
     /**
