@@ -102,7 +102,7 @@ class Router
      */
     private function handleCorsRequest(): Response
     {
-        if (!getenv(self::ALLOW_CORS_REQUESTS_KEY))
+        if (!$this->isCorsEnabled())
         {
             return new Response(Response::STATUS_UNAUTHORIZED);
         }
@@ -111,6 +111,11 @@ class Router
         $this->setCorsHeaders($response);
 
         return $response;
+    }
+
+    private function isCorsEnabled()
+    {
+        return getenv(self::ALLOW_CORS_REQUESTS_KEY);
     }
 
     /**
@@ -146,7 +151,14 @@ class Router
             return new Response(Response::STATUS_NOT_FOUND, 'Route not found.');
         }
 
-        return $this->executeRouteAction($route, $request);
+        $response = $this->executeRouteAction($route, $request);
+
+        if ($this->isCorsEnabled())
+        {
+            $this->setCorsHeaders($response);
+        }
+
+        return $response;
     }
 
     /**
