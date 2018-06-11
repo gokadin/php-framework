@@ -9,16 +9,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SynchronizeSchema extends Command
 {
-    const PREVIOUS_SCHEMA_FILE = __DIR__.'/../../../../Storage/Framework/previousSchema.php';
-    const DATAMAPPER_SCRIPT_FILE = __DIR__.'/../../../../datamapper';
+    const SCHEMA_FILE = '/Config/Schema/schema.php';
+    const PREVIOUS_SCHEMA_FILE = '/Storage/Framework/previousSchema.json';
+    const DATAMAPPER_SCRIPT_FILE = '/Config/FeaturesConfig/datamapper.php';
+    const ENGINE_CONFIG_FILE = '/Config/FeaturesConfig/engine.php';
 
-    private $schema;
+    /**
+     * @var string
+     */
+    private $basePath;
 
-    public function __construct($schema)
+    public function __construct(string $basePath)
     {
         parent::__construct();
 
-        $this->schema = $schema;
+        $this->basePath = $basePath;
     }
 
     protected function configure()
@@ -30,21 +35,18 @@ class SynchronizeSchema extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $previousSchema = [];
-        if (file_exists(self::PREVIOUS_SCHEMA_FILE))
-        {
-            $previousSchema = json_decode(file_get_contents(self::PREVIOUS_SCHEMA_FILE), true);
-        }
+        $engineConfig = require $this->basePath.self::ENGINE_CONFIG_FILE;
+        $synchronizer = new SchemaSynchronizer($this->basePath, $engineConfig, $this->basePath.self::DATAMAPPER_SCRIPT_FILE);
 
-        $synchronizer = new SchemaSynchronizer($this->schema, $previousSchema);
-        $result = $synchronizer->synchronize();
+        $schema = require $this->basePath.self::SCHEMA_FILE;
+        $previousSchema = json_decode(file_get_contents($this->basePath.self::PREVIOUS_SCHEMA_FILE), true);
+        $result = $synchronizer->synchronize($schema, $previousSchema);
 
         if ($result['success'])
         {
-            file_put_contents(self::PREVIOUS_SCHEMA_FILE, json_encode($this->schema, JSON_PRETTY_PRINT));
+            file_put_contents($this->basePath.self::PREVIOUS_SCHEMA_FILE, json_encode($schema, JSON_PRETTY_PRINT));
 
-            echo self::DATAMAPPER_SCRIPT_FILE;
-            exec('php '.self::DATAMAPPER_SCRIPT_FILE.' schema:update --force 2>&1', $dataMapperOutput);
+            exec('php '.$this->basePath.self::DATAMAPPER_SCRIPT_FILE.' schema:update --force 2>&1', $dataMapperOutput);
             foreach ($dataMapperOutput as $dataMapperLine)
             {
                 $output->writeln('<info>'.$dataMapperLine.'</info>');
