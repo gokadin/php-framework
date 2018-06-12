@@ -22,4 +22,5 @@ definitions:
     mysql:
       image: mysql:5.7
       environment:
+        MYSQL_DATABASE: FrameworkTest
         MYSQL_ROOT_PASSWORD: f10ygs87
