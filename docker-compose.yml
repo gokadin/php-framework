@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  framework:
+    container_name: framework
+    build: .
+    volumes:
+      - c:/Users/common/Desktop/framework:/usr/src/app
+      - /usr/src/app/vendor
+    links:
+      - framework-db
+
+  framework-db:
+    container_name: framework-db
+    image: mysql:5.7
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_DATABASE: FrameworkTest
+      MYSQL_ROOT_PASSWORD: f10ygs87

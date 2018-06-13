@@ -17,12 +17,12 @@ class Request
     /**
      * @var array
      */
-    private $getData;
+    private $getData = [];
 
     /**
      * @var array
      */
-    private $postData;
+    private $postData = [];
 
     /**
      * @var array
