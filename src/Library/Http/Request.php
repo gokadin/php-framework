@@ -84,7 +84,7 @@ class Request
     /**
      * @param mixed $getData
      */
-    public function setUpGetData($getData): void
+    public function setUpGetData($getData = null): void
     {
         if (!is_null($getData))
         {
