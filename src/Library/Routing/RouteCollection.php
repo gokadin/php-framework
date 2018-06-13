@@ -143,7 +143,7 @@ class RouteCollection implements Countable
 
         foreach ($this->routesByMethod[$request->method()] as $route)
         {
-            if ($route->matches($request->method(), $request->uri()))
+            if ($route->matches($request))
             {
                 return $route;
             }
