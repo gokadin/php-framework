@@ -12,7 +12,7 @@ class AppConfigurator
 {
     const CONFIG_DIRECTORY_NAME = 'Config';
     const FEATURES_CONFIG_DIRECTORY_NAME = 'FeaturesConfig';
-    const FEATURES_FILE_NAME = 'features.php';
+    const FEATURES_FILE_NAME = 'features.yml';
     const SCHEMA_DIRECTORY_NAME = 'Schema';
     const SCHEMA_FILE_NAME = 'schema.php';
     const STORAGE_DIRECTORY_NAME = 'Storage';
@@ -80,7 +80,7 @@ class AppConfigurator
             throw new CoreException('Could not find features file.');
         }
 
-        $this->features = require $file;
+        $this->features = yaml_parse_file($file);
     }
 
     /**
