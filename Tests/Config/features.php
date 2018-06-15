@@ -32,6 +32,11 @@ return [
      * Dependencies:
      * -> database
      */
-    'engine' => true
+    'engine' => true,
+
+    /**
+     * Inter service communication.
+     */
+    'isc' => true
 
 ];

@@ -1,0 +1,3 @@
+events:
+  topic1:
+    - someHappened

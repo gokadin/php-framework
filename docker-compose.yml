@@ -9,12 +9,19 @@ services:
       - /usr/src/app/vendor
     links:
       - framework-db
+      - framework-redis
 
   framework-db:
     container_name: framework-db
     image: mysql:5.7
     ports:
-      - 13306:3306
+      - 13307:3306
     environment:
       MYSQL_DATABASE: FrameworkTest
       MYSQL_ROOT_PASSWORD: f10ygs87
+
+  framework-redis:
+    container_name: framework-redis
+    image: redis
+    ports:
+      - 16380:6379
