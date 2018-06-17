@@ -67,7 +67,7 @@ class Environment
         }
 
         while (($line = fgets($content)) !== false) {
-            if (preg_match('/[a-zA-Z0-9_-]+\=[.a-zA-Z0-9_\-@/:]+[\r]?[\n]?$/', $line) != 1)
+            if (preg_match('/[a-zA-Z0-9_-]+\=[.a-zA-Z0-9_\-@/\:]+[\r]?[\n]?$/', $line) != 1)
             {
                 continue;
             }
