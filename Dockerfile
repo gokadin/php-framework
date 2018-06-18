@@ -15,5 +15,3 @@ RUN composer global require phpunit/phpunit
 RUN export PATH=~/.composer/vendor/bin:$PATH
 
 COPY . /usr/src/app
-
-CMD while true; do sleep 1000; done
