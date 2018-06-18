@@ -33,13 +33,12 @@ class IscClientRunner extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $isc = new IscClient($this->readConfig());
+
+        $isc->run();
     }
 
     private function readConfig()
     {
-        $config = yaml_parse_file($this->basePath.'/'.self::ISC_CONFIG_FILE);
-
-
-        $isc = new IscClient($config);
+       return yaml_parse_file($this->basePath.'/'.self::ISC_CONFIG_FILE);
     }
 }

@@ -77,8 +77,8 @@ class RedisBusDriver implements IBusDriver
         echo 'ENTER RUN'.PHP_EOL;
         foreach ($this->ps as $message)
         {
-            echo 'got message';
-            var_dump($message);
+            echo 'got message'.PHP_EOL;
+            var_dump($message).PHP_EOL;
         }
         echo 'LEAVING RUN'.PHP_EOL;
     }
