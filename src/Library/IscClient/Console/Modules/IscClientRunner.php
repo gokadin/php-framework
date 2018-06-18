@@ -1,6 +1,6 @@
 <?php
 
-namespace Library\IscClient\Modules;
+namespace Library\IscClient\Console\Modules;
 
 use Library\IscClient\IscClient;
 use Symfony\Component\Console\Command\Command;
