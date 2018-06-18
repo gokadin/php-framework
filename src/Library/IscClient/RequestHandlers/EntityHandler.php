@@ -4,7 +4,7 @@ namespace Library\IscClient\RequestHandlers;
 
 class EntityHandler
 {
-    public function handle(string $request)
+    public function handle($request)
     {
         $strout = fopen('php://stdout', 'w');
 
