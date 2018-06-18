@@ -7,8 +7,8 @@ use Predis\Client;
 
 class RedisBusDriver implements IBusDriver
 {
-    private const REDIS_HOST_KEY = 'REDIS_HOST';
-    private const REDIS_PORT_KEY = 'REDIS_PORT';
+    private const ISC_REDIS_HOST_KEY = 'ISC_REDIS_HOST';
+    private const ISC_REDIS_PORT_KEY = 'ISC_REDIS_PORT';
 
     /**
      * @var PredisClient
@@ -31,13 +31,13 @@ class RedisBusDriver implements IBusDriver
 
     private function connect()
     {
-        $host = getenv(self::REDIS_HOST_KEY);
+        $host = getenv(self::ISC_REDIS_HOST_KEY);
         if (is_null($host) || $host == '')
         {
             throw new IscException('Redis hostname is not set.');
         }
 
-        $port = getenv(self::REDIS_PORT_KEY);
+        $port = getenv(self::ISC_REDIS_PORT_KEY);
         if (is_null($port) || $port == '')
         {
             throw new IscException('Redis port is not set.');
