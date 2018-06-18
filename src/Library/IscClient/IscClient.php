@@ -33,4 +33,9 @@ class IscClient
     {
         $this->driver->stop();
     }
+
+    public function dispatch(string $channel, IscEntity $entity)
+    {
+        $this->driver->dispatch($channel, $entity);
+    }
 }

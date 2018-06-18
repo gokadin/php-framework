@@ -1,3 +1,4 @@
-events:
-  topic1:
-    - someHappened
+subscriptions:
+  events:
+    topic1:
+      - someHappened

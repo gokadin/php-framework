@@ -2,7 +2,9 @@
 
 namespace Library\IscClient\Drivers;
 
+use Library\IscClient\IscEntity;
 use Library\IscClient\IscException;
+use Library\IscClient\RequestHandlers\EntityHandler;
 use Predis\Client;
 
 class RedisBusDriver implements IBusDriver
@@ -43,20 +45,19 @@ class RedisBusDriver implements IBusDriver
             throw new IscException('Redis port is not set.');
         }
 
-        $this->predis = new Client([
-            'scheme' => 'tcp',
-            'host' => $host,
-            'port' => $port
-        ]);
-
-        $this->ps = $this->predis->pubSubLoop();
+        $this->predis = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=0');
     }
 
     public function subscribe()
     {
-        if (isset($this->config['events']))
+        if (is_null($this->ps))
         {
-            $this->subscribeEvents($this->config['events']);
+            $this->ps = $this->predis->pubSubLoop();
+        }
+
+        if (isset($this->config['subscriptions']) && isset($this->config['subscriptions']['events']))
+        {
+            $this->subscribeEvents($this->config['subscriptions']['events']);
         }
     }
 
@@ -74,17 +75,21 @@ class RedisBusDriver implements IBusDriver
 
     public function run()
     {
-        echo 'ENTER RUN'.PHP_EOL;
-        foreach ($this->ps as $message)
+        $handler = new EntityHandler();
+
+        foreach ($this->ps as $request)
         {
-            echo 'got message'.PHP_EOL;
-            var_dump($message).PHP_EOL;
+            $handler->handle($request);
         }
-        echo 'LEAVING RUN'.PHP_EOL;
     }
 
     public function stop()
     {
         //$this->ps->stop();
+    }
+
+    public function dispatch(string $channel, IscEntity $entity)
+    {
+        $this->predis->publish($channel, json_encode($entity));
     }
 }
