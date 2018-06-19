@@ -2,10 +2,10 @@
 
 namespace Tests\App\Isc\Accounts;
 
-use Library\IscClient\Controllers\IscEventController;
+use Library\IscClient\Controllers\IscController;
 use Library\IscClient\IscEvent;
 
-class AccountEvents extends IscEventController
+class AccountEvents extends IscController
 {
     private $onAccountCreatedCalled = false;
 

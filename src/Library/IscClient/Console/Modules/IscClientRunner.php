@@ -39,6 +39,13 @@ class IscClientRunner extends Command
 
     private function readConfig()
     {
-       return yaml_parse_file($this->basePath.'/'.self::ISC_CONFIG_FILE);
+        $configFile = $this->basePath.'/'.self::ISC_CONFIG_FILE;
+        if (!file_exists($configFile))
+        {
+            return [];
+        }
+
+        $config = yaml_parse_file($configFile);
+        return is_null($config) ? [] : $config;
     }
 }

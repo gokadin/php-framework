@@ -56,10 +56,10 @@ class IscClient
     {
         $this->driver->subscribe($this->subscriptionDiscovery->getSubscriptionStrings());
 
-        $this->driver->run(function($request)
+        $this->driver->run(function(string $topic, string $type, string $action, $payload)
         {
-            echo 'RECEIVED REQUEST: '.PHP_EOL;
-            var_dump($request).PHP_EOL;
+            echo 'RECEIVED REQUEST: '.$topic.' - '.$type.' - '.$action.' - '.PHP_EOL;
+            var_dump($payload).PHP_EOL;
         });
     }
 

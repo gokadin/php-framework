@@ -57,8 +57,24 @@ class RedisBusDriver implements IBusDriver
     {
         foreach ($this->ps as $request)
         {
-            $closure($request);
+            $this->processRequest($closure, $request);
         }
+    }
+
+    private function processRequest(\Closure $closure, $request)
+    {
+
+        if ($request->kind != 'message')
+        {
+            return;
+        }
+
+        $action = substr($request->channel, strrpos($request->channel, '.'));
+        $type = str_replace('.'.$action, '', $request->channel);
+        $type = substr($type, strrpos($type, '.'));
+        $topic = str_replace('.'.$type.'.'.$action, '', $request->channel);
+
+        $closure($topic, $type, $action, $request->payload);
     }
 
     public function stop()
