@@ -31,11 +31,7 @@ class ActionHandler
 
     private function resolveMethodParameters(string $class, string $method, array $payload)
     {
-        return $this->container->resolveMethodParameters($class, $method, [
-            'event' => $payload,
-            'command' => $payload,
-            'query' => $payload
-        ]);
+        return $this->container->resolveMethodParameters($class, $method, ['payload' => $payload]);
     }
 
     private function executeAction(IscController $controller, string $method, array $methodParameters)

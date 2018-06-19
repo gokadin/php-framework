@@ -47,9 +47,9 @@ class Container
 
         foreach ($parameters as $parameter)
         {
-            if (isset($overrides[$parameter]))
+            if (isset($overrides[$parameter->getName()]))
             {
-                $resolvedParameters[] = $overrides[$parameter];
+                $resolvedParameters[] = $overrides[$parameter->getName()];
 
                 continue;
             }
