@@ -32,7 +32,7 @@ class IscClientRunner extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $isc = new IscClient($this->readConfig());
+        $isc = new IscClient($this->basePath, $this->readConfig());
 
         $isc->run();
     }

@@ -4,7 +4,6 @@ namespace Library\IscClient\Drivers;
 
 use Library\IscClient\IscEntity;
 use Library\IscClient\IscException;
-use Library\IscClient\RequestHandlers\EntityHandler;
 use Predis\Client;
 
 class RedisBusDriver implements IBusDriver
@@ -19,15 +18,8 @@ class RedisBusDriver implements IBusDriver
 
     private $ps;
 
-    /**
-     * @var array
-     */
-    private $config;
-
-    public function __construct(array $config)
+    public function __construct()
     {
-        $this->config = $config;
-
         $this->connect();
     }
 
@@ -48,38 +40,24 @@ class RedisBusDriver implements IBusDriver
         $this->predis = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=0');
     }
 
-    public function subscribe()
+    public function subscribe(array $subscriptions)
     {
         if (is_null($this->ps))
         {
             $this->ps = $this->predis->pubSubLoop();
         }
 
-        if (isset($this->config['subscriptions']) && isset($this->config['subscriptions']['events']))
+        foreach ($subscriptions as $subscription)
         {
-            $this->subscribeEvents($this->config['subscriptions']['events']);
+            $this->ps->subscribe($subscription);
         }
     }
 
-    private function subscribeEvents(array $allEvents)
+    public function run(\Closure $closure)
     {
-        foreach ($allEvents as $topic => $events)
-        {
-            foreach ($events as $event)
-            {
-                $subscriptionString = $topic.'.'.$event;
-                $this->ps->subscribe($subscriptionString);
-            }
-        }
-    }
-
-    public function run()
-    {
-        $handler = new EntityHandler();
-
         foreach ($this->ps as $request)
         {
-            $handler->handle($request);
+            $closure($request);
         }
     }
 

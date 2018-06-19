@@ -235,7 +235,8 @@ class Router
 
         $validation = $this->resolveValidation($validation, $request);
         $resolvedParameters = $this->container->resolveMethodParameters($validation, $action);
-        $result = call_user_func_array([$validation, $action], $resolvedParameters);
+        $result =
+            call_user_func_array([$validation, $action], $resolvedParameters);
         return $result;
     }
 

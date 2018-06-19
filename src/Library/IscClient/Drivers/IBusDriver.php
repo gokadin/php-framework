@@ -4,9 +4,9 @@ namespace Library\IscClient\Drivers;
 
 interface IBusDriver
 {
-    public function subscribe();
+    public function subscribe(array $subscriptionStrings);
 
-    public function run();
+    public function run(\Closure $closure);
 
     public function stop();
 }
