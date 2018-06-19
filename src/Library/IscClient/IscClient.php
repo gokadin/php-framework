@@ -58,6 +58,7 @@ class IscClient
     public function run()
     {
         $app = new Application($this->basePath);
+        $app->container()->registerInstance('iscClient', $this);
         $actionHandler = new ActionHandler($app->container());
 
         $this->driver->subscribe($this->subscriptionDiscovery->getSubscriptionStrings());
