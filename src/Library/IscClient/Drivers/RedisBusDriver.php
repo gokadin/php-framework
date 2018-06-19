@@ -71,6 +71,7 @@ class RedisBusDriver implements IBusDriver
         $type = str_replace('.'.$action, '', $request->channel);
         $type = substr($type, strrpos($type, '.') + 1);
         $topic = str_replace('.'.$type.'.'.$action, '', $request->channel);
+        var_dump($request->payload);
         $payload = $this->decodePayload($request->payload);
 
         $closure($topic, $type, $action, $payload);
