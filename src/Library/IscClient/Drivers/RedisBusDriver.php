@@ -2,7 +2,6 @@
 
 namespace Library\IscClient\Drivers;
 
-use Library\IscClient\IscEntity;
 use Library\IscClient\IscException;
 use Predis\Client;
 
@@ -63,18 +62,25 @@ class RedisBusDriver implements IBusDriver
 
     private function processRequest(\Closure $closure, $request)
     {
-
         if ($request->kind != 'message')
         {
             return;
         }
 
-        $action = substr($request->channel, strrpos($request->channel, '.'));
+        $action = substr($request->channel, strrpos($request->channel, '.') + 1);
         $type = str_replace('.'.$action, '', $request->channel);
-        $type = substr($type, strrpos($type, '.'));
+        $type = substr($type, strrpos($type, '.') + 1);
         $topic = str_replace('.'.$type.'.'.$action, '', $request->channel);
+        $payload = $this->decodePayload($request->payload);
 
-        $closure($topic, $type, $action, $request->payload);
+        $closure($topic, $type, $action, $payload);
+    }
+
+    private function decodePayload($payload)
+    {
+        $decoded = json_decode($payload, true);
+
+        return is_null($decoded) ? [] : $decoded;
     }
 
     public function stop()
@@ -82,8 +88,8 @@ class RedisBusDriver implements IBusDriver
         //$this->ps->stop();
     }
 
-    public function dispatch(string $channel, IscEntity $entity)
+    public function dispatch(string $channel, array $payload)
     {
-        $this->predis->publish($channel, json_encode($entity));
+        $this->predis->publish($channel, json_encode($payload));
     }
 }

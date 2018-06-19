@@ -2,6 +2,9 @@
 
 namespace Library\IscClient;
 
+use Library\Container\Container;
+use Library\Core\Application;
+use Library\IscClient\Actions\ActionHandler;
 use Library\IscClient\Drivers\IBusDriver;
 use Library\IscClient\Drivers\RedisBusDriver;
 use Library\IscClient\Subscriptions\SubscriptionDiscovery;
@@ -35,7 +38,7 @@ class IscClient
     {
         $this->basePath = $basePath;
 
-        $this->connectToBus($config);
+        $this->connectToBus();
 
         $this->readConfig($config);
 
@@ -47,19 +50,25 @@ class IscClient
         $this->iscRoot = isset($config[self::ISC_ROOT_KEY]) ? $config[self::ISC_ROOT_KEY] : self::DEFAULT_ISC_ROOT;
     }
 
-    private function connectToBus(array $config)
+    private function connectToBus()
     {
-        $this->driver = new RedisBusDriver($config);
+        $this->driver = new RedisBusDriver();
     }
 
     public function run()
     {
+        $app = new Application($this->basePath);
+        $actionHandler = new ActionHandler($app->container());
+
         $this->driver->subscribe($this->subscriptionDiscovery->getSubscriptionStrings());
 
-        $this->driver->run(function(string $topic, string $type, string $action, $payload)
+        $this->driver->run(function(string $topic, string $type, string $action, array $payload) use ($actionHandler)
         {
-            echo 'RECEIVED REQUEST: '.$topic.' - '.$type.' - '.$action.' - '.PHP_EOL;
-            var_dump($payload).PHP_EOL;
+            $route = $this->subscriptionDiscovery->findSubscriptionRoute($topic, $type, $action);
+            if (!is_null($route))
+            {
+                $actionHandler->handle($route, $payload);
+            }
         });
     }
 
@@ -68,8 +77,23 @@ class IscClient
         $this->driver->stop();
     }
 
-    public function dispatch(string $channel, IscEntity $entity)
+    public function dispatchEvent(string $topic, string $action, array $payload)
     {
-        $this->driver->dispatch($channel, $entity);
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::EVENT_TYPE, $action), $payload);
+    }
+
+    public function dispatchCommand(string $topic, string $action, array $payload)
+    {
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::COMMAND_TYPE, $action), $payload);
+    }
+
+    public function dispatchQuery(string $topic, string $action, array $payload)
+    {
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::QUERY_TYPE, $action), $payload);
+    }
+
+    private function buildChannelString(string $topic, string $type, string $action)
+    {
+        return implode('.', [$topic, $type, $action]);
     }
 }

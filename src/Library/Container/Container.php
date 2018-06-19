@@ -38,7 +38,7 @@ class Container
         $this->registeredInterfaces[$interface] = $concrete;
     }
 
-    public function resolveMethodParameters($class, $methodName)
+    public function resolveMethodParameters($class, $methodName, array $overrides = [])
     {
         $r = new ReflectionMethod($class, $methodName);
 
@@ -47,6 +47,13 @@ class Container
 
         foreach ($parameters as $parameter)
         {
+            if (isset($overrides[$parameter]))
+            {
+                $resolvedParameters[] = $overrides[$parameter];
+
+                continue;
+            }
+
             $class = $parameter->getClass();
             if (!is_null($class))
             {

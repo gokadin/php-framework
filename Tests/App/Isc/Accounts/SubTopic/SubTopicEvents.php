@@ -6,7 +6,7 @@ use Library\IscClient\Controllers\IscEventController;
 
 class SubTopicEvents extends IscEventController
 {
-    public function onSubAccountCreated()
+    public function onSubAccountCreated(array $payload)
     {
 
     }

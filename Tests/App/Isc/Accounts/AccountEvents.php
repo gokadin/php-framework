@@ -3,13 +3,12 @@
 namespace Tests\App\Isc\Accounts;
 
 use Library\IscClient\Controllers\IscController;
-use Library\IscClient\IscEvent;
 
 class AccountEvents extends IscController
 {
     private $onAccountCreatedCalled = false;
 
-    public function onAccountCreated(IscEvent $event)
+    public function onAccountCreated(array $payload)
     {
         $this->onAccountCreatedCalled = true;
     }
