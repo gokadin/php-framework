@@ -90,6 +90,7 @@ class RedisBusDriver implements IBusDriver
 
     public function dispatch(string $channel, array $payload)
     {
-        $this->predis->publish($channel, json_encode($payload));
+        $predis2 = new Client('tcp://isc-redis:6379');
+        $predis2->publish($channel, json_encode($payload));
     }
 }
