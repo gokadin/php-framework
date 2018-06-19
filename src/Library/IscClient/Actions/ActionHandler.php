@@ -24,14 +24,16 @@ class ActionHandler
         $controller = $this->resolveController($route['class']);
         $this->executeAction($controller, $route['method'], $methodParameters);
 
-        if ($route['topic'] != 'Pyramid.Diagnostic')
-        {
-            $this->sendDiagnosticInfo($route, $payload);
-        }
+        $this->sendDiagnosticInfo($route, $payload);
     }
 
     private function sendDiagnosticInfo($route, $payload)
     {
+        if ($route['topic'] == 'Pyramid.Diagnostics')
+        {
+            return;
+        }
+
         $iscClient = $this->container->resolve(IscClient::class);
         $iscClient->dispatchEvent('Pyramid.Diagnostics', 'messageReceived', [
             'resourceName' => getenv('APP_NAME'),
