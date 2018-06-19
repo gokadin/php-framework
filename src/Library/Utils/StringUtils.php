@@ -38,6 +38,30 @@ class StringUtils
         return implode('_', $data);
     }
 
+    public static function camelCaseToSnake(string $str): string
+    {
+        $result = '';
+
+        foreach (str_split($str) as $index => $c)
+        {
+            if ($index == 0)
+            {
+                $result .= strtolower($c);
+                continue;
+            }
+
+            if (ctype_upper($c))
+            {
+                $result .= '_'.strtolower($c);
+                continue;
+            }
+
+            $result .= $c;
+        }
+
+        return $result;
+    }
+
     public static function constantToCamelCase(string $str)
     {
         $parts = explode('_', $str);
