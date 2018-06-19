@@ -26,7 +26,7 @@ class ActionHandler
 
     private function resolveController(string $class): IscController
     {
-        $this->container->resolve($class);
+        return $this->container->resolve($class);
     }
 
     private function resolveMethodParameters(string $class, string $method, array $payload)
