@@ -122,10 +122,13 @@ class SubscriptionDiscovery
                 continue;
             }
 
-            $eventName = lcfirst(substr($method->getName(), 2));
-            $this->subscriptionRoutes[$topicName][IscConstants::EVENT_TYPE][$eventName] = [
+            $action = lcfirst(substr($method->getName(), 2));
+            $this->subscriptionRoutes[$topicName][IscConstants::EVENT_TYPE][$action] = [
                 'class' => $class,
-                'method' => $method->getName()
+                'method' => $method->getName(),
+                'topic' => $topicName,
+                'type' => IscConstants::EVENT_TYPE,
+                'action' => $action
             ];
         }
     }
