@@ -8,7 +8,7 @@ class AccountEvents extends IscController
 {
     private $onAccountCreatedCalled = false;
 
-    public function onAccountCreated(array $payload)
+    public function onAccountCreated()
     {
         $this->onAccountCreatedCalled = true;
     }

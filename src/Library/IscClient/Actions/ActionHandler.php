@@ -20,8 +20,8 @@ class ActionHandler
 
     public function handle(array $route, array $payload)
     {
-        $methodParameters = $this->resolveMethodParameters($route['class'], $route['method'], $payload);
-        $controller = $this->resolveController($route['class']);
+        $methodParameters = $this->resolveMethodParameters($route['class'], $route['method']);
+        $controller = $this->resolveController($route['class'], $payload);
         $this->executeAction($controller, $route['method'], $methodParameters);
 
         $this->sendDiagnosticInfo($route, $payload);
@@ -44,14 +44,17 @@ class ActionHandler
         ]);
     }
 
-    private function resolveController(string $class): IscController
+    private function resolveController(string $class, array $payload): IscController
     {
-        return $this->container->resolve($class);
+        $controller = $this->container->resolve($class);
+        $this->container->resolveObjectProperty($controller, 'payload', $payload);
+        $this->container->resolveObjectProperty($controller, 'isc', IscClient::class);
+        return $controller;
     }
 
-    private function resolveMethodParameters(string $class, string $method, array $payload)
+    private function resolveMethodParameters(string $class, string $method)
     {
-        return $this->container->resolveMethodParameters($class, $method, ['payload' => $payload]);
+        return $this->container->resolveMethodParameters($class, $method);
     }
 
     private function executeAction(IscController $controller, string $method, array $methodParameters)

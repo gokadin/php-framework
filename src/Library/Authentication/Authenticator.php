@@ -24,6 +24,7 @@ class Authenticator
      * Authenticator constructor.
      *
      * @param array $config
+     * @throws AuthenticationException
      */
     public function __construct(array $config)
     {
