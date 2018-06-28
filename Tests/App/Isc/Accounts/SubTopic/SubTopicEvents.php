@@ -2,9 +2,9 @@
 
 namespace Tests\App\Isc\Accounts\SubTopic;
 
-use Library\IscClient\Controllers\IscEventController;
+use Library\IscClient\Controllers\IscController;
 
-class SubTopicEvents extends IscEventController
+class SubTopicEvents extends IscController
 {
     public function onSubAccountCreated()
     {

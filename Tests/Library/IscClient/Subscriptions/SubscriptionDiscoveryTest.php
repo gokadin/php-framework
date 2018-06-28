@@ -17,7 +17,9 @@ class SubscriptionDiscoveryTest extends BaseTest
     {
         parent::setUp();
 
-        $this->subscriptionDiscovery = new SubscriptionDiscovery($this->basePath(), 'Tests/App/Isc');
+        $this->loadEnvironment();
+
+        $this->subscriptionDiscovery = new SubscriptionDiscovery($this->basePath(), 'App/Isc');
     }
 
     public function test_findSubscriptionRoute_correctlyLoadsSimpleEventRoute()

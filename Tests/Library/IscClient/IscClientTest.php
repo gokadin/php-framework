@@ -15,7 +15,7 @@ class IscClientTest extends IscClientBaseTest
     {
         parent::setUp();
 
-        $this->isc = new IscClient(yaml_parse_file(__DIR__.'/../../Config/FeaturesConfig/isc.yml'));
+        $this->isc = new IscClient($this->basePath(), yaml_parse_file($this->basePath().'/Config/FeaturesConfig/isc.yml'));
     }
 
     /**

@@ -114,6 +114,10 @@ class SubscriptionDiscovery
         $topicName = str_replace('/', '.', $topicName);
 
         $class = str_replace('.php', '', str_replace('/', '\\', str_replace($this->basePath.'/', '', $file)));
+        if (getenv('APP_ENV') == 'test')
+        {
+            $class = 'Tests\\'.$class;
+        }
         $r = new \ReflectionClass($class);
         foreach ($r->getMethods() as $method)
         {

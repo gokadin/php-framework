@@ -9,7 +9,7 @@ abstract class BaseTest extends TestCase
 {
     protected function basePath()
     {
-        return realpath(__DIR__.'/..');
+        return realpath(__DIR__);
     }
 
     protected function loadEnvironment()
