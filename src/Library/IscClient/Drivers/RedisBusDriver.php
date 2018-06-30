@@ -99,6 +99,7 @@ class RedisBusDriver implements IBusDriver
     public function dispatch(string $channel, array $payload)
     {
         $this->predisPublish->publish($channel, json_encode($payload));
+        fwrite(STDOUT, 'DISPATCHED: '.$channel);
     }
 
     public function listenToResult(string $channel)
@@ -118,6 +119,7 @@ class RedisBusDriver implements IBusDriver
         $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
         $this->ps = $this->predisSubscribe->pubSubLoop();
         $this->ps->psubscribe($channel.'.*');
+        echo 'SUBSCRIBED: '.$channel.'.*'.PHP_EOL;
 
         try
         {
