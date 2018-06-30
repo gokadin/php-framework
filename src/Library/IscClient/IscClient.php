@@ -63,11 +63,12 @@ class IscClient
 
         $this->driver->subscribe($this->subscriptionDiscovery->getSubscriptionStrings());
 
-        $this->driver->run(function(string $topic, string $type, string $action, array $payload) use ($actionHandler)
+        $this->driver->run(function(string $topic, string $type, string $action, array $payload, string $requestId) use ($actionHandler)
         {
             $route = $this->subscriptionDiscovery->findSubscriptionRoute($topic, $type, $action);
             if (!is_null($route))
             {
+                $route->setRequestId($requestId);
                 $actionHandler->handle($route, $payload);
             }
         });
@@ -80,36 +81,35 @@ class IscClient
 
     public function dispatchEvent(string $topic, string $action, array $payload)
     {
-        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::EVENT_TYPE, $action), $payload);
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::EVENT_TYPE, $action, uniqid()), $payload);
     }
 
     public function dispatchCommand(string $topic, string $action, array $payload)
     {
-        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::COMMAND_TYPE, $action), $payload);
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::COMMAND_TYPE, $action, uniqid()), $payload);
     }
 
     public function dispatchQuery(string $topic, string $action, array $payload)
     {
-        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::QUERY_TYPE, $action), $payload);
+        $requestId = uniqid();
+        $channel = $this->buildChannelString($topic, IscConstants::QUERY_TYPE, $action, $requestId);
+        $this->driver->dispatch($channel, $payload);
+
+        return $this->driver->listenToResult($channel);
     }
 
     public function dispatchResult(string $topic, string $action, int $statusCode, array $payload, string $requestId)
     {
-        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::RESULT_TYPE, $action, $statusCode, $requestId), $payload);
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::RESULT_TYPE, $action, $requestId, $statusCode), $payload);
     }
 
-    private function buildChannelString(string $topic, string $type, string $action, $statusCode = null, $requestId = null): string
+    private function buildChannelString(string $topic, string $type, string $action, $requestId, $statusCode = null): string
     {
-        $channel = implode('.', [$topic, $type, $action]);
+        $channel = implode('.', [$topic, $type, $action, $requestId]);
 
         if (!is_null($statusCode))
         {
             $channel .= '.'.$statusCode;
-        }
-
-        if (!is_null($requestId))
-        {
-            $channel .= '.'.$requestId;
         }
 
         return $channel;

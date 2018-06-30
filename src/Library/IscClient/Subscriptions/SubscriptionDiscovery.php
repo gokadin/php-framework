@@ -125,7 +125,7 @@ class SubscriptionDiscovery
         }
     }
 
-    private function parseControllerFile(string $file, string $fileType)
+    private function parseControllerFile(string $file, string $type)
     {
         $topicName = str_replace($this->basePath.'/'.$this->iscRoot.'/', '', $file);
         $topicName = substr($topicName, 0, strrpos($topicName, '/'));
@@ -139,20 +139,15 @@ class SubscriptionDiscovery
         $r = new \ReflectionClass($class);
         foreach ($r->getMethods() as $method)
         {
-            $methodPrefix = $this->getMethodPrefix($fileType);
+            $methodPrefix = $this->getMethodPrefix($type);
             if (!$method->isPublic() || !$this->isMethodAnAction($method, $methodPrefix))
             {
                 continue;
             }
 
             $action = lcfirst(substr($method->getName(), strlen($methodPrefix)));
-            $this->subscriptionRoutes[$topicName][IscConstants::EVENT_TYPE][$action] = [
-                'class' => $class,
-                'method' => $method->getName(),
-                'topic' => $topicName,
-                'type' => IscConstants::EVENT_TYPE,
-                'action' => $action
-            ];
+            $route = new SubscriptionRoute($class, $method->getName(), $topicName, $type, $action);
+            $this->subscriptionRoutes[$topicName][$type][$action] = $route;
         }
     }
 

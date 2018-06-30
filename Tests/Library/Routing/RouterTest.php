@@ -5,6 +5,7 @@ namespace Tests\LibraryRouting;
 use Library\Container\Container;
 use Library\Http\Request;
 use Library\Http\Response;
+use Library\IscClient\IscClient;
 use Library\Routing\Route;
 use Library\Routing\RouteCollection;
 use Library\Routing\Router;

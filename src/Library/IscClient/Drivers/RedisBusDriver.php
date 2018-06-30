@@ -54,7 +54,7 @@ class RedisBusDriver implements IBusDriver
 
         foreach ($subscriptions as $subscription)
         {
-            $this->ps->subscribe($subscription);
+            $this->ps->subscribe($subscription.'.*');
         }
     }
 
@@ -73,13 +73,15 @@ class RedisBusDriver implements IBusDriver
             return;
         }
 
-        $action = substr($request->channel, strrpos($request->channel, '.') + 1);
-        $type = str_replace('.'.$action, '', $request->channel);
-        $type = substr($type, strrpos($type, '.') + 1);
-        $topic = str_replace('.'.$type.'.'.$action, '', $request->channel);
+        $channelParts = explode('.', $request->channel);
+        $partCount = sizeof($channelParts);
+        $requestId = $channelParts[$partCount - 1];
+        $action = $channelParts[$partCount - 2];
+        $type = $channelParts[$partCount - 3];
+        $topic = substr($request->channel, 0, strpos($request->channel, '.'.$type));
         $payload = $this->decodePayload($request->payload);
 
-        $closure($topic, $type, $action, $payload);
+        $closure($topic, $type, $action, $payload, $requestId);
     }
 
     private function decodePayload($payload)
@@ -97,5 +99,32 @@ class RedisBusDriver implements IBusDriver
     public function dispatch(string $channel, array $payload)
     {
         $this->predisPublish->publish($channel, json_encode($payload));
+    }
+
+    public function listenToResult(string $channel)
+    {
+        $host = getenv(self::ISC_REDIS_HOST_KEY);
+        if (is_null($host) || $host == '')
+        {
+            throw new IscException('Redis hostname is not set.');
+        }
+
+        $port = getenv(self::ISC_REDIS_PORT_KEY);
+        if (is_null($port) || $port == '')
+        {
+            throw new IscException('Redis port is not set.');
+        }
+
+        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
+        $this->ps = $this->predisSubscribe->pubSubLoop();
+        $this->ps->subscribe($channel.'.*');
+
+        foreach ($this->ps as $request)
+        {
+            echo 'RECEIVED RESULT! ';
+            var_dump($request);
+        }
+
+        return ['statusCode' => 200, 'payload' => ['is' => 'working']];
     }
 }

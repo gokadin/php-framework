@@ -5,6 +5,7 @@ namespace Tests\Library\Core;
 use Library\Authentication\Authenticator;
 use Library\DataMapper\DataMapper;
 use Library\Engine\Engine;
+use Library\IscClient\IscClient;
 use Library\Routing\Router;
 use Tests\BaseTest;
 use Library\Container\Container;
@@ -66,5 +67,14 @@ class AppConfiguratorTest extends BaseTest
 
         // Assert
         $this->assertNotNull($this->container->resolve(Authenticator::class));
+    }
+
+    public function test_configure_registerIscWhenEnabled()
+    {
+        // Act
+        $this->appConfigurator->configure();
+
+        // Assert
+        $this->assertNotNull($this->container->resolve(IscClient::class));
     }
 }

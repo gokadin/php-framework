@@ -104,6 +104,7 @@ abstract class Controller
      */
     protected function dispatchQuery(string $topic, string $action, array $payload = [])
     {
-        $this->isc->dispatchQuery($topic, $action, $payload);
+        $result = $this->isc->dispatchQuery($topic, $action, $payload);
+        return new Response($result['statusCode'], $result['payload']);
     }
 }

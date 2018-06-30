@@ -29,8 +29,8 @@ class SubscriptionDiscoveryTest extends BaseTest
 
         // Assert
         $this->assertNotNull($route);
-        $this->assertEquals('Tests\\App\\Isc\\Accounts\\AccountEvents', $route['class']);
-        $this->assertEquals('onAccountCreated', $route['method']);
+        $this->assertEquals('Tests\\App\\Isc\\Accounts\\AccountEvents', $route->class());
+        $this->assertEquals('onAccountCreated', $route->method());
     }
 
     public function test_findSubscriptionRoute_correctlyLoadsNestedTopicNameRoute()
@@ -40,8 +40,8 @@ class SubscriptionDiscoveryTest extends BaseTest
 
         // Assert
         $this->assertNotNull($route);
-        $this->assertEquals('Tests\\App\\Isc\\Accounts\\SubTopic\\SubTopicEvents', $route['class']);
-        $this->assertEquals('onSubAccountCreated', $route['method']);
+        $this->assertEquals('Tests\\App\\Isc\\Accounts\\SubTopic\\SubTopicEvents', $route->class());
+        $this->assertEquals('onSubAccountCreated', $route->method());
     }
 
     public function test_getSubscriptionStrings_forSimpleEvent()
