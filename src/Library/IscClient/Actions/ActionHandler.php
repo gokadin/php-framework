@@ -49,7 +49,7 @@ class ActionHandler
     {
         $controller = $this->container->resolve($route->class());
         //$this->container->resolveObjectProperty($controller, 'payload', $payload);
-        $this->container->resolveObjectProperty($controller, 'isc', IscClient::class);
+        //$this->container->resolveObjectProperty($controller, 'isc', IscClient::class);
         $this->container->resolveObjectProperty($controller, 'route', $route);
         return $controller;
     }
