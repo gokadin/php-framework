@@ -90,7 +90,7 @@ class Container
         $r = new ReflectionObject($obj);
         $p = $r->getProperty($property);
         $p->setAccessible(true);
-        if (is_object($class))
+        if (is_object($class) || is_array($class))
         {
             $p->setValue($obj, $class);
             return;
