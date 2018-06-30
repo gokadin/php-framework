@@ -9,7 +9,7 @@ use Library\IscClient\Subscriptions\SubscriptionRoute;
 abstract class IscController
 {
     /**
-     * @var string
+     * @var array
      */
     protected $payload;
 
