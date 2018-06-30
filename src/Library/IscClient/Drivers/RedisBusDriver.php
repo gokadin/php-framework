@@ -68,6 +68,7 @@ class RedisBusDriver implements IBusDriver
 
     private function processRequest(\Closure $closure, $request)
     {
+        fwrite(STDOUT, 'RECEIVED '.$request->channel);
         if ($request->kind != 'message')
         {
             return;
@@ -119,16 +120,23 @@ class RedisBusDriver implements IBusDriver
         $this->ps = $this->predisSubscribe->pubSubLoop();
         $this->ps->psubscribe($channel.'.*');
 
-        foreach ($this->ps as $request)
+        try
         {
-            if ($request->type != 'message')
+            foreach ($this->ps as $request)
             {
-                continue;
-            }
+                if ($request->type != 'message')
+                {
+                    continue;
+                }
 
-            echo 'RECEIVED RESULT => ';
-            var_dump($request);
-            $this->ps->unsubscribe();
+                echo 'RECEIVED RESULT => ';
+                var_dump($request);
+                $this->ps->unsubscribe();
+            }
+        }
+        catch (\Predis\Connection\ConnectionException $e)
+        {
+            // ...
         }
 
         return ['statusCode' => 500, 'payload' => ['error' => 'Isc request timed out.']];
