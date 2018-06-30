@@ -68,8 +68,7 @@ class RedisBusDriver implements IBusDriver
 
     private function processRequest(\Closure $closure, $request)
     {
-        fwrite(STDOUT, 'RECEIVED '.$request->kind.PHP_EOL);
-        if ($request->kind != 'message')
+        if ($request->kind != 'pmessage')
         {
             return;
         }
@@ -124,7 +123,7 @@ class RedisBusDriver implements IBusDriver
         {
             foreach ($this->ps as $request)
             {
-                if ($request->type != 'message')
+                if ($request->kind != 'pmessage')
                 {
                     continue;
                 }
