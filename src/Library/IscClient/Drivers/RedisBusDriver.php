@@ -121,10 +121,16 @@ class RedisBusDriver implements IBusDriver
 
         foreach ($this->ps as $request)
         {
-            echo 'RECEIVED RESULT! ';
+            if ($request->type != 'message')
+            {
+                continue;
+            }
+
+            echo 'RECEIVED RESULT => ';
             var_dump($request);
+            $this->ps->unsubscribe();
         }
 
-        return ['statusCode' => 200, 'payload' => ['is' => 'working']];
+        return ['statusCode' => 500, 'payload' => ['error' => 'Isc request timed out.']];
     }
 }
