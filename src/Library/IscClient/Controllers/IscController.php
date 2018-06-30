@@ -16,12 +16,12 @@ abstract class IscController
     /**
      * @var IscClient
      */
-    private $isc;
+    protected $isc;
 
     /**
      * @var SubscriptionRoute
      */
-    private $route;
+    protected $route;
 
     /**
      * @param string $topic
