@@ -132,9 +132,10 @@ class RedisBusDriver implements IBusDriver
                     continue;
                 }
 
-                echo 'RECEIVED RESULT => ';
-                var_dump($request);
-                $this->ps->unsubscribe();
+                return [
+                    'statusCode' => substr($request->channel, strrpos($request->channel, '.') + 1),
+                    'payload' => $request->payload
+                ];
             }
         }
         catch (\Predis\Connection\ConnectionException $e)
