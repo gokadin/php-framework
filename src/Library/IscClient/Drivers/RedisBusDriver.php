@@ -2,6 +2,7 @@
 
 namespace Library\IscClient\Drivers;
 
+use Library\IscClient\IscConstants;
 use Library\IscClient\IscException;
 use Predis\Client;
 
@@ -118,8 +119,9 @@ class RedisBusDriver implements IBusDriver
 
         $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
         $this->ps = $this->predisSubscribe->pubSubLoop();
+        $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
         $this->ps->psubscribe($channel.'.*');
-        echo 'SUBSCRIBED: '.$channel.'.*'.PHP_EOL;
 
         try
         {
