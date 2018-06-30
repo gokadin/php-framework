@@ -13,7 +13,12 @@ class RedisBusDriver implements IBusDriver
     /**
      * @var PredisClient
      */
-    private $predis;
+    private $predisSubscribe;
+
+    /**
+     * @var PredisClient
+     */
+    private $predisPublish;
 
     private $ps;
 
@@ -36,14 +41,15 @@ class RedisBusDriver implements IBusDriver
             throw new IscException('Redis port is not set.');
         }
 
-        $this->predis = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=0');
+        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=0');
+        $this->predisPublish = new Client('tcp://'.$host.':'.$port);
     }
 
     public function subscribe(array $subscriptions)
     {
         if (is_null($this->ps))
         {
-            $this->ps = $this->predis->pubSubLoop();
+            $this->ps = $this->predisSubscribe->pubSubLoop();
         }
 
         foreach ($subscriptions as $subscription)
@@ -85,12 +91,11 @@ class RedisBusDriver implements IBusDriver
 
     public function stop()
     {
-        //$this->ps->stop();
+        $this->ps->unsubscribe();
     }
 
     public function dispatch(string $channel, array $payload)
     {
-        $predis2 = new Client('tcp://isc-redis:6379');
-        $predis2->publish($channel, json_encode($payload));
+        $this->predisPublish->publish($channel, json_encode($payload));
     }
 }

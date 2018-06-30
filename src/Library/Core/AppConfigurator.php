@@ -6,6 +6,7 @@ use Library\Authentication\Authenticator;
 use Library\Container\Container;
 use Library\DataMapper\DataMapper;
 use Library\Engine\Engine;
+use Library\IscClient\IscClient;
 use Library\Routing\Router;
 
 class AppConfigurator
@@ -91,9 +92,19 @@ class AppConfigurator
     private function readFeatureConfig(string $featureName): array
     {
         $configFile = $this->featuresConfigPath.$featureName.'.php';
+        if ($featureName == 'isc')
+        {
+            $configFile = str_replace('.php', '.yml', $configFile);
+        }
         if (!file_exists($configFile))
         {
             throw new CoreException('Could not find config file for '.$featureName.'.');
+        }
+
+        // new config format
+        if ($featureName == 'isc')
+        {
+            return yaml_parse_file($configFile);
         }
 
         return require $configFile;
@@ -135,6 +146,11 @@ class AppConfigurator
         if ($this->features['engine'])
         {
             $this->registerEngine();
+        }
+
+        if ($this->features['isc'])
+        {
+            $this->registerIsc();
         }
     }
 
@@ -178,6 +194,13 @@ class AppConfigurator
             new Engine($schema, $this->container->resolveInstance('dataMapper'), $this->container, $config));
     }
 
+    private function registerIsc()
+    {
+        $config = $this->readFeatureConfig('isc');
+
+        $this->container->registerInstance('isc', new IscClient($this->basePath, $config));
+    }
+
     /**
      * Register the router.
      */
@@ -197,6 +220,11 @@ class AppConfigurator
         if ($this->features['middlewares'])
         {
             $router->enableMiddlewares();
+        }
+
+        if ($this->features['isc'])
+        {
+            $router->enableIsc();
         }
 
         $this->container->registerInstance('router', $router);

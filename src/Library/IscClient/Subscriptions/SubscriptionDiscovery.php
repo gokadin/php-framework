@@ -3,6 +3,7 @@
 namespace Library\IscClient\Subscriptions;
 
 use Library\IscClient\IscConstants;
+use Library\IscClient\IscException;
 
 class SubscriptionDiscovery
 {
@@ -100,14 +101,31 @@ class SubscriptionDiscovery
 
                 $this->parseFiles($rootFile.'/'.$file);
             }
+
+            return;
         }
-        else if (strpos($rootFile, 'Events') !== false)
+
+        if (strpos($rootFile, 'Events') !== false)
         {
-            $this->parseEventFile($rootFile);
+            $this->parseControllerFile($rootFile, IscConstants::EVENT_TYPE);
+
+            return;
+        }
+
+        if (strpos($rootFile, 'Commands') !== false)
+        {
+            $this->parseControllerFile($rootFile, IscConstants::COMMAND_TYPE);
+
+            return;
+        }
+
+        if (strpos($rootFile, 'Queries') !== false)
+        {
+            $this->parseControllerFile($rootFile, IscConstants::QUERY_TYPE);
         }
     }
 
-    private function parseEventFile(string $file)
+    private function parseControllerFile(string $file, string $fileType)
     {
         $topicName = str_replace($this->basePath.'/'.$this->iscRoot.'/', '', $file);
         $topicName = substr($topicName, 0, strrpos($topicName, '/'));
@@ -121,12 +139,13 @@ class SubscriptionDiscovery
         $r = new \ReflectionClass($class);
         foreach ($r->getMethods() as $method)
         {
-            if (!$method->isPublic() || substr($method->getName(), 0, 2) != IscConstants::EVENT_METHOD_PREFIX)
+            $methodPrefix = $this->getMethodPrefix($fileType);
+            if (!$method->isPublic() || !$this->isMethodAnAction($method, $methodPrefix))
             {
                 continue;
             }
 
-            $action = lcfirst(substr($method->getName(), 2));
+            $action = lcfirst(substr($method->getName(), strlen($methodPrefix)));
             $this->subscriptionRoutes[$topicName][IscConstants::EVENT_TYPE][$action] = [
                 'class' => $class,
                 'method' => $method->getName(),
@@ -135,5 +154,25 @@ class SubscriptionDiscovery
                 'action' => $action
             ];
         }
+    }
+
+    private function getMethodPrefix(string $type): string
+    {
+        switch ($type)
+        {
+            case IscConstants::EVENT_TYPE:
+                return IscConstants::EVENT_METHOD_PREFIX;
+            case IscConstants::COMMAND_TYPE:
+                return IscConstants::COMMAND_METHOD_PREFIX;
+            case IscConstants::QUERY_TYPE:
+                return IscConstants::QUERY_METHOD_PREFIX;
+            default:
+                throw new IscException('Unkown action type '.$type.'.');
+        }
+    }
+
+    private function isMethodAnAction(\ReflectionMethod $method, string $methodPrefix): bool
+    {
+        return substr($method->getName(), 0, strlen($methodPrefix)) == $methodPrefix;
     }
 }

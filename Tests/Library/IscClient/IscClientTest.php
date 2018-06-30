@@ -18,12 +18,8 @@ class IscClientTest extends IscClientBaseTest
         $this->isc = new IscClient($this->basePath(), yaml_parse_file($this->basePath().'/Config/FeaturesConfig/isc.yml'));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function test_some()
     {
-        var_dump($this->predis->pubSub('numsub'));
-        $this->assertTrue(true);
+        $this->isc->dispatchEvent('topic1', 'action1', ['a' => 'one']);
     }
 }

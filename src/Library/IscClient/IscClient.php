@@ -93,8 +93,25 @@ class IscClient
         $this->driver->dispatch($this->buildChannelString($topic, IscConstants::QUERY_TYPE, $action), $payload);
     }
 
-    private function buildChannelString(string $topic, string $type, string $action)
+    public function dispatchResult(string $topic, string $action, int $statusCode, array $payload, string $requestId)
     {
-        return implode('.', [$topic, $type, $action]);
+        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::RESULT_TYPE, $action, $statusCode, $requestId), $payload);
+    }
+
+    private function buildChannelString(string $topic, string $type, string $action, $statusCode = null, $requestId = null): string
+    {
+        $channel = implode('.', [$topic, $type, $action]);
+
+        if (!is_null($statusCode))
+        {
+            $channel .= '.'.$statusCode;
+        }
+
+        if (!is_null($requestId))
+        {
+            $channel .= '.'.$requestId;
+        }
+
+        return $channel;
     }
 }

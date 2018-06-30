@@ -46,6 +46,11 @@ class Router
     private $middlewaresEnabled;
 
     /**
+     * @var bool
+     */
+    private $iscEnabled;
+
+    /**
      * Router constructor.
      *
      * @param Container $container
@@ -65,6 +70,7 @@ class Router
 
     /**
      * @param bool $value
+     * @throws ContainerException
      */
     public function enableEngine(bool $value = true)
     {
@@ -75,6 +81,11 @@ class Router
     public function enableMiddlewares(bool $value = true)
     {
         $this->middlewaresEnabled = $value;
+    }
+
+    public function enableIsc(bool $value = true)
+    {
+        $this->iscEnabled = $value;
     }
 
     /**
@@ -324,6 +335,11 @@ class Router
 
         $this->container->resolveObjectProperty($controller, 'request', $request);
         $this->container->resolveObjectProperty($controller, 'validator', new Validator());
+
+        if ($this->iscEnabled)
+        {
+            $this->container->resolveObjectProperty($controller, 'isc', $this->container->resolveInstance('isc'));
+        }
 
         return $controller;
     }
