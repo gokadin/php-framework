@@ -148,6 +148,7 @@ class SubscriptionDiscovery
             $action = lcfirst(substr($method->getName(), strlen($methodPrefix)));
             $route = new SubscriptionRoute($class, $method->getName(), $topicName, $type, $action);
             $this->subscriptionRoutes[$topicName][$type][$action] = $route;
+            fwrite(STDOUT, 'Registered route '.$route->action().PHP_EOL);
         }
     }
 
