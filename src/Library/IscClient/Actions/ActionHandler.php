@@ -47,11 +47,10 @@ class ActionHandler
 
     private function resolveController(SubscriptionRoute $route, array $payload): IscController
     {
-        exit();
         $controller = $this->container->resolve($route->class());
-        $this->container->resolveObjectProperty($controller, 'payload', $payload);
-        $this->container->resolveObjectProperty($controller, 'isc', IscClient::class);
-        $this->container->resolveObjectProperty($controller, 'route', $route);
+        //$this->container->resolveObjectProperty($controller, 'payload', $payload);
+        //$this->container->resolveObjectProperty($controller, 'isc', IscClient::class);
+        //$this->container->resolveObjectProperty($controller, 'route', $route);
         return $controller;
     }
 
