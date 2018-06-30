@@ -73,7 +73,7 @@ class SubscriptionDiscovery
             {
                 foreach ($routes as $action => $route)
                 {
-                    $subscriptionStrings[] = implode('.', [$topic, $type, $action]);
+                    $subscriptionStrings[] = implode('.', [$topic, $type, $action, '*']);
                 }
             }
         }
@@ -148,7 +148,6 @@ class SubscriptionDiscovery
             $action = lcfirst(substr($method->getName(), strlen($methodPrefix)));
             $route = new SubscriptionRoute($class, $method->getName(), $topicName, $type, $action);
             $this->subscriptionRoutes[$topicName][$type][$action] = $route;
-            fwrite(STDOUT, 'Registered route '.$route->action().PHP_EOL);
         }
     }
 

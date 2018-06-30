@@ -54,7 +54,8 @@ class RedisBusDriver implements IBusDriver
 
         foreach ($subscriptions as $subscription)
         {
-            $this->ps->subscribe($subscription.'.*');
+            $this->ps->subscribe($subscription);
+            fwrite(STDOUT, 'Subscribed to '.$subscription.PHP_EOL);
         }
     }
 
