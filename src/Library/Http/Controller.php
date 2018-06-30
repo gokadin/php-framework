@@ -21,7 +21,7 @@ abstract class Controller
     /**
      * @var IscClient
      */
-    private $isc;
+    protected $isc;
 
     /**
      * @param array $rules
