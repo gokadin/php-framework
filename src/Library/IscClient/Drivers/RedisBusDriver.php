@@ -100,7 +100,6 @@ class RedisBusDriver implements IBusDriver
     public function dispatch(string $channel, array $payload)
     {
         $this->predisPublish->publish($channel, json_encode($payload));
-        fwrite(STDOUT, 'DISPATCHED: '.$channel);
     }
 
     public function listenToResult(string $channel)
@@ -132,6 +131,7 @@ class RedisBusDriver implements IBusDriver
                     continue;
                 }
 
+                echo 'RETURNING...';
                 return [
                     'statusCode' => substr($request->channel, strrpos($request->channel, '.') + 1),
                     'payload' => $request->payload
