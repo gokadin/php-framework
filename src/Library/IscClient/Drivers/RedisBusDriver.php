@@ -54,8 +54,7 @@ class RedisBusDriver implements IBusDriver
 
         foreach ($subscriptions as $subscription)
         {
-            $this->ps->subscribe($subscription);
-            fwrite(STDOUT, 'Subscribed to '.$subscription.PHP_EOL);
+            $this->ps->psubscribe($subscription);
         }
     }
 
@@ -100,7 +99,6 @@ class RedisBusDriver implements IBusDriver
     public function dispatch(string $channel, array $payload)
     {
         $this->predisPublish->publish($channel, json_encode($payload));
-        echo 'PUBLISHED '.$channel.PHP_EOL;
     }
 
     public function listenToResult(string $channel)
@@ -119,7 +117,7 @@ class RedisBusDriver implements IBusDriver
 
         $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
         $this->ps = $this->predisSubscribe->pubSubLoop();
-        $this->ps->subscribe($channel.'.*');
+        $this->ps->psubscribe($channel.'.*');
 
         foreach ($this->ps as $request)
         {
