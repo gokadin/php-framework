@@ -190,7 +190,6 @@ class RedisBusDriver implements IBusDriver
             foreach ($this->ps as $message)
             {
                 echo 'IN LOOP '.$message->kind.'  --  '.$message->channel.'  --  ';
-                $this->ps->stop(true);
                 if ($message->kind == 'pmessage')
                 {
                     $this->ps->stop(true);
@@ -207,6 +206,7 @@ class RedisBusDriver implements IBusDriver
         }
         catch (\Predis\Connection\ConnectionException $e)
         {
+            $this->ps->stop(true);
             echo 'IN EXCEPTION'.PHP_EOL;
             var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
             return [
