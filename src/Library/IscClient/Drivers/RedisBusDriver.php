@@ -176,7 +176,8 @@ class RedisBusDriver implements IBusDriver
 
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel .= '.200';
+        $channel .= '.*';
+        $channel = 'Research.*';
 
         echo 'LISTENING ON '.$channel.PHP_EOL;
 
