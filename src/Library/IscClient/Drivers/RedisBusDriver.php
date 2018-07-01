@@ -132,7 +132,7 @@ class RedisBusDriver implements IBusDriver
         try
         {
             $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel], function($l, $message) use(&$result) {
-                echo 'IN LOOP '.$message->kind.'  --  ';
+                echo 'IN LOOP '.$message->kind.'  --  '.$message->channel.'  --  ';
                 if ($message->kind == 'pmessage')
                 {
                     $result = [
