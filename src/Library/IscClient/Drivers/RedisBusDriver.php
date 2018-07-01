@@ -124,8 +124,11 @@ class RedisBusDriver implements IBusDriver
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel .= '.*';
+
         echo 'LISTENING ON '.$channel.PHP_EOL;
 
+        $err = 'no';
+        var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
         try
         {
             $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel], function($l, $message) use(&$result) {
