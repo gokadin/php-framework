@@ -119,7 +119,7 @@ class RedisBusDriver implements IBusDriver
             throw new IscException('Redis port is not set.');
         }
 
-        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=1');
+        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
 
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
