@@ -74,6 +74,8 @@ class RedisBusDriver implements IBusDriver
             return;
         }
 
+        echo 'PROCESSING REQUEST FROM '.$request->channel.PHP_EOL;
+        fwrite(STDOUT, 'PROCESSING REQUEST FROM '.$request->channel.PHP_EOL);
         $channelParts = explode('.', $request->channel);
         $partCount = sizeof($channelParts);
         $requestId = $channelParts[$partCount - 1];
@@ -94,12 +96,13 @@ class RedisBusDriver implements IBusDriver
 
     public function stop()
     {
-        $this->ps->unsubscribe();
+        $this->ps->punsubscribe();
     }
 
     public function dispatch(string $channel, array $payload)
     {
         $this->predisPublish->publish($channel, json_encode($payload));
+        echo 'DISPATCHING ON '.$channel.PHP_EOL;
     }
 
     public function listenToResult(string $channel)
@@ -116,51 +119,34 @@ class RedisBusDriver implements IBusDriver
             throw new IscException('Redis port is not set.');
         }
 
-        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
+        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=1');
 
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
-
-        $x = ['statusCode' => 500, 'payload' => ['error' => 'Isc request timed out.']];
-        $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel.'.*'], function($l, $message) use($x) {
-            if ($message->kind == 'pmessage')
-            {
-                $x = [
-                    'statusCode' => substr($message->channel, strrpos($message->channel, '.') + 1),
-                    'payload' => $message->payload
-                ];
-                return false;
-            }
-        });
-
-        return $x;
-
-        $this->ps = $this->predisSubscribe->pubSubLoop();
-        $this->ps->psubscribe($channel.'.*');
+        $channel .= '.*';
+        echo 'LISTENING ON '.$channel.PHP_EOL;
 
         try
         {
-            foreach ($this->ps as $request)
-            {
-                if ($request->kind != 'pmessage')
+            $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel], function($l, $message) use(&$result) {
+                if ($message->kind == 'pmessage')
                 {
-                    continue;
+                    $result = [
+                        'statusCode' => substr($message->channel, strrpos($message->channel, '.') + 1),
+                        'payload' => $message->payload
+                    ];
+                    return false;
                 }
+            });
 
-                $this->ps->punsubscribe();
-                $this->ps->stop(true);
-
-                return [
-                    'statusCode' => substr($request->channel, strrpos($request->channel, '.') + 1),
-                    'payload' => $request->payload
-                ];
-            }
+            return $result;
         }
         catch (\Predis\Connection\ConnectionException $e)
         {
-            // ...
+            return [
+                'statusCode' => 500,
+                'payload' => ['error' => 'Isc request timed out.']
+            ];
         }
-
-        return ['statusCode' => 500, 'payload' => ['error' => 'Isc request timed out.']];
     }
 }
