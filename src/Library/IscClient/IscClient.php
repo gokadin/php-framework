@@ -61,9 +61,7 @@ class IscClient
         $app->container()->registerInstance('iscClient', $this);
         $actionHandler = new ActionHandler($app->container());
 
-        $this->driver->subscribe($this->subscriptionDiscovery->getSubscriptionStrings());
-
-        $this->driver->run(function(string $topic, string $type, string $action, array $payload, string $requestId) use ($actionHandler)
+        $this->driver->run($this->subscriptionDiscovery->getSubscriptionStrings(), function(string $topic, string $type, string $action, array $payload, string $requestId) use ($actionHandler)
         {
             $route = $this->subscriptionDiscovery->findSubscriptionRoute($topic, $type, $action);
             if (!is_null($route))
@@ -94,10 +92,10 @@ class IscClient
         $requestId = uniqid();
         $channel = $this->buildChannelString($topic, IscConstants::QUERY_TYPE, $action, $requestId);
 
+        $result = $this->driver->listenToResult($channel);
 
         $this->driver->dispatch($channel, $payload);
 
-        $result = $this->driver->listenToResult2($channel);
         return $result;
     }
 

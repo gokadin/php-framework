@@ -4,7 +4,7 @@ namespace Library\IscClient\Drivers;
 
 use Library\IscClient\IscConstants;
 use Library\IscClient\IscException;
-use Predis\Client;
+use \Redis;
 
 class RedisBusDriver implements IBusDriver
 {
@@ -12,16 +12,9 @@ class RedisBusDriver implements IBusDriver
     private const ISC_REDIS_PORT_KEY = 'ISC_REDIS_PORT';
 
     /**
-     * @var PredisClient
+     * @var Redis
      */
-    private $predisSubscribe;
-
-    /**
-     * @var PredisClient
-     */
-    private $predisPublish;
-
-    private $ps;
+    private $redis;
 
     public function __construct()
     {
@@ -42,49 +35,25 @@ class RedisBusDriver implements IBusDriver
             throw new IscException('Redis port is not set.');
         }
 
-        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=0');
-        $this->predisPublish = new Client('tcp://'.$host.':'.$port);
+        $this->redis = new Redis();
+        $this->redis->connect($host, $port, 5, NULL, 100, 5);
     }
 
-    public function subscribe(array $subscriptions)
+    public function run(array $subscriptions, \Closure $closure)
     {
-        if (is_null($this->ps))
-        {
-            $this->ps = $this->predisSubscribe->pubSubLoop();
-        }
+        $this->redis->psubscribe($subscriptions, function($redis, $channel, $subscription, $payload) use ($closure) {
+            echo 'PROCESSING REQUEST FROM '.$channel.PHP_EOL;
+            fwrite(STDOUT, 'PROCESSING REQUEST FROM '.$channel.PHP_EOL);
+            $channelParts = explode('.', $channel);
+            $partCount = sizeof($channelParts);
+            $requestId = $channelParts[$partCount - 1];
+            $action = $channelParts[$partCount - 2];
+            $type = $channelParts[$partCount - 3];
+            $topic = substr($channel, 0, strpos($channel, '.'.$type));
+            $payload = $this->decodePayload($payload);
 
-        foreach ($subscriptions as $subscription)
-        {
-            $this->ps->psubscribe($subscription);
-        }
-    }
-
-    public function run(\Closure $closure)
-    {
-        foreach ($this->ps as $request)
-        {
-            $this->processRequest($closure, $request);
-        }
-    }
-
-    private function processRequest(\Closure $closure, $request)
-    {
-        if ($request->kind != 'pmessage')
-        {
-            return;
-        }
-
-        echo 'PROCESSING REQUEST FROM '.$request->channel.PHP_EOL;
-        fwrite(STDOUT, 'PROCESSING REQUEST FROM '.$request->channel.PHP_EOL);
-        $channelParts = explode('.', $request->channel);
-        $partCount = sizeof($channelParts);
-        $requestId = $channelParts[$partCount - 1];
-        $action = $channelParts[$partCount - 2];
-        $type = $channelParts[$partCount - 3];
-        $topic = substr($request->channel, 0, strpos($request->channel, '.'.$type));
-        $payload = $this->decodePayload($request->payload);
-
-        $closure($topic, $type, $action, $payload, $requestId);
+            $closure($topic, $type, $action, $payload, $requestId);
+        });
     }
 
     private function decodePayload($payload)
@@ -96,121 +65,43 @@ class RedisBusDriver implements IBusDriver
 
     public function stop()
     {
-        $this->ps->punsubscribe();
+        // ...
     }
 
     public function dispatch(string $channel, array $payload)
     {
-        $this->predisPublish = new Client('tcp://'.'isc-redis'.':'.'6379');
-        $this->predisPublish->publish($channel, json_encode($payload));
+        $this->redis->publish($channel, $payload);
         echo 'DISPATCHING ON '.$channel.PHP_EOL;
     }
 
     public function listenToResult(string $channel)
     {
-        $host = getenv(self::ISC_REDIS_HOST_KEY);
-        if (is_null($host) || $host == '')
-        {
-            throw new IscException('Redis hostname is not set.');
-        }
-
-        $port = getenv(self::ISC_REDIS_PORT_KEY);
-        if (is_null($port) || $port == '')
-        {
-            throw new IscException('Redis port is not set.');
-        }
-
-        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=1');
-
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel .= '.*';
 
         echo 'LISTENING ON '.$channel.PHP_EOL;
 
-        $err = 'no';
-        var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
         try
         {
-            $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel], function($l, $message) use(&$result) {
-                echo 'IN LOOP '.$message->kind.'  --  '.$message->channel.'  --  ';
-                if ($message->kind == 'pmessage')
-                {
-                    $result = [
-                        'statusCode' => substr($message->channel, strrpos($message->channel, '.') + 1),
-                        'payload' => $message->payload
-                    ];
-                    return false;
-                }
+            $result = [];
+            $this->redis->psubscribe($channel, function($redis, $channel, $subscription, $payload) use (&$result) {
+                var_dump($payload);
+
+                $result = [
+                    'statusCode' => 200,
+                    'payload' => $payload
+                ];
+
+                $redis->close();
+                return false;
             });
 
-            echo 'END OF TRY'.PHP_EOL;
-            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
             return $result;
         }
-        catch (\Predis\Connection\ConnectionException $e)
+        catch (\RedisException $e)
         {
             echo 'IN EXCEPTION'.PHP_EOL;
-            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
-            return [
-                'statusCode' => 500,
-                'payload' => ['error' => 'Isc request timed out.']
-            ];
-        }
-    }
-
-    public function listenToResult2(string $channel)
-    {
-        $host = getenv(self::ISC_REDIS_HOST_KEY);
-        if (is_null($host) || $host == '')
-        {
-            throw new IscException('Redis hostname is not set.');
-        }
-
-        $port = getenv(self::ISC_REDIS_PORT_KEY);
-        if (is_null($port) || $port == '')
-        {
-            throw new IscException('Redis port is not set.');
-        }
-
-        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=1');
-
-        $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel .= '.*';
-        $channel = 'Research.*';
-
-        echo 'LISTENING ON '.$channel.PHP_EOL;
-
-        $err = 'no';
-        var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
-        try
-        {
-            $this->ps = $this->predisSubscribe->pubSubLoop();
-            $this->ps->psubscribe($channel);
-
-            foreach ($this->ps as $message)
-            {
-                echo 'IN LOOP '.$message->kind.'  --  '.$message->channel.'  --  ';
-                if ($message->kind == 'pmessage')
-                {
-                    $this->ps->stop(true);
-                    return [
-                        'statusCode' => substr($message->channel, strrpos($message->channel, '.') + 1),
-                        'payload' => $message->payload
-                    ];
-                }
-            }
-
-            echo 'END OF TRY'.PHP_EOL;
-            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
-            return ['asdasfa' => 'asd'];
-        }
-        catch (\Predis\Connection\ConnectionException $e)
-        {
-            $this->ps->stop(true);
-            echo 'IN EXCEPTION'.PHP_EOL;
-            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
             return [
                 'statusCode' => 500,
                 'payload' => ['error' => 'Isc request timed out.']
