@@ -176,7 +176,7 @@ class RedisBusDriver implements IBusDriver
 
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel .= '.*';
+        $channel .= '.200';
 
         echo 'LISTENING ON '.$channel.PHP_EOL;
 
@@ -190,8 +190,10 @@ class RedisBusDriver implements IBusDriver
             foreach ($this->ps as $message)
             {
                 echo 'IN LOOP '.$message->kind.'  --  '.$message->channel.'  --  ';
+                $this->ps->stop(true);
                 if ($message->kind == 'pmessage')
                 {
+                    $this->ps->stop(true);
                     return [
                         'statusCode' => substr($message->channel, strrpos($message->channel, '.') + 1),
                         'payload' => $message->payload
