@@ -126,14 +126,13 @@ class RedisBusDriver implements IBusDriver
         {
             foreach ($this->ps as $request)
             {
-                echo 'A'.$request->kind.PHP_EOL;
                 if ($request->kind != 'pmessage')
                 {
                     continue;
                 }
 
                 $this->ps->unsubscribe();
-                echo 'RETURNING...';
+
                 return [
                     'statusCode' => substr($request->channel, strrpos($request->channel, '.') + 1),
                     'payload' => $request->payload
