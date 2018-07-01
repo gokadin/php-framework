@@ -119,7 +119,7 @@ class RedisBusDriver implements IBusDriver
             throw new IscException('Redis port is not set.');
         }
 
-        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
+        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=1');
 
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
@@ -146,6 +146,62 @@ class RedisBusDriver implements IBusDriver
             echo 'END OF TRY'.PHP_EOL;
             var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
             return $result;
+        }
+        catch (\Predis\Connection\ConnectionException $e)
+        {
+            echo 'IN EXCEPTION'.PHP_EOL;
+            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
+            return [
+                'statusCode' => 500,
+                'payload' => ['error' => 'Isc request timed out.']
+            ];
+        }
+    }
+
+    public function listenToResult2(string $channel)
+    {
+        $host = getenv(self::ISC_REDIS_HOST_KEY);
+        if (is_null($host) || $host == '')
+        {
+            throw new IscException('Redis hostname is not set.');
+        }
+
+        $port = getenv(self::ISC_REDIS_PORT_KEY);
+        if (is_null($port) || $port == '')
+        {
+            throw new IscException('Redis port is not set.');
+        }
+
+        $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=1');
+
+        $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $channel .= '.*';
+
+        echo 'LISTENING ON '.$channel.PHP_EOL;
+
+        $err = 'no';
+        var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
+        try
+        {
+            $this->ps = $this->predisSubscribe->pubSubLoop();
+            $this->ps->psubscribe($channel);
+
+            foreach ($this->ps as $message)
+            {
+                echo 'IN LOOP '.$message->kind.'  --  '.$message->channel.'  --  ';
+                if ($message->kind == 'pmessage')
+                {
+                    return [
+                        'statusCode' => substr($message->channel, strrpos($message->channel, '.') + 1),
+                        'payload' => $message->payload
+                    ];
+                }
+            }
+
+            echo 'END OF TRY'.PHP_EOL;
+            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
+            return ['asdasfa' => 'asd'];
         }
         catch (\Predis\Connection\ConnectionException $e)
         {
