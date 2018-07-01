@@ -142,6 +142,8 @@ class RedisBusDriver implements IBusDriver
                 }
             });
 
+            echo 'END OF TRY'.PHP_EOL;
+            var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
             return $result;
         }
         catch (\Predis\Connection\ConnectionException $e)
