@@ -149,6 +149,8 @@ class RedisBusDriver implements IBusDriver
         catch (\Predis\Connection\ConnectionException $e)
         {
             echo 'IN EXCEPTION'.PHP_EOL;
+            $ps = $this->predisSubscribe->pubSubLoop();
+            $ps->psubscribe('some.*');
             var_dump($this->predisSubscribe->executeRaw(['PUBSUB', 'CHANNELS'], $err));
             return [
                 'statusCode' => 500,
