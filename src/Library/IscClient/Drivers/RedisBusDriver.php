@@ -131,7 +131,8 @@ class RedisBusDriver implements IBusDriver
                     continue;
                 }
 
-                $this->ps->stop();
+                $this->ps->punsubscribe();
+                $this->ps->stop(true);
 
                 return [
                     'statusCode' => substr($request->channel, strrpos($request->channel, '.') + 1),
