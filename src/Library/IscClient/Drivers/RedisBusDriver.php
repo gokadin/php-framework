@@ -118,8 +118,11 @@ class RedisBusDriver implements IBusDriver
 
         $this->predisSubscribe = new Client('tcp://'.$host.':'.$port.'?read_write_timeout=5');
 
+        $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
+
         $x = ['statusCode' => 500, 'payload' => ['error' => 'Isc request timed out.']];
-        $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel], function($l, $message) use($x) {
+        $this->predisSubscribe->pubSubLoop(['psubscribe' => $channel.'.*'], function($l, $message) use($x) {
             if ($message->kind == 'pmessage')
             {
                 $x = [
@@ -133,8 +136,6 @@ class RedisBusDriver implements IBusDriver
         return $x;
 
         $this->ps = $this->predisSubscribe->pubSubLoop();
-        $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
         $this->ps->psubscribe($channel.'.*');
 
         try
