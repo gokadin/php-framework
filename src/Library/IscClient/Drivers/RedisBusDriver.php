@@ -36,7 +36,7 @@ class RedisBusDriver implements IBusDriver
         }
 
         $redis = new Redis();
-        $redis->connect($host, $port);
+        $redis->connect($host, $port, 0, NULL, 100, $readTimeout);
 
         return $redis;
     }
@@ -72,11 +72,12 @@ class RedisBusDriver implements IBusDriver
     {
         $this->redis->publish($channel, json_encode($payload));
         echo 'DISPATCHING ON '.$channel.PHP_EOL;
+        echo 'payload: '.json_encode($payload);
     }
 
     public function listenToResult(string $channel)
     {
-        $resultRedis = $this->connect(5);
+        $resultRedis = $this->connect(3);
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel .= '.*';
@@ -100,6 +101,7 @@ class RedisBusDriver implements IBusDriver
         }
         catch (\RedisException $e)
         {
+            $resultRedis->close();
             return [
                 'statusCode' => 500,
                 'payload' => ['error' => 'Isc request timed out.']
