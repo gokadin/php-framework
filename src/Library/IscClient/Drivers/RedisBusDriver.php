@@ -41,9 +41,8 @@ class RedisBusDriver implements IBusDriver
 
     public function run(array $subscriptions, \Closure $closure)
     {
-        $this->redis->psubscribe($subscriptions, function($redis, $channel, $subscription, $payload) use ($closure) {
+        $this->redis->psubscribe($subscriptions, function($redis, $subscription, $channel, $payload) use ($closure) {
             echo 'PROCESSING REQUEST FROM '.$channel.PHP_EOL;
-            fwrite(STDOUT, 'PROCESSING REQUEST FROM '.$channel.PHP_EOL);
             $channelParts = explode('.', $channel);
             $partCount = sizeof($channelParts);
             $requestId = $channelParts[$partCount - 1];
@@ -52,6 +51,7 @@ class RedisBusDriver implements IBusDriver
             $topic = substr($channel, 0, strpos($channel, '.'.$type));
             $payload = $this->decodePayload($payload);
 
+            echo 'requestId: '.$requestId.' - action: '.$action.' - type: '.$type.' - topic: '.$topic.PHP_EOL;
             $closure($topic, $type, $action, $payload, $requestId);
         });
     }
