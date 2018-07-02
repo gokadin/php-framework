@@ -36,7 +36,7 @@ class RedisBusDriver implements IBusDriver
         }
 
         $redis = new Redis();
-        $redis->connect($host, $port, 5, NULL, 100, $readTimeout);
+        $redis->connect($host, $port, 0, NULL, 100, $readTimeout);
 
         return $redis;
     }
