@@ -84,26 +84,24 @@ class RedisBusDriver implements IBusDriver
 
         try
         {
-            $result = [];
-            $resultRedis->psubscribe([$channel], function($redis, $channel, $subscription, $payload) use (&$resultRedis, &$result) {
-                $result = [
+            return $resultRedis->psubscribe([$channel], function($redis, $channel, $subscription, $payload) {
+                echo 'IN PSUBSCRIBE'.PHP_EOL;
+                return [
                     'statusCode' => 200,
                     'payload' => $payload
                 ];
-
-                $resultRedis->close();
-                return false;
             });
-
-            return $result;
         }
         catch (\RedisException $e)
         {
-            $resultRedis->close();
             return [
                 'statusCode' => 500,
                 'payload' => ['error' => 'Isc request timed out.']
             ];
+        }
+        finally
+        {
+            $resultRedis->close();
         }
     }
 }
