@@ -77,7 +77,7 @@ class RedisBusDriver implements IBusDriver
     {
         $r = $this->connect(3);
         $resultChannel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $resultChannel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $resultChannel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $resultChannel);
         $resultChannel .= '.*';
 
         try
