@@ -73,7 +73,7 @@ class RedisBusDriver implements IBusDriver
         $this->redis->publish($channel, json_encode($payload));
     }
 
-    public function listenToResult(string $channel, array $payload)
+    public function publishAndListenResult(string $channel, array $payload)
     {
         $r = $this->connect(3);
         $resultChannel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
