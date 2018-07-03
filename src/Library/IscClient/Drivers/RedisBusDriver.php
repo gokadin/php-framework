@@ -87,6 +87,7 @@ class RedisBusDriver implements IBusDriver
         try
         {
             $r->publish($a, 'what now');
+            echo 'PUBLISHING '.$a.PHP_EOL;
             return $r->psubscribe([$channel], function($redis, $channel, $subscription, $payload) {
                 echo 'IN PSUBSCRIBE'.PHP_EOL;
                 return [
