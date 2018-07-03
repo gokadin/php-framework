@@ -70,8 +70,7 @@ class RedisBusDriver implements IBusDriver
 
     public function dispatch(string $channel, array $payload)
     {
-        $this->redis->publish($channel, 'something');
-        echo 'PUBLISHED RESULT on: '.$channel.PHP_EOL;
+        $this->redis->publish($channel, json_encode($payload));
     }
 
     public function listenToResult(string $channel)
@@ -86,7 +85,7 @@ class RedisBusDriver implements IBusDriver
         try
         {
             $result = [];
-            $resultRedis->psubscribe($channel, function($redis, $channel, $subscription, $payload) use ($resultRedis, &$result) {
+            $resultRedis->psubscribe([$channel], function($redis, $channel, $subscription, $payload) use ($resultRedis, &$result) {
                 $result = [
                     'statusCode' => 200,
                     'payload' => $payload
