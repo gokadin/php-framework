@@ -76,6 +76,7 @@ class RedisBusDriver implements IBusDriver
 
     public function listenToResult(string $channel)
     {
+        $a = $channel;
         $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
         $channel .= '.*';
@@ -84,6 +85,7 @@ class RedisBusDriver implements IBusDriver
 
         try
         {
+            $this->redis->publish($a, 'what now');
             return $this->redis->psubscribe([$channel], function($redis, $channel, $subscription, $payload) {
                 echo 'IN PSUBSCRIBE'.PHP_EOL;
                 return [

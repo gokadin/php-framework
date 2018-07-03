@@ -92,7 +92,7 @@ class IscClient
         $requestId = uniqid();
         $channel = $this->buildChannelString($topic, IscConstants::QUERY_TYPE, $action, $requestId);
 
-        $this->driver->dispatch($channel, $payload);
+        //$this->driver->dispatch($channel, $payload);
 
         return $this->driver->listenToResult($channel);
     }
