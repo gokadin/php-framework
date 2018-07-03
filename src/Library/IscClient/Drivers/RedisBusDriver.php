@@ -70,27 +70,21 @@ class RedisBusDriver implements IBusDriver
 
     public function dispatch(string $channel, array $payload)
     {
-        $x = $this->redis->publish($channel, json_encode($payload));
-        echo 'DISPATCH ON '.$channel.' CODE: '.$x.PHP_EOL;
+        $this->redis->publish($channel, json_encode($payload));
     }
 
-    public function listenToResult(string $channel)
+    public function listenToResult(string $channel, array $payload)
     {
-        $r = $this->connect(1);
-        $a = $channel;
-        $channel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
-        $channel .= '.*';
-
-        echo 'LISTENING ON '.$channel.PHP_EOL;
+        $r = $this->connect(3);
+        $resultChannel = str_replace(IscConstants::QUERY_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $resultChannel = str_replace(IscConstants::COMMAND_TYPE, IscConstants::RESULT_TYPE, $channel);
+        $resultChannel .= '.*';
 
         try
         {
-            $r->publish($a, 'what now');
-            echo 'PUBLISHING '.$a.PHP_EOL;
             $result = [];
-            $r->psubscribe([$channel], function($redis, $channel, $subscription, $payload) use (&$result) {
-                echo 'IN PSUBSCRIBE'.PHP_EOL;
+            $r->publish($channel, json_encode($payload));
+            $r->psubscribe([$resultChannel], function($redis, $channel, $subscription, $payload) use (&$result) {
                 $result = [
                     'statusCode' => 200,
                     'payload' => $payload
