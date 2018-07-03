@@ -71,6 +71,7 @@ class RedisBusDriver implements IBusDriver
     public function dispatch(string $channel, array $payload)
     {
         $this->redis->publish($channel, 'something');
+        echo 'PUBLISHED RESULT on: '.$channel.PHP_EOL;
     }
 
     public function listenToResult(string $channel)
