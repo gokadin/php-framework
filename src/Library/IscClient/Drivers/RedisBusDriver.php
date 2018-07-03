@@ -95,6 +95,7 @@ class RedisBusDriver implements IBusDriver
                     'statusCode' => 200,
                     'payload' => $payload
                 ];
+                $redis->close();
                 return false;
             });
 
@@ -102,14 +103,11 @@ class RedisBusDriver implements IBusDriver
         }
         catch (\RedisException $e)
         {
+            $r->close();
             return [
                 'statusCode' => 500,
                 'payload' => ['error' => 'Isc request timed out.']
             ];
-        }
-        finally
-        {
-            $r->close();
         }
     }
 }
