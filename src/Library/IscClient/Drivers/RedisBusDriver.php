@@ -85,7 +85,7 @@ class RedisBusDriver implements IBusDriver
         try
         {
             $result = [];
-            $resultRedis->psubscribe([$channel], function($redis, $channel, $subscription, $payload) use ($resultRedis, &$result) {
+            $resultRedis->psubscribe([$channel], function($redis, $channel, $subscription, $payload) use (&$resultRedis, &$result) {
                 $result = [
                     'statusCode' => 200,
                     'payload' => $payload
