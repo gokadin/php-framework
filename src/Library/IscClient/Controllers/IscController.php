@@ -53,13 +53,52 @@ abstract class IscController
         $this->isc->dispatchQuery($topic, $action, $payload);
     }
 
-    protected function returnOk(array $payload = [])
+    /**
+     * @param array $payload
+     */
+    protected function respondOk(array $payload = [])
     {
-        $this->isc->dispatchResult($this->route->topic(), $this->route->action(), IscConstants::STATUS_OK, $payload, $this->route->requestId());
+        $this->respond(IscConstants::STATUS_OK, $payload);
     }
 
-    private function returnResult()
+    /**
+     * @param array $payload
+     */
+    protected function respondBadRequest(array $payload = [])
     {
+        $this->respond(IscConstants::STATUS_BAD_REQUEST, $payload);
+    }
 
+    /**
+     * @param array $payload
+     */
+    protected function respondInternalServerError(array $payload = [])
+    {
+        $this->respond(IscConstants::STATUS_INTERNAL_SERVER_ERROR, $payload);
+    }
+
+    /**
+     * @param array $payload
+     */
+    protected function respondUnauthorized(array $payload = [])
+    {
+        $this->respond(IscConstants::STATUS_BAD_UNAUTHORIZED, $payload);
+    }
+
+    /**
+     * @param array $payload
+     */
+    protected function respondNotFound(array $payload = [])
+    {
+        $this->respond(IscConstants::STATUS_NOT_FOUND, $payload);
+    }
+
+    /**
+     * @param int $statusCode
+     * @param array $payload
+     */
+    private function respond(int $statusCode, array $payload)
+    {
+        $this->isc->dispatchResult($this->route->topic(), $this->route->action(), $statusCode, $payload, $this->route->requestId());
     }
 }

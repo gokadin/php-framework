@@ -51,7 +51,7 @@ class SubscriptionDiscoveryTest extends BaseTest
 
         // Assert
         $this->assertGreaterThan(0, sizeof($strings));
-        $this->assertTrue(in_array('Accounts.EVENT.accountCreated', $strings));
+        $this->assertTrue(in_array('Accounts.EVENT.accountCreated.*', $strings));
     }
 
     public function test_getSubscriptionStrings_forNestedTopicName()
@@ -61,6 +61,6 @@ class SubscriptionDiscoveryTest extends BaseTest
 
         // Assert
         $this->assertGreaterThan(0, sizeof($strings));
-        $this->assertTrue(in_array('Accounts.SubTopic.EVENT.subAccountCreated', $strings));
+        $this->assertTrue(in_array('Accounts.SubTopic.EVENT.subAccountCreated.*', $strings));
     }
 }
