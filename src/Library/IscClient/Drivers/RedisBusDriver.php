@@ -85,6 +85,7 @@ class RedisBusDriver implements IBusDriver
             $result = [];
             $r->publish($channel, json_encode($payload));
             $r->psubscribe([$resultChannel], function($redis, $channel, $subscription, $payload) use (&$result) {
+                // subscribe to the sub event and hook there
                 $result = [
                     'statusCode' => 200,
                     'payload' => $payload
