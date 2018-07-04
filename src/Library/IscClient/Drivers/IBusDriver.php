@@ -8,5 +8,5 @@ interface IBusDriver
 
     public function run(array $subscriptions, \Closure $closure);
 
-    public function stop();
+    public function publishAndListenResult(string $dispatchChannel, array $dispatchPayload);
 }
