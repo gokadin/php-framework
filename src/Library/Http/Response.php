@@ -60,8 +60,13 @@ class Response
     {
         http_response_code($this->statusCode);
 
-        echo json_encode($this->data);
+        if (is_array($this->data))
+        {
+            echo json_decode($this->data);
+            exit();
+        }
 
+        echo $this->data;
         exit();
     }
 }
