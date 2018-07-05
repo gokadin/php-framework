@@ -231,7 +231,7 @@ class DataMapper
                 throw new DataMapperException('DataMapper.findBy : Property '.$prop.' does not exist.');
             }
 
-            $queryBuilder->where($column->name(), '=', $value);
+            $queryBuilder->where($column->name(), $operator, $value);
         }
 
         return $queryBuilder;
