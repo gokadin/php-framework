@@ -62,7 +62,7 @@ class Response
 
         if (is_array($this->data))
         {
-            echo json_decode($this->data);
+            echo json_encode($this->data);
             exit();
         }
 
