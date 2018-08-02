@@ -70,6 +70,19 @@ class SchemaSynchronizer
         $this->controllersDirectoryPath = $this->basePath.'/'.$config['controllersPath'];
     }
 
+    private function createMissingDirectories()
+    {
+        if (!file_exists($this->modelsDirectoryPath))
+        {
+            mkdir($this->modelsDirectoryPath, 0777, true);
+        }
+
+        if (!file_exists($this->controllersDirectoryPath))
+        {
+            mkdir($this->controllersDirectoryPath, 0777, true);
+        }
+    }
+
     /**
      * @param array $schema
      * @param array $previousSchema
@@ -77,6 +90,8 @@ class SchemaSynchronizer
      */
     public function synchronize(array $schema, array $previousSchema): array
     {
+        $this->createMissingDirectories();
+
         try
         {
             foreach (array_diff_key($schema, $previousSchema) as $typeName => $fields)

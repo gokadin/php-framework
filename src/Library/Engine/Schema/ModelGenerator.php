@@ -50,6 +50,14 @@ class ModelGenerator
         $this->modelsNamespace = $modelsNamespace;
     }
 
+    private function reset()
+    {
+        $this->fields = [];
+        $this->ctorLines = [];
+        $this->imports = [];
+        $this->methods = [];
+    }
+
     /**
      * @param string $type
      * @param array $fields
@@ -57,6 +65,8 @@ class ModelGenerator
      */
     public function generate(string $type, array $fields): string
     {
+        $this->reset();
+
         $this->type = $type;
         $this->collectionImportAdded = false;
 
