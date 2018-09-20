@@ -91,7 +91,8 @@ class IscClient
 
     public function dispatchCommand(string $topic, string $action, array $payload)
     {
-        $this->driver->dispatch($this->buildChannelString($topic, IscConstants::COMMAND_TYPE, $action, uniqid()), $payload);
+        $channel = $this->buildChannelString($topic, IscConstants::COMMAND_TYPE, $action, uniqid());
+        return $this->driver->publishAndListenResult($channel, $payload);
     }
 
     public function dispatchQuery(string $topic, string $action, array $payload)

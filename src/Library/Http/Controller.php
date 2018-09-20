@@ -94,7 +94,8 @@ abstract class Controller
      */
     protected function dispatchCommand(string $topic, string $action, array $payload = [])
     {
-        $this->isc->dispatchCommand($topic, $action, $payload);
+        $result = $this->isc->dispatchCommand($topic, $action, $payload);
+        return new Response($result['statusCode'], $result['payload']);
     }
 
     /**
@@ -105,9 +106,6 @@ abstract class Controller
     protected function dispatchQuery(string $topic, string $action, array $payload = [])
     {
         $result = $this->isc->dispatchQuery($topic, $action, $payload);
-        echo 'returning result: '.PHP_EOL;
-        var_dump($result);
-        echo 'end of res'.PHP_EOL;
         return new Response($result['statusCode'], $result['payload']);
     }
 }
