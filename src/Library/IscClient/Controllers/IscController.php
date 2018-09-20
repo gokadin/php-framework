@@ -5,7 +5,6 @@ namespace Library\IscClient\Controllers;
 use Library\IscClient\IscClient;
 use Library\IscClient\IscConstants;
 use Library\IscClient\Subscriptions\SubscriptionRoute;
-use Library\Http\Response;
 
 abstract class IscController
 {
@@ -42,7 +41,7 @@ abstract class IscController
     protected function dispatchCommand(string $topic, string $action, array $payload = [])
     {
         $result = $this->isc->dispatchCommand($topic, $action, $payload);
-        return new Response($result['statusCode'], $result['payload']);
+        return new IscResponse($result['statusCode'], $result['payload']);
     }
 
     /**
@@ -53,7 +52,7 @@ abstract class IscController
     protected function dispatchQuery(string $topic, string $action, array $payload = [])
     {
         $result = $this->isc->dispatchQuery($topic, $action, $payload);
-        return new Response($result['statusCode'], $result['payload']);
+        return new IscResponse($result['statusCode'], $result['payload']);
     }
 
     /**

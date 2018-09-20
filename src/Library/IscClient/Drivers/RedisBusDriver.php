@@ -92,6 +92,10 @@ class RedisBusDriver implements IBusDriver
                     $this->dispatch($dispatchChannel, $dispatchPayload);
                     return true;
                 case 'pmessage':
+                    if (is_string($payload))
+                    {
+                        $payload = json_decode($payload, true);
+                    }
                     $result = [
                         'statusCode' => 200,
                         'payload' => $payload
