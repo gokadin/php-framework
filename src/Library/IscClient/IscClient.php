@@ -61,7 +61,14 @@ class IscClient
         $app->container()->registerInstance('iscClient', $this);
         $actionHandler = new ActionHandler($app->container());
 
-        $this->driver->run($this->subscriptionDiscovery->getSubscriptionStrings(), function(string $topic, string $type, string $action, array $payload, string $requestId) use ($actionHandler)
+        echo 'Discovering subscriptions...'.PHP_EOL;
+        $subscriptions = $this->subscriptionDiscovery->getSubscriptionStrings();
+        foreach ($subscriptions as $subscription)
+        {
+            echo $subscription.PHP_EOL;
+        }
+
+        $this->driver->run($subscriptions, function(string $topic, string $type, string $action, array $payload, string $requestId) use ($actionHandler)
         {
             $route = $this->subscriptionDiscovery->findSubscriptionRoute($topic, $type, $action);
             if (!is_null($route))
