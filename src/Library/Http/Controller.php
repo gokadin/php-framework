@@ -105,6 +105,9 @@ abstract class Controller
     protected function dispatchQuery(string $topic, string $action, array $payload = [])
     {
         $result = $this->isc->dispatchQuery($topic, $action, $payload);
+        echo 'returning result: '.PHP_EOL;
+        var_dump($result);
+        echo 'end of res'.PHP_EOL;
         return new Response($result['statusCode'], $result['payload']);
     }
 }
