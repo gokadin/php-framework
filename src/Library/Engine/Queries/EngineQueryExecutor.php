@@ -222,10 +222,10 @@ class EngineQueryExecutor
 
     /**
      * @param $entities
-     * @param array $fields
+     * @param $fields
      * @return array
      */
-    private function buildFieldsFromEntities($entities, array $fields): array
+    private function buildFieldsFromEntities($entities, $fields): array
     {
         $results = [];
         foreach ($entities as $entity)
@@ -238,10 +238,10 @@ class EngineQueryExecutor
 
     /**
      * @param $entity
-     * @param array $fields
+     * @param $fields
      * @return array
      */
-    private function buildFieldsFromEntity($entity, array $fields): array
+    private function buildFieldsFromEntity($entity, $fields): array
     {
         if ($fields == '*')
         {
