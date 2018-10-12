@@ -291,9 +291,10 @@ class EngineQueryExecutor
 
         foreach ($r->getMethods() as $method)
         {
-            if ($method->isPublic())
+            if ($method->isPublic() && !$method->isConstructor() && substr($method->name, 0, 3) == 'get')
             {
-                $fields[$method->name] = ['as' => $method->name];
+                $fieldName = substr($method->name, 3);
+                $fields[$fieldName] = ['as' => $fieldName];
             }
         }
 
