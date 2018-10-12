@@ -293,7 +293,7 @@ class EngineQueryExecutor
         {
             if ($method->isPublic() && !$method->isConstructor() && substr($method->name, 0, 3) == 'get')
             {
-                $fieldName = substr($method->name, 3);
+                $fieldName = lcfirst(substr($method->name, 3));
                 $fields[$fieldName] = ['as' => $fieldName];
             }
         }
