@@ -116,8 +116,13 @@ class Engine
         return new FetchQuery($queryBuilder);
     }
 
-
-    public function create($type, array $data, array $fields = []): CreateQuery
+    /**
+     * @param $type
+     * @param array $data
+     * @param $fields
+     * @return CreateQuery
+     */
+    public function create($type, array $data, $fields = []): CreateQuery
     {
         $queryBuilder = $this->getTypeQueryBuilder($type);
         $this->commands[] = [
