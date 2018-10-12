@@ -8,6 +8,8 @@ use Library\DataMapper\DataMapper;
 use Library\Engine\Engine;
 use Library\Engine\EngineException;
 use ReflectionClass;
+use ReflectionException;
+use ReflectionObject;
 
 class EngineQueryExecutor
 {
@@ -241,6 +243,11 @@ class EngineQueryExecutor
      */
     private function buildFieldsFromEntity($entity, array $fields): array
     {
+        if ($fields == '*')
+        {
+            $fields = $this->findAllFieldsOfEntity($entity);
+        }
+
         $result = [];
         foreach ($fields as $field => $metadata)
         {
@@ -274,6 +281,26 @@ class EngineQueryExecutor
     }
 
     /**
+     * @param $entity
+     * @return array
+     */
+    private function findAllFieldsOfEntity($entity): array
+    {
+        $fields = [];
+        $r = new ReflectionObject($entity);
+
+        foreach ($r->getMethods() as $method)
+        {
+            if ($method->isPublic())
+            {
+                $fields[$method->name] = ['as' => $method->name];
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
      * @param string $entityName
      * @return mixed|null|object
      */
@@ -288,6 +315,7 @@ class EngineQueryExecutor
      * @param array $createData
      * @return object
      * @throws EngineException
+     * @throws ReflectionException
      */
     private function buildEntityFromData(string $type, array $createData)
     {

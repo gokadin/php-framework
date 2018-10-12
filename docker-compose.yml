@@ -5,7 +5,7 @@ services:
     container_name: framework
     build: .
     volumes:
-      - c:/Users/common/Desktop/framework:/usr/src/app
+      - c:/Users/gltop/Desktop/framework:/usr/src/app
       - /usr/src/app/vendor
     links:
       - framework-db
