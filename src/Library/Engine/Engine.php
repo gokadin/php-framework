@@ -99,10 +99,10 @@ class Engine
 
     /**
      * @param $type
-     * @param array $fields
+     * @param $fields
      * @return FetchQuery
      */
-    public function fetch($type, array $fields): FetchQuery
+    public function fetch($type, $fields): FetchQuery
     {
         $queryBuilder = $this->getTypeQueryBuilder($type);
         $this->commands[] = [
