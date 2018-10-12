@@ -149,7 +149,7 @@ class EngineQueryExecutor
         $entity = $this->buildEntityFromData($command['type'], $command['data']);
         $this->dm->flush();
 
-        return sizeof($command['fields']) > 0
+        return $command['fields'] == '*' || sizeof($command['fields']) > 0
             ? [$this->buildFieldsFromEntity($entity, $command['fields'])]
             : [];
     }
