@@ -77,10 +77,10 @@ class EngineDataParserTest extends EngineBaseTest
                         'id' => ['as' => 'id']
                     ],
                     'conditions' => [
-                        'where' => ['age', '<', 5],
-                        'orWhere' => ['age', '=', 6],
-                        'sort' => ['age', 'desc'],
-                        'limit' => 3
+                        ['where', 'age', '<', 5],
+                        ['orWhere', 'age', '=', 6],
+                        ['sort', 'age', 'desc'],
+                        ['limit', 3]
                     ]
                 ]
             ]
@@ -296,7 +296,7 @@ class EngineDataParserTest extends EngineBaseTest
                         'age' => ['as' => 'age']
                     ],
                     'conditions' => [
-                        'where' => ['id', '=', 2]
+                        ['where', 'id', '=', 2]
                     ]
                 ]
             ]
@@ -343,7 +343,7 @@ class EngineDataParserTest extends EngineBaseTest
             'delete' => [
                 'User' => [
                     'conditions' => [
-                        'where' => ['age', '=', 2]
+                        ['where', 'age', '=', 2]
                     ]
                 ]
             ]

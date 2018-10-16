@@ -168,9 +168,9 @@ class EngineDataParser
      */
     private function addQueryConditions($query, array $conditions): void
     {
-        foreach ($conditions as $key => $condition)
+        foreach ($conditions as $condition)
         {
-            $this->addQueryCondition($query, $key, $condition);
+            $this->addQueryCondition($query, $condition);
         }
     }
 
@@ -179,21 +179,21 @@ class EngineDataParser
      * @param string $key
      * @param $condition
      */
-    private function addQueryCondition($query, string $key, $condition): void
+    private function addQueryCondition($query, $condition): void
     {
-        switch ($key)
+        switch ($condition[0])
         {
             case self::WHERE_KEY:
-                $query->where($condition[0], $condition[1], $condition[2]);
+                $query->where($condition[1], $condition[2], $condition[3]);
                 break;
             case self::OR_WHERE_KEY:
-                $query->orWhere($condition[0], $condition[1], $condition[2]);
+                $query->orWhere($condition[1], $condition[2], $condition[3]);
                 break;
             case self::SORT_KEY:
-                $query->sort($condition[0], strtoupper($condition[1]) == 'ASC');
+                $query->sort($condition[1], strtoupper($condition[2]) == 'ASC');
                 break;
             case self::LIMIT_KEY:
-                $query->limit($condition);
+                $query->limit($condition[1]);
                 break;
         }
     }
