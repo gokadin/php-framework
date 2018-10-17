@@ -181,6 +181,11 @@ class EngineDataParser
      */
     private function addQueryCondition($query, $condition): void
     {
+        if ($condition[0] == self::WHERE_KEY || $condition[0] == self::OR_WHERE_KEY && substr($condition[1], -2) == 'Id')
+        {
+            $condition[1] = str_replace('Id', '_id', $condition[1]);
+        }
+
         switch ($condition[0])
         {
             case self::WHERE_KEY:
