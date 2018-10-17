@@ -63,6 +63,7 @@ class Engine
     {
         $this->dm = $dm;
 
+        echo 'a';
         $this->readConfig($config);
 
         $this->queryExecutor = new EngineQueryExecutor($schema, $dm, $container, $config);

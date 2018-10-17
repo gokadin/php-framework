@@ -247,7 +247,6 @@ class EngineQueryExecutor
     {
         if ($fields == '*')
         {
-            echo 'a';
             $fields = $this->findAllFieldsOfType($type);
             print_r($fields);
         }
