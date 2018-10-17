@@ -94,7 +94,6 @@ class Engine
     {
         $this->dataParser->parse($data);
 
-        echo 'A';
         return $this->run();
     }
 

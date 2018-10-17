@@ -262,7 +262,6 @@ class EngineQueryExecutor
                     $alias = $metadata['as'];
                 }
                 $getter = 'get'.ucfirst(substr($field, 0, strlen($field) - 2));
-                echo 'getter: '.$getter;
                 $result[$alias] = $entity->$getter()->getId();
 
                 continue;
