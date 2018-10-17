@@ -247,7 +247,9 @@ class EngineQueryExecutor
     {
         if ($fields == '*')
         {
+            echo 'a';
             $fields = $this->findAllFieldsOfType($type);
+            print_r($fields);
         }
 
         $result = [];
@@ -261,6 +263,7 @@ class EngineQueryExecutor
                     $alias = $metadata['as'];
                 }
                 $getter = 'get'.ucfirst(substr($field, 0, strlen($field) - 2));
+                echo 'getter: '.$getter;
                 $result[$alias] = $entity->$getter()->getId();
 
                 continue;
