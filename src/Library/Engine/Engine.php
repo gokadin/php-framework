@@ -63,7 +63,6 @@ class Engine
     {
         $this->dm = $dm;
 
-        echo 'a';
         $this->readConfig($config);
 
         $this->queryExecutor = new EngineQueryExecutor($schema, $dm, $container, $config);
@@ -93,8 +92,9 @@ class Engine
      */
     public function processData(array $data): array
     {
-        $this->dataParser->parse($data, $this->s);
+        $this->dataParser->parse($data);
 
+        echo 'A';
         return $this->run();
     }
 
