@@ -195,7 +195,7 @@ class EngineQueryExecutor
             $this->dm->flush();
         }
 
-        return $this->buildFieldsFromEntities($entities, $command['fields']);
+        return $this->buildFieldsFromEntities($entities, $command['fields'], $command['type']);
     }
 
     /**
@@ -223,14 +223,15 @@ class EngineQueryExecutor
     /**
      * @param $entities
      * @param $fields
+     * @param string $type
      * @return array
      */
-    private function buildFieldsFromEntities($entities, $fields): array
+    private function buildFieldsFromEntities($entities, $fields, string $type): array
     {
         $results = [];
         foreach ($entities as $entity)
         {
-            $results[] = $this->buildFieldsFromEntity($entity, $fields);
+            $results[] = $this->buildFieldsFromEntity($entity, $fields, $type);
         }
 
         return $results;
@@ -239,18 +240,32 @@ class EngineQueryExecutor
     /**
      * @param $entity
      * @param $fields
+     * @param string $type
      * @return array
      */
-    private function buildFieldsFromEntity($entity, $fields): array
+    private function buildFieldsFromEntity($entity, $fields, string $type): array
     {
         if ($fields == '*')
         {
-            $fields = $this->findAllFieldsOfEntity($entity);
+            $fields = $this->findAllFieldsOfType($type);
         }
 
         $result = [];
         foreach ($fields as $field => $metadata)
         {
+            if (substr($field, -2) == 'Id')
+            {
+                $alias = $field;
+                if (is_array($metadata) && isset($metadata['as']))
+                {
+                    $alias = $metadata['as'];
+                }
+                $getter = 'get'.ucfirst(substr($field, 0, strlen($field) - 2));
+                $result[$alias] = $entity->$getter()->getId();
+
+                continue;
+            }
+
             if (is_string($metadata))
             {
                 $field = $metadata;
@@ -258,18 +273,15 @@ class EngineQueryExecutor
 
             $getter = 'get'.ucfirst($field);
             $alias = $field;
-            if (is_array($metadata))
+            if (is_array($metadata) && isset($metadata['as']))
             {
-                if (isset($metadata['as']))
-                {
-                    $alias = $metadata['as'];
-                }
+                $alias = $metadata['as'];
             }
 
             if (is_array($metadata) && sizeof($metadata) > 0 && isset($metadata[0]))
             {
                 $relation = $entity->$getter();
-                $result[$alias] = $this->buildFieldsFromEntities($relation->toArray(), $metadata);
+                $result[$alias] = $this->buildFieldsFromEntities($relation->toArray(), $metadata, $type);
 
                 continue;
             }
@@ -281,21 +293,21 @@ class EngineQueryExecutor
     }
 
     /**
-     * @param $entity
+     * @param string $type
      * @return array
      */
-    private function findAllFieldsOfEntity($entity): array
+    private function findAllFieldsOfType(string $type): array
     {
         $fields = [];
-        $r = new ReflectionObject($entity);
 
-        foreach ($r->getMethods() as $method)
+        foreach ($this->schema[$type] as $fieldName => $metadata)
         {
-            if ($method->isPublic() && !$method->isConstructor() && substr($method->name, 0, 3) == 'get')
+            if (is_array($metadata) && isset($metadata['belongsTo']))
             {
-                $fieldName = lcfirst(substr($method->name, 3));
-                $fields[$fieldName] = ['as' => $fieldName];
+                $fieldName = $fieldName.'Id';
             }
+
+            $fields[$fieldName] = ['as' => $fieldName];
         }
 
         return $fields;

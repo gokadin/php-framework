@@ -92,7 +92,7 @@ class Engine
      */
     public function processData(array $data): array
     {
-        $this->dataParser->parse($data);
+        $this->dataParser->parse($data, $this->s);
 
         return $this->run();
     }
