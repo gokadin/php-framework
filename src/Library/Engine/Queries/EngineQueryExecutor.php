@@ -101,7 +101,7 @@ class EngineQueryExecutor
     private function executeFetch(array $command): array
     {
         $entities = $this->dm->processQueryResults($command['entityClassName'], $command['queryBuilder']->select());
-        return $this->buildFieldsFromEntities($entities, $command['fields']);
+        return $this->buildFieldsFromEntities($entities, $command['fields'], $command['type']);
     }
 
     /**
@@ -136,7 +136,7 @@ class EngineQueryExecutor
         $this->dm->flush();
 
         return sizeof($command['fields']) > 0
-            ? $this->buildFieldsFromEntities($entities, $command['fields'])
+            ? $this->buildFieldsFromEntities($entities, $command['fields'], $command['type'])
             : [];
     }
 
@@ -150,7 +150,7 @@ class EngineQueryExecutor
         $this->dm->flush();
 
         return $command['fields'] == '*' || sizeof($command['fields']) > 0
-            ? [$this->buildFieldsFromEntity($entity, $command['fields'])]
+            ? [$this->buildFieldsFromEntity($entity, $command['fields'], $command['type'])]
             : [];
     }
 
