@@ -310,6 +310,10 @@ class EngineQueryExecutor
             $fields[$fieldName] = ['as' => $fieldName];
         }
 
+        $fields['id'] = ['as' => 'id'];
+        $fields['createdAt'] = ['as' => 'createdAt'];
+        $fields['updatedAt'] = ['as' => 'updatedAt'];
+
         return $fields;
     }
 
