@@ -176,7 +176,6 @@ class EngineDataParser
 
     /**
      * @param $query
-     * @param string $key
      * @param $condition
      */
     private function addQueryCondition($query, $condition): void
