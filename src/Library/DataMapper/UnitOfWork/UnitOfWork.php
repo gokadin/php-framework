@@ -354,7 +354,7 @@ final class UnitOfWork implements Observable
 
             if ($column->isBoolean())
             {
-                $value = $value == 1 ? true : false;
+                $value = $value || $value == 1 || $value == 'true';
             }
 
             if ($column->isDateTime())
